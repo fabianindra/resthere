@@ -1,0 +1,4 @@
+Folder ini berisi logika bisnis utama aplikasi Anda. 
+Services bertindak sebagai lapisan antara controller dan repository, 
+menangani logika aplikasi dan aturan bisnis sebelum data 
+dikirimkan kembali ke controller.
