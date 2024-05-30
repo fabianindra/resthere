@@ -1,0 +1,3 @@
+Folder ini bertanggung jawab untuk berinteraksi langsung dengan database. 
+Repository mengabstraksi logika akses data, 
+membuat kode lebih mudah diuji dan dipelihara.
