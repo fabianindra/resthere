@@ -30,5 +30,11 @@
     "hooks": {
       "pre-commit": "npx lint-staged"
     }
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "formik": "^2.4.6",
+    "react-redux": "^9.1.2",
+    "yup": "^1.4.0"
   }
 }
