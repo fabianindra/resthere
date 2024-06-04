@@ -56,7 +56,7 @@ const LocationBox: React.FC<LocationBoxProps> = ({ location }) => {
       <MenuButton>
         <Box
           minW={'fit-content'}
-          className="flex-1 py-4 px-8 border-2 border-solid border-gray text-start flex-1"
+          className="flex-1 py-4 px-8 border-2 border-solid border-gray text-start"
         >
           <Text fontWeight={'medium'} fontSize={'sm'}>
             Location
