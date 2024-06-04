@@ -10,6 +10,7 @@ export default function ClouserDestination() {
     { url: '/JAKARTA.png', title: 'Jakarta' },
     { url: '/LOMBOK.png', title: 'Lombok' },
     { url: '/MAKASAR.png', title: 'Makasar' },
+    { url: '/MALANG.png', title: 'Malang' },
     { url: '/MEDAN.png', title: 'Medan' },
     { url: '/SEMARANG.png', title: 'Semarang' },
     { url: '/SURABAYA.png', title: 'Surabaya' },

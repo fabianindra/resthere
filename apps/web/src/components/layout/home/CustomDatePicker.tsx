@@ -32,7 +32,7 @@ const CustomDatePicker = () => {
         <CalendarDots size={32} className="inline-block mt-1" />
       </button>
       {isOpen && (
-        <div className="absolute mt-2">
+        <div className="absolute mt-2 z-50">
           <DatePicker
             selected={startDate}
             onChange={handleDateChange}
