@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.react-datepicker {
+  font-family: inherit;
+}
+
+.react-datepicker__header {
+  background-color: #3b82f6; /* Warna header */
+  color: white;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background-color: #3b82f6; /* Warna hari yang dipilih */
+  color: white;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #2563eb; /* Warna hari yang dipilih dengan keyboard */
+  color: white;
+}
