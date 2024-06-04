@@ -1,6 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,12 +13,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String 
+  username      String   @unique  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
 
-  @@map("samples") // if you want to use snake_case format
+model Tenant {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String 
+  username      String   @unique  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  properties    Property[] 
+}
+
+model Property {
+  id            Int      @id @default(autoincrement())
+  name          String   
+  address       String 
+  category_property      String   
+  room_count    Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  rooms         Room[]
+
+  tenant        Tenant?  @relation(fields: [tenant_id], references: [id])
+  tenant_id     Int?     
+
+  reviews       Review[]
+}
+
+model Room {
+  id            Int      @id @default(autoincrement())
+  name          String   
+  price               Int 
+  weekend_price       Int    
+  capacity_person     Int
+  capacity_room       Int
+  room_size           Int
+  available_room      Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  property            Property?  @relation(fields: [property_id], references: [id])
+  property_id         Int?     
+}
+
+model SpecialPrice {
+  id            Int      @id @default(autoincrement())
+  date          DateTime 
+  special_price      Int 
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Transaction {
+  id            Int      @id @default(autoincrement())
+  total_price   Int 
+  total_room    Int 
+  check_in      DateTime
+  check_out     DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Review {
+  id            Int      @id @default(autoincrement())
+  star          Int 
+  feed_back     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  property      Property? @relation(fields: [property_id], references: [id])
+  property_id   Int?
 }
