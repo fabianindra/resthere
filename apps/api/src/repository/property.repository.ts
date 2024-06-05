@@ -10,13 +10,11 @@ export const repoAddProperty = async ({
   name,
   address,
   category_property,
-  room_count,
   tenant_id,
 }: {
   name: string;
   address: string;
   category_property: string;
-  room_count: number;
   tenant_id: number;
 }) => {
   return await prisma.property.create({
@@ -24,7 +22,7 @@ export const repoAddProperty = async ({
       name,
       address,
       category_property,
-      room_count,
+      room_count: 0,
       tenant_id,
     },
   });
@@ -35,15 +33,11 @@ export const repoUpdateProperty = async ({
   name,
   address,
   category_property,
-  room_count,
-  tenant_id,
 }: {
   id: number;
   name: string;
   address: string;
   category_property: string;
-  room_count: number;
-  tenant_id: number;
 }) => {
   return await prisma.property.update({
     where: { id },
@@ -51,14 +45,18 @@ export const repoUpdateProperty = async ({
       name,
       address,
       category_property,
-      room_count,
-      tenant_id,
     },
   });
 };
 
-export const repoDeleteProperty = async ({ id }: { id: number }) => {
+export const repoDeleteProperty = async (id: number) => {
   return await prisma.property.delete({
+    where: { id },
+  });
+};
+
+export const repoCheckProperty = async (id: number) => {
+  return await prisma.property.findUnique({
     where: { id },
   });
 };

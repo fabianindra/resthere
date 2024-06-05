@@ -1,14 +1,14 @@
 import {
   repoAddProperty,
+  repoCheckProperty,
   repoDeleteProperty,
   repoGetProperty,
   repoUpdateProperty,
-} from '@/repository/property.repository';
+} from '../repository/property.repository';
 
 export const serviceGetALLProperty = async () => {
   try {
     const data = await repoGetProperty();
-    console.log(data);
     return {
       status: 200,
       success: true,
@@ -16,19 +16,28 @@ export const serviceGetALLProperty = async () => {
       data: data,
     };
   } catch (error) {
-    throw new Error('Failed to get books');
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
   }
 };
 
 export const serviceAddProperty = async (req: any) => {
-  const { name, address, category_property, room_count, tenant_id }: any =
-    req.body;
+  const { name, address, category_property, tenant_id }: any = req.body;
   try {
+    if (!name || !address || !category_property || !tenant_id) {
+      return {
+        status: 401,
+        success: true,
+        message: 'invalid input',
+      };
+    }
     const data = await repoAddProperty({
       name,
       address,
       category_property,
-      room_count,
       tenant_id,
     });
     return {
@@ -38,21 +47,29 @@ export const serviceAddProperty = async (req: any) => {
       data: { data },
     };
   } catch (error) {
-    throw new Error('Failed to get books');
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
   }
 };
 
 export const serviceUpdateProperty = async (req: any) => {
-  const { name, address, category_property, room_count, tenant_id }: any =
-    req.body;
+  const { name, address, category_property }: any = req.body;
+  if (!name || !address || !category_property) {
+    return {
+      status: 401,
+      success: true,
+      message: 'invalid input',
+    };
+  }
   try {
     const data = await repoUpdateProperty({
       id: parseInt(req.params.id),
       name,
       address,
       category_property,
-      room_count,
-      tenant_id,
     });
     return {
       status: 201,
@@ -61,15 +78,17 @@ export const serviceUpdateProperty = async (req: any) => {
       data: { data },
     };
   } catch (error) {
-    throw new Error('Failed to get books');
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
   }
 };
 
 export const serviceDeleteProperty = async (req: any) => {
   try {
-    const data = await repoDeleteProperty({
-      id: parseInt(req.params.id),
-    });
+    const data = await repoDeleteProperty(parseInt(req.params.id));
     return {
       status: 201,
       success: true,
@@ -77,6 +96,30 @@ export const serviceDeleteProperty = async (req: any) => {
       data: { data },
     };
   } catch (error) {
-    throw new Error('Failed to get books');
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceCheckProperty = async (req: any, next: any) => {
+  try {
+    const data = await repoCheckProperty(parseInt(req.params.id));
+    if (!data) {
+      return {
+        status: 401,
+        success: true,
+        message: 'invalid input',
+      };
+    }
+    next();
+  } catch (error) {
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
   }
 };
