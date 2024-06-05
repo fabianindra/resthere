@@ -44,8 +44,8 @@ model Property {
 
   rooms         Room[]
 
-  tenant        Tenant?  @relation(fields: [tenant_id], references: [id])
-  tenant_id     Int?     
+  tenant        Tenant  @relation(fields: [tenant_id], references: [id])
+  tenant_id     Int    
 
   reviews       Review[]
 }
@@ -62,8 +62,8 @@ model Room {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  property            Property?  @relation(fields: [property_id], references: [id])
-  property_id         Int?     
+  property            Property  @relation(fields: [property_id], references: [id])
+  property_id         Int     
 }
 
 model SpecialPrice {
@@ -91,6 +91,6 @@ model Review {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  property      Property? @relation(fields: [property_id], references: [id])
-  property_id   Int?
+  property      Property @relation(fields: [property_id], references: [id])
+  property_id   Int
 }
