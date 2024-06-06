@@ -32,7 +32,7 @@ export const serviceAddRoom = async (req: any) => {
     capacity_person,
     capacity_room,
     room_size,
-    available_room,
+
     property_id,
   } = req.body;
   if (
@@ -42,7 +42,6 @@ export const serviceAddRoom = async (req: any) => {
     !capacity_person ||
     !capacity_room ||
     !room_size ||
-    !available_room ||
     !property_id
   ) {
     return {
@@ -59,7 +58,6 @@ export const serviceAddRoom = async (req: any) => {
       capacity_person,
       capacity_room,
       room_size,
-      available_room,
       property_id,
     });
     return {
@@ -85,7 +83,7 @@ export const serviceUpdateRoom = async (req: any) => {
     capacity_person,
     capacity_room,
     room_size,
-    available_room,
+
     id,
   } = req.body;
 
@@ -95,8 +93,7 @@ export const serviceUpdateRoom = async (req: any) => {
     !weekend_price ||
     !capacity_person ||
     !capacity_room ||
-    !room_size ||
-    !available_room
+    !room_size
   ) {
     return {
       status: 401,
@@ -113,7 +110,6 @@ export const serviceUpdateRoom = async (req: any) => {
       capacity_person,
       capacity_room,
       room_size,
-      available_room,
       id,
     });
     return {

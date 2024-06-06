@@ -25,9 +25,23 @@ export const serviceGetALLProperty = async () => {
 };
 
 export const serviceAddProperty = async (req: any) => {
-  const { name, address, category_property, tenant_id }: any = req.body;
+  const {
+    name,
+    address,
+    city_name,
+    province_name,
+    category_property,
+    tenant_id,
+  }: any = req.body;
   try {
-    if (!name || !address || !category_property || !tenant_id) {
+    if (
+      !name ||
+      !address ||
+      !city_name ||
+      !province_name ||
+      !category_property ||
+      !tenant_id
+    ) {
       return {
         status: 401,
         success: true,
@@ -37,6 +51,8 @@ export const serviceAddProperty = async (req: any) => {
     const data = await repoAddProperty({
       name,
       address,
+      city_name,
+      province_name,
       category_property,
       tenant_id,
     });
@@ -106,7 +122,10 @@ export const serviceDeleteProperty = async (req: any) => {
 
 export const serviceCheckProperty = async (req: any, next: any) => {
   try {
-    const data = await repoCheckProperty(parseInt(req.params.id));
+    const id = req.params.id
+      ? parseInt(req.params.id)
+      : parseInt(req.body.property_id);
+    const data = await repoCheckProperty(id);
     if (!data) {
       return {
         status: 401,

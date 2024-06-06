@@ -1,3 +1,4 @@
+import { checkPropertyController } from '../controllers/property.controller';
 import {
   addRoomController,
   checkRoomController,
@@ -9,7 +10,7 @@ import { Router } from 'express';
 const roomRouter = Router();
 
 roomRouter.get('/', getRoomController);
-roomRouter.post('/', addRoomController);
+roomRouter.post('/', checkPropertyController, addRoomController);
 roomRouter.put('/:id', checkRoomController, deleteRoomController);
 roomRouter.delete('/:id', checkRoomController, deleteRoomController);
 

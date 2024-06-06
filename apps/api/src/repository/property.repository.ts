@@ -9,11 +9,15 @@ export const repoGetProperty = async () => {
 export const repoAddProperty = async ({
   name,
   address,
+  city_name,
+  province_name,
   category_property,
   tenant_id,
 }: {
   name: string;
   address: string;
+  city_name: string;
+  province_name: string;
   category_property: string;
   tenant_id: number;
 }) => {
@@ -21,6 +25,8 @@ export const repoAddProperty = async ({
     data: {
       name,
       address,
+      city_name,
+      province_name,
       category_property,
       room_count: 0,
       tenant_id,

@@ -13,7 +13,6 @@ export const repoAddRoom = async ({
   capacity_person,
   capacity_room,
   room_size,
-  available_room,
   property_id,
 }: {
   name: string;
@@ -22,7 +21,6 @@ export const repoAddRoom = async ({
   capacity_person: number;
   capacity_room: number;
   room_size: number;
-  available_room: number;
   property_id: number;
 }) => {
   return await prisma.room.create({
@@ -33,7 +31,6 @@ export const repoAddRoom = async ({
       capacity_person,
       capacity_room,
       room_size,
-      available_room,
       property_id,
     },
   });
@@ -46,7 +43,6 @@ export const repoUpdateRoom = async ({
   capacity_person,
   capacity_room,
   room_size,
-  available_room,
   id,
 }: {
   name: string;
@@ -55,7 +51,6 @@ export const repoUpdateRoom = async ({
   capacity_person: number;
   capacity_room: number;
   room_size: number;
-  available_room: number;
   id: number;
 }) => {
   return await prisma.room.update({
@@ -67,7 +62,6 @@ export const repoUpdateRoom = async ({
       capacity_person,
       capacity_room,
       room_size,
-      available_room,
     },
   });
 };
