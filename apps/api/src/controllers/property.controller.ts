@@ -32,6 +32,9 @@ export const checkPropertyController = async (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log('Request Body:', req.body);
   const response = await serviceCheckProperty(req, next);
-  return res.status(Number(response?.status)).send(response);
+  if (response) {
+    return res.status(Number(response.status)).send(response);
+  }
 };

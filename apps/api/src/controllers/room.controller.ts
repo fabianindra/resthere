@@ -14,6 +14,7 @@ export const getRoomController = async (req: Request, res: Response) => {
 
 export const addRoomController = async (req: Request, res: Response) => {
   const response = await serviceAddRoom(req);
+  console.log(response, 'INI RESPONENT');
   return res.status(Number(response?.status)).send(response);
 };
 

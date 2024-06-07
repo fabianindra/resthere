@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const repoGetRoom = async () => {
-  return await prisma.room.findMany();
+  return await prisma.room.findMany({});
 };
 
 export const repoAddRoom = async ({
@@ -14,6 +14,7 @@ export const repoAddRoom = async ({
   capacity_room,
   room_size,
   property_id,
+  image,
 }: {
   name: string;
   price: number;
@@ -22,6 +23,7 @@ export const repoAddRoom = async ({
   capacity_room: number;
   room_size: number;
   property_id: number;
+  image: string;
 }) => {
   return await prisma.room.create({
     data: {
@@ -32,6 +34,7 @@ export const repoAddRoom = async ({
       capacity_room,
       room_size,
       property_id,
+      image,
     },
   });
 };
@@ -44,6 +47,7 @@ export const repoUpdateRoom = async ({
   capacity_room,
   room_size,
   id,
+  image,
 }: {
   name: string;
   price: number;
@@ -52,6 +56,7 @@ export const repoUpdateRoom = async ({
   capacity_room: number;
   room_size: number;
   id: number;
+  image: string;
 }) => {
   return await prisma.room.update({
     where: { id },
@@ -62,6 +67,7 @@ export const repoUpdateRoom = async ({
       capacity_person,
       capacity_room,
       room_size,
+      image,
     },
   });
 };

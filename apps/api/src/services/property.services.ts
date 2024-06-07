@@ -32,29 +32,32 @@ export const serviceAddProperty = async (req: any) => {
     province_name,
     category_property,
     tenant_id,
-  }: any = req.body;
+  } = req.body;
+  const { file } = req;
+  if (
+    !name ||
+    !address ||
+    !city_name ||
+    !province_name ||
+    !category_property ||
+    !tenant_id ||
+    !file
+  ) {
+    return {
+      status: 401,
+      success: true,
+      message: 'invalid input',
+    };
+  }
   try {
-    if (
-      !name ||
-      !address ||
-      !city_name ||
-      !province_name ||
-      !category_property ||
-      !tenant_id
-    ) {
-      return {
-        status: 401,
-        success: true,
-        message: 'invalid input',
-      };
-    }
     const data = await repoAddProperty({
       name,
       address,
       city_name,
       province_name,
       category_property,
-      tenant_id,
+      tenant_id: parseInt(tenant_id),
+      image: file.filename,
     });
     return {
       status: 201,
@@ -73,7 +76,8 @@ export const serviceAddProperty = async (req: any) => {
 
 export const serviceUpdateProperty = async (req: any) => {
   const { name, address, category_property }: any = req.body;
-  if (!name || !address || !category_property) {
+  const { file } = req;
+  if (!name && !address && !category_property && !file) {
     return {
       status: 401,
       success: true,
@@ -86,6 +90,7 @@ export const serviceUpdateProperty = async (req: any) => {
       name,
       address,
       category_property,
+      image: file?.filename,
     });
     return {
       status: 201,
@@ -125,19 +130,32 @@ export const serviceCheckProperty = async (req: any, next: any) => {
     const id = req.params.id
       ? parseInt(req.params.id)
       : parseInt(req.body.property_id);
-    const data = await repoCheckProperty(id);
-    if (!data) {
+
+    if (isNaN(id)) {
       return {
-        status: 401,
-        success: true,
-        message: 'invalid input',
+        status: 400,
+        success: false,
+        message: 'Invalid property ID',
       };
     }
+
+    const data = await repoCheckProperty(id);
+    console.log(id, 'INI ID');
+
+    if (!data) {
+      return {
+        status: 404,
+        success: false,
+        message: 'Property not found',
+      };
+    }
+
     next();
   } catch (error) {
+    console.error('Error in serviceCheckProperty:', error);
     return {
       status: 500,
-      message: 'server error',
+      message: 'Server error',
       error: (error as Error).message,
     };
   }

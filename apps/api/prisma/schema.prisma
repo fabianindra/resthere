@@ -41,6 +41,7 @@ model Property {
   province_name String
   category_property      String   
   room_count    Int
+  image         String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -60,6 +61,7 @@ model Room {
   capacity_person     Int
   capacity_room       Int
   room_size           Int
+  image         String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

@@ -32,9 +32,9 @@ export const serviceAddRoom = async (req: any) => {
     capacity_person,
     capacity_room,
     room_size,
-
     property_id,
   } = req.body;
+  const { file } = req;
   if (
     !name ||
     !price ||
@@ -42,7 +42,8 @@ export const serviceAddRoom = async (req: any) => {
     !capacity_person ||
     !capacity_room ||
     !room_size ||
-    !property_id
+    !property_id ||
+    !file
   ) {
     return {
       status: 401,
@@ -53,12 +54,13 @@ export const serviceAddRoom = async (req: any) => {
   try {
     const data = await repoAddRoom({
       name,
-      price,
-      weekend_price,
-      capacity_person,
-      capacity_room,
-      room_size,
-      property_id,
+      price: parseInt(price),
+      weekend_price: parseInt(weekend_price),
+      capacity_person: parseInt(capacity_person),
+      capacity_room: parseInt(capacity_room),
+      room_size: parseInt(room_size),
+      property_id: parseInt(property_id),
+      image: file.filename,
     });
     return {
       status: 201,
@@ -83,17 +85,17 @@ export const serviceUpdateRoom = async (req: any) => {
     capacity_person,
     capacity_room,
     room_size,
-
     id,
   } = req.body;
-
+  const { file } = req;
   if (
     !name ||
     !price ||
     !weekend_price ||
     !capacity_person ||
     !capacity_room ||
-    !room_size
+    !room_size ||
+    !file
   ) {
     return {
       status: 401,
@@ -105,12 +107,13 @@ export const serviceUpdateRoom = async (req: any) => {
   try {
     const data = await repoUpdateRoom({
       name,
-      price,
-      weekend_price,
-      capacity_person,
-      capacity_room,
-      room_size,
-      id,
+      price: parseInt(price),
+      weekend_price: parseInt(weekend_price),
+      capacity_person: parseInt(capacity_person),
+      capacity_room: parseInt(capacity_room),
+      room_size: parseInt(room_size),
+      id: parseInt(id),
+      image: file.path,
     });
     return {
       status: 201,

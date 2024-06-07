@@ -1,4 +1,5 @@
 'use client';
+import { getDataRoom } from '@/api/property';
 import DateRangePicker from '@/components/layout/home/DateRangePicker';
 import GuestBox from '@/components/layout/home/GuestBox';
 import LocationBox from '@/components/layout/home/LocationBox';
@@ -6,11 +7,26 @@ import SearchButton from '@/components/layout/home/SearchButton';
 import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
 import { Box, HStack } from '@chakra-ui/react';
-import { MapPin, Star } from '@phosphor-icons/react/dist/ssr';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function page() {
   const [guest, setGuest] = useState(1);
+  const [dataRoom, setDataRoom] = useState<any>([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await getDataRoom();
+      console.log(response);
+      setDataRoom(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <Box className="mx-10">
       <HStack flexWrap={'wrap'} mt={10}>
@@ -26,11 +42,17 @@ export default function page() {
         </HStack>
         <SearchButton />
       </HStack>
-      <HStack justifyContent={'center'} gap={8} mt={10}>
-        <CustomCard />
-        <CustomCard />
-        <CustomCard />
-        <CustomCard />
+      <HStack justifyContent={'start'} gap={8} mt={10}>
+        {dataRoom.length == 0
+          ? null
+          : dataRoom.map((item: any) => (
+              <CustomCard
+                key={item.id}
+                city={item.city_name}
+                name={item.name}
+                price={item.rooms.length > 0 ? item.rooms[0].price : 'N/A'}
+              />
+            ))}
       </HStack>
       <SimplePagination page={page} setPage={''} maxPage={10} />
     </Box>

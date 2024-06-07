@@ -1,3 +1,4 @@
+import { uploader } from '../middlewares/uploder';
 import {
   addPropertyController,
   checkPropertyController,
@@ -10,8 +11,17 @@ import { Router } from 'express';
 const propertyRouter = Router();
 
 propertyRouter.get('/', getPropertyController);
-propertyRouter.post('/', addPropertyController);
-propertyRouter.put('/:id', checkPropertyController, updtePropertyController);
+propertyRouter.post(
+  '/',
+  uploader('IMG', '/images').single('file'),
+  addPropertyController,
+);
+propertyRouter.put(
+  '/:id',
+  checkPropertyController,
+  uploader('IMG', '/images').single('file'),
+  updtePropertyController,
+);
 propertyRouter.delete(
   '/:id',
   checkPropertyController,

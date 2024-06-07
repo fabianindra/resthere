@@ -11,7 +11,15 @@ import {
 import { MapPin, Star } from '@phosphor-icons/react';
 import React from 'react';
 
-export default function CustomCard() {
+export default function CustomCard({
+  city,
+  name,
+  price,
+}: {
+  city: string;
+  name: string;
+  price: number;
+}) {
   return (
     <Card maxW="xs">
       <CardBody>
@@ -22,10 +30,10 @@ export default function CustomCard() {
         />
         <HStack mt={4} color={'gray.400'}>
           <MapPin size={20} weight="fill" />
-          <Text fontSize={'sm'}>Tahunan, Jepara</Text>
+          <Text fontSize={'sm'}>{city}</Text>
         </HStack>
         <Heading size="md" mt={4}>
-          Living room Sofa
+          {name}
         </Heading>
       </CardBody>
       <CardFooter justifyContent={'space-between'}>
@@ -35,7 +43,7 @@ export default function CustomCard() {
         </HStack>
         <Box>
           <Text fontSize={'md'} fontWeight={'bold'}>
-            Rp. 500.00
+            Rp. {price}
           </Text>
         </Box>
       </CardFooter>
