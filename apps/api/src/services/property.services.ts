@@ -6,16 +6,19 @@ import {
   repoUpdateProperty,
 } from '../repository/property.repository';
 
-export const serviceGetALLProperty = async () => {
+export const serviceGetALLProperty = async (req: any) => {
+  const { city, guest, search, page } = req.query;
   try {
-    const data = await repoGetProperty();
+    const data = await repoGetProperty({ city, guest, search, page });
     return {
       status: 200,
       success: true,
       message: 'Get data success',
-      data: data,
+      data: data.result,
+      count: data.count,
     };
   } catch (error) {
+    console.error(error);
     return {
       status: 500,
       message: 'server error',

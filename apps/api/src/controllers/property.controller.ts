@@ -8,7 +8,7 @@ import {
 } from '../services/property.services';
 
 export const getPropertyController = async (req: Request, res: Response) => {
-  const response = await serviceGetALLProperty();
+  const response = await serviceGetALLProperty(req);
   return res.status(Number(response?.status)).send(response);
 };
 
@@ -32,7 +32,6 @@ export const checkPropertyController = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log('Request Body:', req.body);
   const response = await serviceCheckProperty(req, next);
   if (response) {
     return res.status(Number(response.status)).send(response);

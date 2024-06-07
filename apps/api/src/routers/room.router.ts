@@ -13,14 +13,14 @@ const roomRouter = Router();
 roomRouter.get('/', getRoomController);
 roomRouter.post(
   '/',
-  checkPropertyController,
+  // checkPropertyController,
   uploader('IMG', '/images').single('file'),
   addRoomController,
 );
 
 roomRouter.put(
   '/:id',
-  checkRoomController,
+  // checkRoomController,
   uploader('IMG', '/images').single('file'),
   deleteRoomController,
 );

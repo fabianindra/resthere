@@ -43,16 +43,18 @@ export default function page() {
         <SearchButton />
       </HStack>
       <HStack justifyContent={'start'} gap={8} mt={10}>
-        {dataRoom.length == 0
+        {dataRoom.length === 0
           ? null
-          : dataRoom.map((item: any) => (
-              <CustomCard
-                key={item.id}
-                city={item.city_name}
-                name={item.name}
-                price={item.rooms.length > 0 ? item.rooms[0].price : 'N/A'}
-              />
-            ))}
+          : dataRoom.map((item: any) => {
+              return item.rooms.length > 0 ? (
+                <CustomCard
+                  key={item.id}
+                  city={item.city_name}
+                  name={item.name}
+                  price={item.rooms[0].price}
+                />
+              ) : null;
+            })}
       </HStack>
       <SimplePagination page={page} setPage={''} maxPage={10} />
     </Box>

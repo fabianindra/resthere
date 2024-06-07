@@ -2,8 +2,47 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const repoGetProperty = async () => {
+interface GetPropertyParams {
+  city?: string;
+  guest?: number;
+  search?: string;
+}
+
+export const repoGetProperty = async ({ city, guest, search, page }: any) => {
+  const pageN = parseInt(page) * 4 - 4;
+  console.log(city);
+  const count = await prisma.property.aggregate({
+    where: {
+      ...(city ? { city_name: city } : {}),
+      // ...(guest ? { roo } : {}),
+      ...(search
+        ? {
+            OR: [
+              { name: { contains: search } },
+              { province_name: { contains: search } },
+            ],
+          }
+        : {}),
+    },
+    _count: {
+      _all: true,
+    },
+  });
   const result = await prisma.property.findMany({
+    where: {
+      ...(city ? { city_name: city } : {}),
+      // ...(guest ? { roo } : {}),
+      ...(search
+        ? {
+            OR: [
+              { name: { contains: search } },
+              { province_name: { contains: search } },
+            ],
+          }
+        : {}),
+    },
+    skip: pageN,
+    take: 4,
     include: {
       rooms: true,
     },
@@ -15,7 +54,10 @@ export const repoGetProperty = async () => {
     return minPriceA - minPriceB;
   });
 
-  return result;
+  return {
+    count: count._count._all,
+    result,
+  };
 };
 
 export const repoAddProperty = async ({
