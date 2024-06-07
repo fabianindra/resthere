@@ -5,6 +5,7 @@ import GuestBox from '@/components/layout/home/GuestBox';
 import Hero from '@/components/layout/home/Hero';
 import LocationBox from '@/components/layout/home/LocationBox';
 import PromoSection from '@/components/layout/home/PromoSection';
+import PropertySection from '@/components/layout/home/PropertySection';
 import SearchButton from '@/components/layout/home/SearchButton';
 import UpdateEmail from '@/components/layout/home/UpdateEmail';
 import CustomCard from '@/components/ui/CustomCard';
@@ -35,34 +36,7 @@ export default function Home() {
         </HStack>
         <ClouserDestination />
         <PromoSection />
-
-        <Box mt={20} className="w-full">
-          <VStack alignItems={'start'}>
-            <HStack>
-              {/* <SealPercent size={40} /> */}
-              <Heading as={'h3'} size={'lg'}>
-                Best property
-              </Heading>
-            </HStack>
-            <HStack w={'full'} justifyContent={'space-between'}>
-              <Text color={'gray'} fontSize={'md'}>
-                Find Your Ideal Stay Perfectly Suited To You!
-              </Text>
-              <HStack mr={6}>
-                <Link className=" underline text-sm" href={'/list-room'}>
-                  See more
-                </Link>
-                <ArrowRight size={20} />
-              </HStack>
-            </HStack>
-          </VStack>
-          <HStack my={10} justifyContent={'space-between'}>
-            <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
-            <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
-            <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
-            <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
-          </HStack>
-        </Box>
+        <PropertySection />
       </Box>
       <UpdateEmail />
     </Box>

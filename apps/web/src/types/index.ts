@@ -10,4 +10,5 @@ export interface City {
 
 export interface LocationBoxProps {
   location: string;
+  setLocation: any;
 }

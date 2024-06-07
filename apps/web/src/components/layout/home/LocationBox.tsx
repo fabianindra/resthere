@@ -18,7 +18,7 @@ import { MapPinArea } from '@phosphor-icons/react';
 import { getDataCity, getDataProvinces } from '@/api/content';
 import { City, LocationBoxProps, Province } from '@/types';
 
-const LocationBox: React.FC<LocationBoxProps> = ({ location }) => {
+const LocationBox: React.FC<LocationBoxProps> = ({ location, setLocation }) => {
   const [datas, setDatas] = useState<Province[]>([]);
   const [cities, setCities] = useState<Record<number, City[]>>({});
   const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
@@ -88,7 +88,13 @@ const LocationBox: React.FC<LocationBoxProps> = ({ location }) => {
                 {selectedProvince === item.id && memoizedCities[item.id] ? (
                   <Box>
                     {memoizedCities[item.id].map((city) => (
-                      <Text key={city.id}>{city.name}</Text>
+                      <Text
+                        key={city.id}
+                        className=" cursor-pointer"
+                        onClick={() => setLocation(city.name)}
+                      >
+                        {city.name}
+                      </Text>
                     ))}
                   </Box>
                 ) : (
