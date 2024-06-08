@@ -2,14 +2,14 @@ import {
   repoAddProperty,
   repoCheckProperty,
   repoDeleteProperty,
-  repoGetProperty,
+  repoGetPropertyByRooms,
   repoUpdateProperty,
 } from '../repository/property.repository';
 
-export const serviceGetALLProperty = async (req: any) => {
+export const serviceGetPropertyByRooms = async (req: any) => {
   const { city, guest, search, page } = req.query;
   try {
-    const data = await repoGetProperty({ city, guest, search, page });
+    const data = await repoGetPropertyByRooms({ city, search, page });
     return {
       status: 200,
       success: true,

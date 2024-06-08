@@ -1,10 +1,26 @@
+'use client';
+import { getDataPropertyByRoom } from '@/api/property';
 import CustomCard from '@/components/ui/CustomCard';
 import { VStack, HStack, Heading, Box, Text } from '@chakra-ui/react';
 import { ArrowRight } from '@phosphor-icons/react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function PropertySection() {
+  const [dataRoom, setDataRoom] = useState<any>([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await getDataPropertyByRoom(1);
+      setDataRoom(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <Box mt={20} className="w-full">
       <VStack alignItems={'start'}>
@@ -26,10 +42,18 @@ export default function PropertySection() {
         </HStack>
       </VStack>
       <HStack my={10} justifyContent={'space-between'}>
-        <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
-        <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
-        <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
-        <CustomCard city={'Jepara'} name={'Sailendra'} price={0} />
+        {dataRoom.length === 0
+          ? null
+          : dataRoom.map((item: any) => {
+              return (
+                <CustomCard
+                  key={item.id}
+                  city={item.city_name}
+                  name={item.name}
+                  price={item.rooms[0].price}
+                />
+              );
+            })}
       </HStack>
     </Box>
   );

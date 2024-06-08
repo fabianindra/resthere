@@ -4,43 +4,41 @@ const prisma = new PrismaClient();
 
 interface GetPropertyParams {
   city?: string;
-  guest?: number;
   search?: string;
+  page?: string;
 }
 
-export const repoGetProperty = async ({ city, guest, search, page }: any) => {
-  const pageN = parseInt(page) * 4 - 4;
-  console.log(city);
-  const count = await prisma.property.aggregate({
-    where: {
-      ...(city ? { city_name: city } : {}),
-      // ...(guest ? { roo } : {}),
-      ...(search
-        ? {
-            OR: [
-              { name: { contains: search } },
-              { province_name: { contains: search } },
-            ],
-          }
-        : {}),
+export const repoGetPropertyByRooms = async ({
+  city,
+  search,
+  page,
+}: GetPropertyParams) => {
+  const pageN = page ? parseInt(page) * 4 - 4 : 0;
+
+  const whereClause = {
+    ...(city ? { city_name: city } : {}),
+    ...(search
+      ? {
+          OR: [
+            { name: { contains: search } },
+            { province_name: { contains: search } },
+          ],
+        }
+      : {}),
+    rooms: {
+      some: {},
     },
+  };
+
+  const count = await prisma.property.aggregate({
+    where: whereClause,
     _count: {
       _all: true,
     },
   });
+
   const result = await prisma.property.findMany({
-    where: {
-      ...(city ? { city_name: city } : {}),
-      // ...(guest ? { roo } : {}),
-      ...(search
-        ? {
-            OR: [
-              { name: { contains: search } },
-              { province_name: { contains: search } },
-            ],
-          }
-        : {}),
-    },
+    where: whereClause,
     skip: pageN,
     take: 4,
     include: {

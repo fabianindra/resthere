@@ -10,6 +10,7 @@ import {
   Heading,
 } from '@chakra-ui/react';
 import { SignOut, UserCircle } from '@phosphor-icons/react/dist/ssr';
+import Link from 'next/link';
 import React from 'react';
 
 export default function Nav() {
@@ -18,12 +19,12 @@ export default function Nav() {
       justifyContent={'space-between'}
       className=" sticky px-20 py-8 bg-[#FFFFFF]"
     >
-      <HStack>
+      <Link href={'/'}>
         {/* <Image src="/logo.png" width={'100px'} /> */}
         <Heading ml={-4} color={'primary'} as="h2" size="lg">
           Hostel
         </Heading>
-      </HStack>
+      </Link>
 
       <HStack>
         <Button

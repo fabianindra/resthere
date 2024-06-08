@@ -3,12 +3,15 @@ import {
   serviceAddProperty,
   serviceCheckProperty,
   serviceDeleteProperty,
-  serviceGetALLProperty,
+  serviceGetPropertyByRooms,
   serviceUpdateProperty,
 } from '../services/property.services';
 
-export const getPropertyController = async (req: Request, res: Response) => {
-  const response = await serviceGetALLProperty(req);
+export const getPropertyControllerByRooms = async (
+  req: Request,
+  res: Response,
+) => {
+  const response = await serviceGetPropertyByRooms(req);
   return res.status(Number(response?.status)).send(response);
 };
 

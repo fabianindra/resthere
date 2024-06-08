@@ -7,14 +7,16 @@ import SearchButton from '@/components/layout/home/SearchButton';
 import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
 import { Box, HStack } from '@chakra-ui/react';
+import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 export default function page() {
+  const searchParams = useSearchParams();
   const [guest, setGuest] = useState(1);
   const [dataRoom, setDataRoom] = useState<any>([]);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
-  const [city, setCity] = useState();
+  const [city, setCity] = useState<any>();
 
   const fetchData = async () => {
     try {
@@ -27,13 +29,25 @@ export default function page() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [page, city]);
+    const cityParam = searchParams.get('city');
+    if (cityParam) {
+      setCity(cityParam);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (city !== null) {
+      fetchData();
+    }
+  }, [city, page]);
 
   return (
     <Box className="mx-10">
       <HStack flexWrap={'wrap'} mt={10}>
-        <LocationBox setLocation={setCity} location={city ? city : ''} />
+        <LocationBox
+          setLocation={setCity}
+          location={city ? city : 'Choose Location'}
+        />
         <GuestBox set={setGuest} guestCount={guest} />
         <HStack
           gap={20}

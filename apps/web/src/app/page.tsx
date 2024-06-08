@@ -8,21 +8,28 @@ import PromoSection from '@/components/layout/home/PromoSection';
 import PropertySection from '@/components/layout/home/PropertySection';
 import SearchButton from '@/components/layout/home/SearchButton';
 import UpdateEmail from '@/components/layout/home/UpdateEmail';
-import CustomCard from '@/components/ui/CustomCard';
-import { Box, HStack, Heading, VStack, Text, Button } from '@chakra-ui/react';
-import { SealPercent, CaretLeft, CaretRight } from '@phosphor-icons/react';
-import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
-import Link from 'next/link';
+import { Box, HStack } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Home() {
   const [guest, setGuest] = useState(1);
+  const [city, setCity] = useState();
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/list-room?city=${city}`);
+  };
+
   return (
     <Box>
       <Box className="mx-10">
         <Hero />
         <HStack flexWrap={'wrap'} mt={10}>
-          <LocationBox location="Semarang, Jawa Tengah, Indonesia" />
+          <LocationBox
+            setLocation={setCity}
+            location={city ? city : 'Choose Location'}
+          />
           <GuestBox set={setGuest} guestCount={guest} />
           <HStack
             gap={20}
@@ -32,7 +39,7 @@ export default function Home() {
             <DateRangePicker label="from" />
             <DateRangePicker label="until" />
           </HStack>
-          <SearchButton />
+          <SearchButton onClick={handleClick} />
         </HStack>
         <ClouserDestination />
         <PromoSection />
