@@ -3,6 +3,7 @@ import {
   repoCheckRoom,
   repoDeleteRoom,
   repoGetRoom,
+  repoGetRoomByProperty,
   repoUpdateRoom,
 } from '../repository/room.repository';
 
@@ -14,6 +15,25 @@ export const serviceGetALLRoom = async () => {
       success: true,
       message: 'get all rooms successfully',
       data: data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceGetRoomByProperty = async (req: any) => {
+  const { property_id } = req.params;
+  try {
+    const data = await repoGetRoomByProperty(parseInt(property_id));
+    return {
+      status: 200,
+      success: true,
+      message: 'get all rooms property successfully',
+      data,
     };
   } catch (error) {
     return {

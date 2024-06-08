@@ -6,6 +6,14 @@ export const repoGetRoom = async () => {
   return await prisma.room.findMany({});
 };
 
+export const repoGetRoomByProperty = async (property_id: number) => {
+  return await prisma.room.findMany({
+    where: {
+      property_id,
+    },
+  });
+};
+
 export const repoAddRoom = async ({
   name,
   price,

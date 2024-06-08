@@ -34,9 +34,11 @@ export default function Nav() {
           variant="outline"
         >
           {/* Tenant */}
-          {/* <Text fontWeight={'light'}>List Your Property</Text> */}
+          <Link href={'/dhasboard'}>
+            <Text fontWeight={'light'}>List Your Property</Text>
+          </Link>
           {/* User */}
-          <Text fontWeight={'light'}>Transaction</Text>
+          {/* <Text fontWeight={'light'}>Transaction</Text> */}
         </Button>
 
         <Menu>

@@ -4,6 +4,7 @@ import {
   addRoomController,
   checkRoomController,
   deleteRoomController,
+  getRoomByPropertyController,
   getRoomController,
 } from '../controllers/room.controller';
 import { Router } from 'express';
@@ -11,6 +12,7 @@ import { Router } from 'express';
 const roomRouter = Router();
 
 roomRouter.get('/', getRoomController);
+roomRouter.get('/:property_id', getRoomByPropertyController);
 roomRouter.post(
   '/',
   // checkPropertyController,
