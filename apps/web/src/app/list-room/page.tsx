@@ -9,7 +9,7 @@ import SimplePagination from '@/components/ui/Pagination';
 import { Box, HStack } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 
-export default function page() {
+export default function Page() {
   const [guest, setGuest] = useState(1);
   const [dataRoom, setDataRoom] = useState<any>([]);
 
@@ -54,7 +54,7 @@ export default function page() {
               />
             ))}
       </HStack>
-      <SimplePagination page={page} setPage={''} maxPage={10} />
+      <SimplePagination page={Page} setPage={''} maxPage={10} />
     </Box>
   );
 }

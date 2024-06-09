@@ -11,3 +11,17 @@ export interface City {
 export interface LocationBoxProps {
   location: string;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  username: string;
+  password: string; 
+};
+
+export interface Tenant {
+  id: number;
+  email: string;
+  username: string;
+  password: string; 
+};
