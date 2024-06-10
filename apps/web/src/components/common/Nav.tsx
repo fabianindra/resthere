@@ -34,7 +34,7 @@ export default function Nav() {
           variant="outline"
         >
           {/* Tenant */}
-          <Link href={'/dhasboard'}>
+          <Link href={'/dashboard '}>
             <Text fontWeight={'light'}>List Your Property</Text>
           </Link>
           {/* User */}

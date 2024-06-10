@@ -7,18 +7,22 @@ import {
   Box,
   Image,
   Text,
+  Button,
 } from '@chakra-ui/react';
 import { MapPin, Star } from '@phosphor-icons/react';
+import { PencilSimple, TrashSimple } from '@phosphor-icons/react/dist/ssr';
 import React from 'react';
 
 export default function CustomCard({
   city,
   name,
   price,
+  dashboard,
 }: {
   city: string;
   name: string;
   price: number;
+  dashboard: boolean;
 }) {
   return (
     <Card maxW="xs">
@@ -36,16 +40,32 @@ export default function CustomCard({
           {name}
         </Heading>
       </CardBody>
-      <CardFooter justifyContent={'space-between'}>
-        <HStack>
-          <Star size={20} weight="fill" />
-          <Text fontSize={'sm'}>5.0 (Review)</Text>
+      <CardFooter flexDirection={'column'}>
+        <HStack justifyContent={'space-between'}>
+          <HStack>
+            <Star size={20} weight="fill" />
+            <Text fontSize={'sm'}>5.0 (Review)</Text>
+          </HStack>
+          <Box>
+            <Text fontSize={'md'} fontWeight={'bold'}>
+              Rp. {price}
+            </Text>
+          </Box>
         </HStack>
-        <Box>
-          <Text fontSize={'md'} fontWeight={'bold'}>
-            Rp. {price}
-          </Text>
-        </Box>
+        {dashboard ? (
+          <HStack justifyContent={'end'} mb={4} mt={10}>
+            <Button rightIcon={<PencilSimple size={20} />} colorScheme="blue">
+              Edit
+            </Button>
+            <Button
+              rightIcon={<TrashSimple size={20} />}
+              colorScheme="red"
+              variant="outline"
+            >
+              Delete
+            </Button>
+          </HStack>
+        ) : null}
       </CardFooter>
     </Card>
   );

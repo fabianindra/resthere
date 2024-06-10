@@ -88,16 +88,14 @@ export const repoGetPropertyByTenant = async ({
     },
   });
 
-  const properties = await prisma.property.findMany({
+  const allProperties = await prisma.property.findMany({
     where: whereClause,
-    skip: pageN,
-    take: 4,
     include: {
       rooms: true,
     },
   });
 
-  const sortedProperties = properties.sort((a, b) => {
+  const sortedProperties = allProperties.sort((a, b) => {
     if (sortBy === 'price') {
       const aMinPrice = a.rooms.length
         ? Math.min(...a.rooms.map((room) => room.price))
@@ -116,9 +114,11 @@ export const repoGetPropertyByTenant = async ({
     return 0;
   });
 
+  const paginatedProperties = sortedProperties.slice(pageN, pageN + 4);
+
   return {
     count: count._count._all,
-    result: sortedProperties,
+    result: paginatedProperties,
   };
 };
 

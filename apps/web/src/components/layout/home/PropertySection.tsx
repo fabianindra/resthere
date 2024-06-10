@@ -21,6 +21,7 @@ export default function PropertySection() {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <Box mt={20} className="w-full">
       <VStack alignItems={'start'}>

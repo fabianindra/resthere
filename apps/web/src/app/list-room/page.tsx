@@ -30,7 +30,7 @@ export default function page() {
 
   useEffect(() => {
     const cityParam = searchParams.get('city');
-    if (cityParam) {
+    if (cityParam && cityParam != undefined) {
       setCity(cityParam);
     }
   }, [searchParams]);
@@ -69,6 +69,7 @@ export default function page() {
                   city={item.city_name}
                   name={item.name}
                   price={item.rooms[0].price}
+                  dashboard={false}
                 />
               );
             })}
