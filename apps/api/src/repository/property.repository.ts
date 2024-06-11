@@ -122,6 +122,14 @@ export const repoGetPropertyByTenant = async ({
   };
 };
 
+export const repoGetDetailProperty = async (property_id: number) => {
+  return await prisma.property.findUnique({
+    where: {
+      id: property_id,
+    },
+  });
+};
+
 export const repoAddProperty = async ({
   name,
   address,
