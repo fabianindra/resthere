@@ -8,22 +8,27 @@ import {
   Image,
   Text,
   Button,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { MapPin, Star } from '@phosphor-icons/react';
 import { PencilSimple, TrashSimple } from '@phosphor-icons/react/dist/ssr';
 import React from 'react';
+import ModalEditProperty from '../layout/dashboard/ModalEditProperty';
 
 export default function CustomCard({
+  id,
   city,
   name,
   price,
   dashboard,
 }: {
+  id: number;
   city: string;
   name: string;
   price: number;
   dashboard: boolean;
 }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Card maxW="xs">
       <CardBody>
@@ -54,7 +59,11 @@ export default function CustomCard({
         </HStack>
         {dashboard ? (
           <HStack justifyContent={'end'} mb={4} mt={10}>
-            <Button rightIcon={<PencilSimple size={20} />} colorScheme="blue">
+            <Button
+              onClick={onOpen}
+              rightIcon={<PencilSimple size={20} />}
+              colorScheme="blue"
+            >
               Edit
             </Button>
             <Button
@@ -67,6 +76,7 @@ export default function CustomCard({
           </HStack>
         ) : null}
       </CardFooter>
+      <ModalEditProperty id={id} isOpen={isOpen} onClose={onClose} />
     </Card>
   );
 }

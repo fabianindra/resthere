@@ -32,7 +32,6 @@ export default function Page() {
     maxPage,
     search,
     setSearch,
-    sortBy,
     setSortBy,
     sortDirection,
     handleDirections,
@@ -90,6 +89,7 @@ export default function Page() {
           : dataRoom.map((item: any) => (
               <CustomCard
                 key={item.id}
+                id={item.id}
                 city={item.city_name}
                 name={item.name}
                 price={item.rooms[0] ? item.rooms[0].price : 0}

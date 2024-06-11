@@ -23,6 +23,10 @@ export function getDataPropertyByTenant(
   );
 }
 
+export function getDetailProperty(id: any) {
+  return axios.get(`http://localhost:6570/api/property/detail/${id}`);
+}
+
 export function addDataProperty(
   name: string,
   address: string,
