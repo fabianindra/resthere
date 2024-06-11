@@ -14,6 +14,7 @@ import { MapPin, Star } from '@phosphor-icons/react';
 import { PencilSimple, TrashSimple } from '@phosphor-icons/react/dist/ssr';
 import React from 'react';
 import ModalEditProperty from '../layout/dashboard/ModalEditProperty';
+import ModalDeleteProperty from '../layout/dashboard/ModalDeleteProperty';
 
 export default function CustomCard({
   id,
@@ -66,13 +67,7 @@ export default function CustomCard({
             >
               Edit
             </Button>
-            <Button
-              rightIcon={<TrashSimple size={20} />}
-              colorScheme="red"
-              variant="outline"
-            >
-              Delete
-            </Button>
+            <ModalDeleteProperty id={id} />
           </HStack>
         ) : null}
       </CardFooter>

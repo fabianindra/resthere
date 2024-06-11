@@ -78,3 +78,7 @@ export function editDataProperty(
     },
   );
 }
+
+export function deleteProperty(id: any) {
+  return axios.delete(`http://localhost:6570/api/property/${id}`);
+}
