@@ -6,12 +6,50 @@ export const repoGetRoom = async () => {
   return await prisma.room.findMany({});
 };
 
-export const repoGetRoomByProperty = async (property_id: number) => {
-  return await prisma.room.findMany({
-    where: {
-      property_id,
+export const repoGetRoomByProperty = async ({
+  property_id,
+  search,
+  category,
+  page,
+  sortBy,
+  sortDirection,
+}: {
+  property_id: string;
+  search: string;
+  category: string;
+  page: string;
+  sortBy: 'name' | 'price';
+  sortDirection: 'asc' | 'desc';
+}) => {
+  const pageN = page ? parseInt(page) * 4 - 4 : 0;
+
+  const whereClause = {
+    property_id: parseInt(property_id),
+    ...(category ? { category_property: category } : {}),
+    ...(search ? { OR: [{ name: { contains: search } }] } : {}),
+  };
+  const count = await prisma.room.aggregate({
+    where: whereClause,
+    _count: {
+      _all: true,
     },
   });
+
+  const allRooms = await prisma.room.findMany({
+    skip: pageN,
+    take: 4,
+    where: whereClause,
+    orderBy: [
+      {
+        [sortBy]: sortDirection,
+      },
+    ],
+  });
+
+  return {
+    count,
+    data: allRooms,
+  };
 };
 
 export const repoAddRoom = async ({

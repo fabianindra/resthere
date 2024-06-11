@@ -27,15 +27,25 @@ export const serviceGetALLRoom = async () => {
 
 export const serviceGetRoomByProperty = async (req: any) => {
   const { property_id } = req.params;
+  const { search, category, page, sortBy, sortDirection } = req.query;
   try {
-    const data = await repoGetRoomByProperty(parseInt(property_id));
+    const data = await repoGetRoomByProperty({
+      property_id,
+      search,
+      category,
+      page,
+      sortBy,
+      sortDirection,
+    });
     return {
       status: 200,
       success: true,
       message: 'get all rooms property successfully',
-      data,
+      data: data.data,
+      count: data.count._count._all,
     };
   } catch (error) {
+    console.log(error);
     return {
       status: 500,
       message: 'server error',
