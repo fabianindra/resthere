@@ -13,9 +13,9 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useFormik } from 'formik';
-import { addDataProperty } from '@/api/property';
+import { editDataProperty } from '@/api/property';
 
 const propertySchema = Yup.object().shape({
   name: Yup.string()
@@ -32,7 +32,7 @@ const propertySchema = Yup.object().shape({
   tenant_id: Yup.number().required('tenant_id is required'),
 });
 
-export default function ModalAddProperty({ isOpen, onClose }: any) {
+export default function ModalEditProperty({ isOpen, onClose }: any) {
   const {
     provinces,
     loading: provincesLoading,
@@ -58,7 +58,7 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
         province_name,
         tenant_id,
       } = values;
-      const response = await addDataProperty(
+      const response = await editDataProperty(
         name,
         address,
         category_property,
