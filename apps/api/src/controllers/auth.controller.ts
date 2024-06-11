@@ -1,39 +1,5 @@
-import { Response, Request, NextFunction } from "express";
-import { PrismaClient } from "@prisma/client";
-import {
-  serviceRegisterUser,
-  serviceRegisterTenant,
-  serviceLogin,
-  serviceVerifyToken,
-} from "../services/auth.service";
-
-type User = {
-  id: number;
-  email: string;
-  username: string;
-  password: string; 
-};
-
-type Tenant = {
-  id: number;
-  email: string;
-  username: string;
-  password: string; 
-};
-
-type UserModel = Omit<User, 'password'> & {
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-type TenantModel = Omit<Tenant, 'password'> & {
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-const prisma = new PrismaClient();
+import { Request, Response } from "express";
+import { serviceRegisterUser, serviceRegisterTenant, serviceLogin, serviceVerifyEmail } from "../services/auth.service";
 
 export const registerUser = async (req: Request, res: Response) => {
   const result = await serviceRegisterUser(req.body);
@@ -50,11 +16,7 @@ export const login = async (req: Request, res: Response) => {
   return res.status(Number(result?.status)).send(result);
 };
 
-export const verifyToken = async (
-  req: Request | any,
-  res: Response,
-  next: NextFunction
-) => {
-  const result = await serviceVerifyToken(req, next);
+export const verifyEmail = async (req: Request, res: Response) => {
+  const result = await serviceVerifyEmail(req);
   return res.status(Number(result?.status)).send(result);
 };

@@ -38,9 +38,21 @@ export default function Nav () {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const username = urlParams.get('username')
+    const email = urlParams.get('email')
+
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setLoggedIn(true);
+    }
+    
+    if (token) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify({ username, email }));
+      setLoggedIn(true);
+      window.location.href = '/';
     }
   }, []);
   
@@ -75,7 +87,10 @@ export default function Nav () {
     setLoggedIn(false);
     setUser(null);
   };
-  
+
+  const handleGoogleLogin = async () => {
+    window.location.href = 'http://localhost:6570/api/auth/google';
+  };
 
   const handleCloseModal = () => {
     onClose();
@@ -172,14 +187,24 @@ export default function Nav () {
             <Button colorScheme="blue" mr={3} onClick={handleLogin}>
               Log In
             </Button>
-            <Button variant="ghost" onClick={handleCloseModal}>
-              Cancel
-            </Button>
             <Link href="/register" passHref>
               <Button variant="link" colorScheme="blue" ml={3} onClick={handleLinkClick}>
                 Register
               </Button>
             </Link>
+            <Button variant="ghost" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+          </ModalFooter>
+          <ModalFooter>
+          <Button
+              mt={4}
+              w="full"
+              colorScheme="blue"
+              onClick={handleGoogleLogin}
+            >
+              Google 
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

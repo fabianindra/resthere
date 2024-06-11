@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react';
 import {
   Button,
@@ -42,14 +41,16 @@ export default function Register() {
       } else {
         response = await axios.post('http://localhost:6570/api/auth/register-user', payload);
       }
-      if (response) {
+      if (response.data.success) {
         console.log('Registration successful', response);
         setSuccess(true);
+        setError('');
       } else {
-        setError('Registration failed');
+        setError(response.data.message || 'Registration failed');
       }
-    } catch (error) {
-      setError('Registration failed');
+    } catch (error:any) {
+      console.error('Registration error:', error);
+      setError('Registration failed: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -127,5 +128,3 @@ export default function Register() {
     </Container>
   );
 }
-
-

@@ -14,30 +14,38 @@ export const repoFindTenant = async (email: any) => {
   });
 };
 
-export const repoAddUser = async (
-  username: any,
-  email: any,
-  password: any,
-) => {
+export const repoAddUser = async (username: any, email: any, password: any) => {
   await prisma.user.create({
     data: {
       username,
       email,
       password,
+      verified: false, // Default to not verified
     },
   });
 };
 
-export const repoAddTenant = async (
-  username: any,
-  email: any,
-  password: any,
-) => {
+export const repoAddTenant = async (username: any, email: any, password: any) => {
   await prisma.tenant.create({
     data: {
       username,
       email,
       password,
+      verified: false, // Default to not verified
     },
+  });
+};
+
+export const repoVerifyUser = async (email: any) => {
+  await prisma.user.update({
+    where: { email },
+    data: { verified: true },
+  });
+};
+
+export const repoVerifyTenant = async (email: any) => {
+  await prisma.tenant.update({
+    where: { email },
+    data: { verified: true },
   });
 };
