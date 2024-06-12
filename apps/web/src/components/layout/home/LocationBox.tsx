@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Text,
@@ -15,39 +15,28 @@ import {
   MenuList,
 } from '@chakra-ui/react';
 import { MapPinArea } from '@phosphor-icons/react';
-import { getDataCity, getDataProvinces } from '@/api/content';
-import { City, LocationBoxProps, Province } from '@/types';
+import useProvinces from '@/hooks/useProvinces';
+import useCities from '@/hooks/useCities';
+import { LocationBoxProps } from '@/types';
 
 const LocationBox: React.FC<LocationBoxProps> = ({ location, setLocation }) => {
-  const [datas, setDatas] = useState<Province[]>([]);
-  const [cities, setCities] = useState<Record<number, City[]>>({});
+  const {
+    provinces,
+    loading: provincesLoading,
+    error: provincesError,
+  } = useProvinces();
+  const {
+    cities,
+    fetchCities,
+    loading: citiesLoading,
+    error: citiesError,
+  } = useCities();
   const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
 
-  const fetchData = async () => {
-    try {
-      const response = await getDataProvinces();
-      setDatas(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleProvinceClick = (id: number) => {
+    fetchCities(id);
+    setSelectedProvince(id);
   };
-
-  const getCity = async (id_provinces: number) => {
-    try {
-      const response = await getDataCity(id_provinces);
-      setCities((prevState) => ({
-        ...prevState,
-        [id_provinces]: response.data,
-      }));
-      setSelectedProvince(id_provinces);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const memoizedCities = useMemo(() => cities, [cities]);
 
@@ -74,35 +63,45 @@ const LocationBox: React.FC<LocationBoxProps> = ({ location, setLocation }) => {
       </MenuButton>
       <MenuList height={500} overflow={'auto'}>
         <Accordion>
-          {datas?.map((item) => (
-            <AccordionItem key={item.id}>
-              <h2>
-                <AccordionButton onClick={() => getCity(item.id)}>
-                  <Box as="span" flex="1" textAlign="left">
-                    {item.name}
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
-              <AccordionPanel pb={4}>
-                {selectedProvince === item.id && memoizedCities[item.id] ? (
-                  <Box>
-                    {memoizedCities[item.id].map((city) => (
-                      <Text
-                        key={city.id}
-                        className=" cursor-pointer"
-                        onClick={() => setLocation(city.name)}
-                      >
-                        {city.name}
-                      </Text>
-                    ))}
-                  </Box>
-                ) : (
-                  <Text>Loading...</Text>
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          ))}
+          {provincesLoading ? (
+            <Text>Loading provinces...</Text>
+          ) : provincesError ? (
+            <Text>{provincesError}</Text>
+          ) : (
+            provinces.map((item) => (
+              <AccordionItem key={item.id}>
+                <h2>
+                  <AccordionButton onClick={() => handleProvinceClick(item.id)}>
+                    <Box as="span" flex="1" textAlign="left">
+                      {item.name}
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  {selectedProvince === item.id ? (
+                    citiesLoading ? (
+                      <Text>Loading cities...</Text>
+                    ) : citiesError ? (
+                      <Text>{citiesError}</Text>
+                    ) : (
+                      memoizedCities[item.id]?.map((city) => (
+                        <Text
+                          key={city.id}
+                          className=" cursor-pointer"
+                          onClick={() => setLocation(city.name)}
+                        >
+                          {city.name}
+                        </Text>
+                      ))
+                    )
+                  ) : (
+                    <Text>Loading...</Text>
+                  )}
+                </AccordionPanel>
+              </AccordionItem>
+            ))
+          )}
         </Accordion>
       </MenuList>
     </Menu>

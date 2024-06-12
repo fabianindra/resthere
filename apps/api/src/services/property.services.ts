@@ -2,7 +2,9 @@ import {
   repoAddProperty,
   repoCheckProperty,
   repoDeleteProperty,
+  repoGetDetailProperty,
   repoGetPropertyByRooms,
+  repoGetPropertyByTenant,
   repoUpdateProperty,
 } from '../repository/property.repository';
 
@@ -19,6 +21,55 @@ export const serviceGetPropertyByRooms = async (req: any) => {
     };
   } catch (error) {
     console.error(error);
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceGetPropertyByTenant = async (req: any) => {
+  const { tenant_id } = req.params;
+  const { search, category, page, sortBy, sortDirection } = req.query;
+  try {
+    const data = await repoGetPropertyByTenant({
+      tenant_id,
+      search,
+      category,
+      page,
+      sortBy,
+      sortDirection,
+    });
+    return {
+      status: 200,
+      success: true,
+      message: 'Get data success',
+      data: data.result,
+      count: data.count,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceGetPropertyById = async (req: any) => {
+  const { property_id } = req.params;
+  try {
+    const data = await repoGetDetailProperty(parseInt(property_id));
+    return {
+      status: 200,
+      success: true,
+      message: 'Get data success',
+      data: data,
+    };
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       message: 'server error',

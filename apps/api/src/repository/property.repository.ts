@@ -58,6 +58,78 @@ export const repoGetPropertyByRooms = async ({
   };
 };
 
+export const repoGetPropertyByTenant = async ({
+  tenant_id,
+  search,
+  category,
+  page,
+  sortBy,
+  sortDirection,
+}: {
+  tenant_id: string;
+  search: string;
+  category: string;
+  page: string;
+  sortBy: 'name' | 'price';
+  sortDirection: 'asc' | 'desc';
+}) => {
+  const pageN = page ? parseInt(page) * 4 - 4 : 0;
+
+  const whereClause = {
+    tenant_id: parseInt(tenant_id),
+    ...(category ? { category_property: category } : {}),
+    ...(search ? { OR: [{ name: { contains: search } }] } : {}),
+  };
+
+  const count = await prisma.property.aggregate({
+    where: whereClause,
+    _count: {
+      _all: true,
+    },
+  });
+
+  const allProperties = await prisma.property.findMany({
+    where: whereClause,
+    include: {
+      rooms: true,
+    },
+  });
+
+  const sortedProperties = allProperties.sort((a, b) => {
+    if (sortBy === 'price') {
+      const aMinPrice = a.rooms.length
+        ? Math.min(...a.rooms.map((room) => room.price))
+        : Number.MAX_VALUE;
+      const bMinPrice = b.rooms.length
+        ? Math.min(...b.rooms.map((room) => room.price))
+        : Number.MAX_VALUE;
+      return sortDirection === 'asc'
+        ? aMinPrice - bMinPrice
+        : bMinPrice - aMinPrice;
+    } else if (sortBy === 'name') {
+      return sortDirection === 'asc'
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
+    }
+    return 0;
+  });
+
+  const paginatedProperties = sortedProperties.slice(pageN, pageN + 4);
+
+  return {
+    count: count._count._all,
+    result: paginatedProperties,
+  };
+};
+
+export const repoGetDetailProperty = async (property_id: number) => {
+  return await prisma.property.findUnique({
+    where: {
+      id: property_id,
+    },
+  });
+};
+
 export const repoAddProperty = async ({
   name,
   address,

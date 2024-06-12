@@ -20,6 +20,7 @@ export default function Nav() {
     const username = urlParams.get('username');
     const email = urlParams.get('email');
 
+
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setLoggedIn(true);
