@@ -35,6 +35,8 @@ export const repoGetRoomByProperty = async ({
     },
   });
 
+  sortBy ? sortBy : (sortBy = 'name');
+
   const allRooms = await prisma.room.findMany({
     skip: pageN,
     take: 4,

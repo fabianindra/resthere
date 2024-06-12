@@ -1,43 +1,44 @@
 'use client';
-import React from 'react';
-import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
+import usePropertyDetail from '@/hooks/usePropertyDetail';
 import {
-  Box,
+  HStack,
+  InputGroup,
+  Input,
+  InputRightElement,
+  Select,
   Button,
   Center,
   Divider,
-  HStack,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Select,
-  useDisclosure,
+  Box,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
-  Plus,
   SortAscending,
   SortDescending,
-} from '@phosphor-icons/react/dist/ssr';
-import usePropertyData from '../../hooks/usePropertyData';
-import ModalAddProperty from '../../components/layout/dashboard/ModalAddProperty';
+  Plus,
+} from '@phosphor-icons/react';
+import React from 'react';
 
-export default function Page() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+export default function page() {
   const {
-    dataRoom,
+    property,
+    rooms,
     page,
     setPage,
-    maxPage,
     search,
     setSearch,
-    setSortBy,
+    category,
     setCategory,
+    sortBy,
+    setSortBy,
     sortDirection,
+    setSortDirection,
+    loading,
+    error,
+    fetchProperty,
     handleDirections,
-  } = usePropertyData();
-
+  } = usePropertyDetail();
   return (
     <Box className="px-16">
       <HStack my={20} justifyContent={'space-between'}>
@@ -86,30 +87,15 @@ export default function Page() {
             />
           </Center>
           <Button
-            onClick={onOpen}
+            // onClick={onOpen}
             rightIcon={<Plus size={20} />}
             variant="outline"
           >
-            Add Property
+            Add Room
           </Button>
         </HStack>
       </HStack>
-      <HStack justifyContent={'start'} gap={8} my={10}>
-        {dataRoom.length === 0
-          ? null
-          : dataRoom.map((item: any) => (
-              <CustomCard
-                key={item.id}
-                id={item.id}
-                city={item.city_name}
-                name={item.name}
-                price={item.rooms[0] ? item.rooms[0].price : 0}
-                dashboard={true}
-              />
-            ))}
-      </HStack>
-      <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
-      <ModalAddProperty isOpen={isOpen} onClose={onClose} />
+      <SimplePagination page={page} setPage={setPage} maxPage={1} />
     </Box>
   );
 }

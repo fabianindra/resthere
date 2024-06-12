@@ -29,7 +29,7 @@ const usePropertyData = () => {
 
   useEffect(() => {
     fetchData();
-  }, [page, sortDirection, sortBy, search]);
+  }, [page, sortDirection, sortBy, search, category]);
 
   const handleDirections = () => {
     setDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
