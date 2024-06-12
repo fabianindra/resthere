@@ -20,7 +20,7 @@ export const repoAddUser = async (username: any, email: any, password: any) => {
       username,
       email,
       password,
-      verified: false, // Default to not verified
+      verified: false,
     },
   });
 };
@@ -31,7 +31,7 @@ export const repoAddTenant = async (username: any, email: any, password: any) =>
       username,
       email,
       password,
-      verified: false, // Default to not verified
+      verified: false,
     },
   });
 };
@@ -49,3 +49,17 @@ export const repoVerifyTenant = async (email: any) => {
     data: { verified: true },
   });
 };
+
+export const repoUserChangePassword = async (email: any, password: any) => {
+  await prisma.user.update({
+    where: { email },
+    data: { password: password },
+  });
+}
+
+export const repoTenantChangePassword = async (email: any, password: any) => {
+  await prisma.tenant.update({
+    where: { email },
+    data: { password: password },
+  });
+}

@@ -2,21 +2,19 @@ import { Router, Request, Response } from 'express';
 import passport from '../passport.config';
 import { sign } from 'jsonwebtoken';
 import { User } from '@prisma/client';
+import { login, registerTenant, registerUser, verifyEmail } from '../controllers/auth.controller';
 
 const authRouter = Router();
-
-import {
-  login,
-  registerTenant,
-  registerUser,
-  verifyEmail
-} from '../controllers/auth.controller';
 
 authRouter.post('/register-user', registerUser);
 authRouter.post('/register-tenant', registerTenant);
 authRouter.post('/login', login);
+authRouter.post('/change-password-user',)
 
-authRouter.get('/verify-email', verifyEmail);
+authRouter.get('/verify-email', (req: Request, res: Response) => {
+  verifyEmail;
+  res.redirect('http://localhost:3000');
+});
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 authRouter.get('/google/callback', passport.authenticate('google', { 
@@ -31,7 +29,6 @@ authRouter.get('/google/callback', passport.authenticate('google', {
     const token = sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
     res.redirect(`http://localhost:3000/?token=${token}&username=${username}&email=${email}`);
   } catch (error) {
-    // Handle error
     console.error('Error generating token:', error);
     res.status(500).json({ message: 'Internal server error' });
   }

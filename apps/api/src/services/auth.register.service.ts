@@ -6,7 +6,7 @@ import {
   repoAddTenant,
   repoAddUser,
   repoFindTenant,
-  repoFindUser
+  repoFindUser, repoTenantChangePassword, repoUserChangePassword
 } from "../repository/auth.repository";
 
 // Define types for User and Tenant
@@ -130,4 +130,48 @@ export const serviceRegisterUser = async (request: User) => {
 // Tenant registration service
 export const serviceRegisterTenant = async (request: Tenant) => {
   return register(request, false);
+};
+
+// Change password for a user
+export const serviceChangeUserPassword = async (email: string, newPassword: string) => {
+  try {
+    const hashedPassword = await hashPassword(newPassword);
+    await repoUserChangePassword(email, hashedPassword);
+    console.log("User password changed successfully.");
+    return {
+      status: 200,
+      success: true,
+      message: "User password changed successfully.",
+    };
+  } catch (error) {
+    console.log(`Error changing user password: ${(error as Error).message}`);
+    return {
+      status: 500,
+      success: false,
+      message: "Server error",
+      error: (error as Error).message,
+    };
+  }
+};
+
+// Change password for a tenant
+export const serviceChangeTenantPassword = async (email: string, newPassword: string) => {
+  try {
+    const hashedPassword = await hashPassword(newPassword);
+    await repoTenantChangePassword(email, hashedPassword);
+    console.log("Tenant password changed successfully.");
+    return {
+      status: 200,
+      success: true,
+      message: "Tenant password changed successfully.",
+    };
+  } catch (error) {
+    console.log(`Error changing tenant password: ${(error as Error).message}`);
+    return {
+      status: 500,
+      success: false,
+      message: "Server error",
+      error: (error as Error).message,
+    };
+  }
 };
