@@ -2,9 +2,9 @@ import React from 'react';
 import { HStack, Heading, Button, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import UserMenu from './UserMenu';
-import { User } from '@/types';
+import { HeaderProps } from '@/types';
 
-const Header: React.FC<{}> = ({
+const Header: React.FC<HeaderProps> = ({
   loggedIn,
   user,
   onOpen,
