@@ -41,7 +41,7 @@ export default function Nav() {
   };
 
   return (
-    <div style={{ zIndex: 999 }}>
+    <div className=" z" style={{ zIndex: 999 }}>
       <Header
         loggedIn={loggedIn}
         user={user}
