@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import { serviceRegisterUser, serviceRegisterTenant, serviceLogin, serviceVerifyEmail } from "../services/auth.service";
+import { serviceRegisterUser, serviceRegisterTenant} from "../services/auth.register.service";
+import { serviceLogin } from "@/services/auth.login.service";
+import { serviceVerifyEmail } from "@/services/auth.verify.service";
 
 export const registerUser = async (req: Request, res: Response) => {
   const result = await serviceRegisterUser(req.body);

@@ -19,8 +19,6 @@ authRouter.post('/login', login);
 authRouter.get('/verify-email', verifyEmail);
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-
 authRouter.get('/google/callback', passport.authenticate('google', { 
   failureRedirect: 'http://localhost:3000',
 }), (req: Request, res: Response) => {
@@ -38,7 +36,5 @@ authRouter.get('/google/callback', passport.authenticate('google', {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
 
 export default authRouter;
