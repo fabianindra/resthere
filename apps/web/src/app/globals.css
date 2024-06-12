@@ -22,3 +22,7 @@
   background-color: #2563eb; /* Warna hari yang dipilih dengan keyboard */
   color: white;
 }
+
+.nav {
+  z-index: 9999;
+}
