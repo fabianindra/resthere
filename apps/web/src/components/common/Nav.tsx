@@ -6,6 +6,7 @@ import { User } from '@/types';
 import LoginModal from './LoginModal';
 import Header from './Header';
 import Cookies from 'js-cookie';
+import UserMenu from './UserMenu';
 
 export default function Nav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -41,16 +42,19 @@ export default function Nav() {
 
   return (
     <div className='z-50'>
-      <Header
-        loggedIn={loggedIn}
-        user={user}
-        onOpen={onOpen}
-        handleLogout={handleLogout}
-      />
       <HStack justifyContent="space-between" pr={20} pt={8}>
-        <HStack spacing={4}>
-          {' '}
-        </HStack>
+        <Header
+          loggedIn={loggedIn}
+          user={user}
+          onOpen={onOpen}
+          handleLogout={handleLogout}
+        />
+        <UserMenu
+          loggedIn={loggedIn}
+          user={user}
+          onOpen={onOpen}
+          handleLogout={handleLogout}
+        />
       </HStack>
       <LoginModal
         isOpen={isOpen}

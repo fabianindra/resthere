@@ -9,19 +9,12 @@ import {
 } from '@chakra-ui/react';
 import { SignOut, UserCircle, SignIn, Table } from '@phosphor-icons/react';
 import Link from 'next/link';
-import { User } from '@/types';
-
-interface UserMenuProps {
-  loggedIn: boolean;
-  user: User | null;
-  onOpen: () => void;
-  handleLogout: () => void;
-}
+import { UserMenuProps } from '@/types';
 
 const UserMenu: React.FC<UserMenuProps> = ({ loggedIn, user, onOpen, handleLogout }) => {
   return (
     <Menu>
-      <MenuButton>
+      <MenuButton >
         <HStack>
           <UserCircle className="text-primary" size={50} weight="duotone" />
           {loggedIn && user && <Text fontWeight={'semibold'}>{user.username}</Text>}
@@ -43,7 +36,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ loggedIn, user, onOpen, handleLogou
             </Text>
           </MenuItem>
         )}
-        <Link href={"/dashboard"}>
+        <Link href="/dashboard">
           <MenuItem color={'primary'}>
             <Table size={32} />
             <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
