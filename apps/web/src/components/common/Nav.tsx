@@ -1,58 +1,66 @@
-import {
-  Button,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  Image,
-  Heading,
-} from '@chakra-ui/react';
-import { SignOut, UserCircle } from '@phosphor-icons/react/dist/ssr';
-import Link from 'next/link';
-import React from 'react';
+'use client';
+
+import { HStack, useDisclosure } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { User } from '@/types';
+import LoginModal from './LoginModal';
+import UserMenu from './UserMenu';
+import Header from './Header';
+import Cookies from 'js-cookie';
 
 export default function Nav() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const username = urlParams.get('username');
+    const email = urlParams.get('email');
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setLoggedIn(true);
+    }
+
+    if (token) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify({ username, email }));
+      setLoggedIn(true);
+      window.location.href = '/';
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user'); // Remove stored user data
+    Cookies.remove('token');
+    setLoggedIn(false);
+    setUser(null);
+  };
+
   return (
-    <HStack
-      justifyContent={'space-between'}
-      className=" sticky px-20 py-8 bg-[#FFFFFF]"
-    >
-      <Link href={'/'}>
-        {/* <Image src="/logo.png" width={'100px'} /> */}
-        <Heading ml={-4} color={'primary'} as="h2" size="lg">
-          Hostel
-        </Heading>
-      </Link>
-
-      <HStack>
-        <Button
-          border={'2px'}
-          borderColor={'gray.300'}
-          borderRadius={50}
-          variant="outline"
-        >
-          {/* Tenant */}
-          {/* <Text fontWeight={'light'}>List Your Property</Text> */}
-          {/* User */}
-          <Text fontWeight={'light'}>Transaction</Text>
-        </Button>
-
-        <Menu>
-          <MenuButton>
-            <UserCircle className="text-primary" size={50} weight="duotone" />
-          </MenuButton>
-          <MenuList>
-            <MenuItem color={'primary'}>
-              <SignOut size={32} />
-              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                LogOut
-              </Text>
-            </MenuItem>
-          </MenuList>
-        </Menu>
+    <div style={{ zIndex: 999 }}>
+      <Header
+        loggedIn={loggedIn}
+        user={user}
+        onOpen={onOpen}
+        handleLogout={handleLogout}
+      />
+      <HStack justifyContent="space-between" pr={20} pt={8}>
+        <HStack spacing={4}>
+          {' '}
+          {/* Adjust spacing as needed */}
+          {/* Add other navigation components here */}
+        </HStack>
       </HStack>
-    </HStack>
+      <LoginModal
+        isOpen={isOpen}
+        onClose={onClose}
+        setLoggedIn={setLoggedIn}
+        setUser={setUser}
+      />
+    </div>
   );
 }

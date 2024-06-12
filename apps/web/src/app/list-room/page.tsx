@@ -10,8 +10,12 @@ import { Box, HStack } from '@chakra-ui/react';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
+<<<<<<< HEAD
 export default function page() {
   const searchParams = useSearchParams();
+=======
+export default function Page() {
+>>>>>>> dee74e7d69f874d8033fbfb9d0d3d4d7e83c2cc8
   const [guest, setGuest] = useState(1);
   const [dataRoom, setDataRoom] = useState<any>([]);
   const [page, setPage] = useState(1);
@@ -73,7 +77,11 @@ export default function page() {
               );
             })}
       </HStack>
+<<<<<<< HEAD
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
+=======
+      <SimplePagination page={Page} setPage={''} maxPage={10} />
+>>>>>>> dee74e7d69f874d8033fbfb9d0d3d4d7e83c2cc8
     </Box>
   );
 }
