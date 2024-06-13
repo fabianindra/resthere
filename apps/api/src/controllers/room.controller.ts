@@ -3,18 +3,26 @@ import {
   serviceCheckRoom,
   serviceDeleteRoom,
   serviceGetALLRoom,
+  serviceGetRoomByProperty,
   serviceUpdateRoom,
 } from '../services/room.service';
 import { NextFunction, Request, Response } from 'express';
 
 export const getRoomController = async (req: Request, res: Response) => {
-  const response = await serviceGetALLRoom();
+  const response = await serviceGetALLRoom(req);
+  return res.status(Number(response?.status)).send(response);
+};
+
+export const getRoomByPropertyController = async (
+  req: Request,
+  res: Response,
+) => {
+  const response = await serviceGetRoomByProperty(req);
   return res.status(Number(response?.status)).send(response);
 };
 
 export const addRoomController = async (req: Request, res: Response) => {
   const response = await serviceAddRoom(req);
-  console.log(response, 'INI RESPONENT');
   return res.status(Number(response?.status)).send(response);
 };
 

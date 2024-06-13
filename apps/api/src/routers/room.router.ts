@@ -4,13 +4,16 @@ import {
   addRoomController,
   checkRoomController,
   deleteRoomController,
+  getRoomByPropertyController,
   getRoomController,
+  updateRoomController,
 } from '../controllers/room.controller';
 import { Router } from 'express';
 
 const roomRouter = Router();
 
-roomRouter.get('/', getRoomController);
+roomRouter.get('/detail/:room_id', getRoomController);
+roomRouter.get('/:property_id', getRoomByPropertyController);
 roomRouter.post(
   '/',
   // checkPropertyController,
@@ -22,8 +25,12 @@ roomRouter.put(
   '/:id',
   // checkRoomController,
   uploader('IMG', '/images').single('file'),
+  updateRoomController,
+);
+roomRouter.delete(
+  '/:id',
+  // checkRoomController,
   deleteRoomController,
 );
-roomRouter.delete('/:id', checkRoomController, deleteRoomController);
 
 export default roomRouter;

@@ -10,12 +10,8 @@ import { Box, HStack } from '@chakra-ui/react';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-<<<<<<< HEAD
 export default function page() {
   const searchParams = useSearchParams();
-=======
-export default function Page() {
->>>>>>> dee74e7d69f874d8033fbfb9d0d3d4d7e83c2cc8
   const [guest, setGuest] = useState(1);
   const [dataRoom, setDataRoom] = useState<any>([]);
   const [page, setPage] = useState(1);
@@ -34,7 +30,7 @@ export default function Page() {
 
   useEffect(() => {
     const cityParam = searchParams.get('city');
-    if (cityParam) {
+    if (cityParam && cityParam != undefined) {
       setCity(cityParam);
     }
   }, [searchParams]);
@@ -70,18 +66,16 @@ export default function Page() {
               return (
                 <CustomCard
                   key={item.id}
+                  id={item.id}
                   city={item.city_name}
                   name={item.name}
                   price={item.rooms[0].price}
+                  dashboard={false}
                 />
               );
             })}
       </HStack>
-<<<<<<< HEAD
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
-=======
-      <SimplePagination page={Page} setPage={''} maxPage={10} />
->>>>>>> dee74e7d69f874d8033fbfb9d0d3d4d7e83c2cc8
     </Box>
   );
 }

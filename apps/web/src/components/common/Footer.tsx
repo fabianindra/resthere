@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Text, VStack, Link } from '@chakra-ui/react';
+import { HStack, Heading, Text, VStack, Link } from '@chakra-ui/react';
 
 export const Footer = () => {
   return (
@@ -7,7 +7,7 @@ export const Footer = () => {
       flexWrap={'wrap'}
       alignItems={'start'}
       gap={8}
-      className="px-10 py-10"
+      className="px-20 py-10 "
     >
       <HStack>
         <Heading ml={-4} color={'primary'} as="h2" size="lg">

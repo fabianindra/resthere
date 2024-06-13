@@ -26,3 +26,17 @@ export interface Tenant {
   username: string;
   password: string; 
 };
+
+export interface HeaderProps {
+  loggedIn: boolean;
+  user: User | null;
+  onOpen: () => void;
+  handleLogout: () => void;
+}
+
+export interface UserMenuProps {
+  loggedIn: boolean;
+  user: User | null;
+  onOpen: () => void;
+  handleLogout: () => void;
+}

@@ -4,9 +4,9 @@ import { HStack, useDisclosure } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import LoginModal from './LoginModal';
-import UserMenu from './UserMenu';
 import Header from './Header';
 import Cookies from 'js-cookie';
+import UserMenu from './UserMenu';
 
 export default function Nav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,26 +34,27 @@ export default function Nav() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user'); // Remove stored user data
+    localStorage.removeItem('user');
     Cookies.remove('token');
     setLoggedIn(false);
     setUser(null);
   };
 
   return (
-    <div className=" z" style={{ zIndex: 999 }}>
-      <Header
-        loggedIn={loggedIn}
-        user={user}
-        onOpen={onOpen}
-        handleLogout={handleLogout}
-      />
+    <div className="z-50">
       <HStack justifyContent="space-between" pr={20} pt={8}>
-        <HStack spacing={4}>
-          {' '}
-          {/* Adjust spacing as needed */}
-          {/* Add other navigation components here */}
-        </HStack>
+        <Header
+          loggedIn={loggedIn}
+          user={user}
+          onOpen={onOpen}
+          handleLogout={handleLogout}
+        />
+        <UserMenu
+          loggedIn={loggedIn}
+          user={user}
+          onOpen={onOpen}
+          handleLogout={handleLogout}
+        />
       </HStack>
       <LoginModal
         isOpen={isOpen}

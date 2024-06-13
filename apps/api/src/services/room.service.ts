@@ -3,12 +3,14 @@ import {
   repoCheckRoom,
   repoDeleteRoom,
   repoGetRoom,
+  repoGetRoomByProperty,
   repoUpdateRoom,
 } from '../repository/room.repository';
 
-export const serviceGetALLRoom = async () => {
+export const serviceGetALLRoom = async (req: any) => {
+  const { room_id } = req.params;
   try {
-    const data = await repoGetRoom();
+    const data = await repoGetRoom(parseInt(room_id));
     return {
       status: 200,
       success: true,
@@ -16,6 +18,35 @@ export const serviceGetALLRoom = async () => {
       data: data,
     };
   } catch (error) {
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceGetRoomByProperty = async (req: any) => {
+  const { property_id } = req.params;
+  const { search, category, page, sortBy, sortDirection } = req.query;
+  try {
+    const data = await repoGetRoomByProperty({
+      property_id,
+      search,
+      category,
+      page,
+      sortBy,
+      sortDirection,
+    });
+    return {
+      status: 200,
+      success: true,
+      message: 'get all rooms property successfully',
+      data: data.data,
+      count: data.count._count._all,
+    };
+  } catch (error) {
+    console.log(error);
     return {
       status: 500,
       message: 'server error',
@@ -35,6 +66,7 @@ export const serviceAddRoom = async (req: any) => {
     property_id,
   } = req.body;
   const { file } = req;
+  console.log(req.body, file, 'HALOO');
   if (
     !name ||
     !price ||
@@ -48,7 +80,7 @@ export const serviceAddRoom = async (req: any) => {
     return {
       status: 401,
       success: true,
-      message: 'invalid input',
+      message: 'invalid input room',
     };
   }
   try {
@@ -58,7 +90,7 @@ export const serviceAddRoom = async (req: any) => {
       weekend_price: parseInt(weekend_price),
       capacity_person: parseInt(capacity_person),
       capacity_room: parseInt(capacity_room),
-      room_size: parseInt(room_size),
+      room_size: room_size,
       property_id: parseInt(property_id),
       image: file.filename,
     });
@@ -69,6 +101,7 @@ export const serviceAddRoom = async (req: any) => {
       data: data,
     };
   } catch (error) {
+    console.error(error);
     return {
       status: 500,
       message: 'server error',
@@ -85,16 +118,15 @@ export const serviceUpdateRoom = async (req: any) => {
     capacity_person,
     capacity_room,
     room_size,
-    id,
   } = req.body;
   const { file } = req;
   if (
-    !name ||
-    !price ||
-    !weekend_price ||
-    !capacity_person ||
-    !capacity_room ||
-    !room_size ||
+    !name &&
+    !price &&
+    !weekend_price &&
+    !capacity_person &&
+    !capacity_room &&
+    !room_size &&
     !file
   ) {
     return {
@@ -111,9 +143,9 @@ export const serviceUpdateRoom = async (req: any) => {
       weekend_price: parseInt(weekend_price),
       capacity_person: parseInt(capacity_person),
       capacity_room: parseInt(capacity_room),
-      room_size: parseInt(room_size),
-      id: parseInt(id),
-      image: file.path,
+      room_size,
+      id: parseInt(req.params.id),
+      image: file?.path,
     });
     return {
       status: 201,
@@ -122,6 +154,7 @@ export const serviceUpdateRoom = async (req: any) => {
       data: data,
     };
   } catch (error) {
+    console.error(error);
     return {
       status: 500,
       message: 'server error',

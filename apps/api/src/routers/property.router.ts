@@ -3,7 +3,9 @@ import {
   addPropertyController,
   checkPropertyController,
   deletePropertyController,
+  getPropertyControllerById,
   getPropertyControllerByRooms,
+  getPropertyControllerByTenant,
   updtePropertyController,
 } from '../controllers/property.controller';
 import { Router } from 'express';
@@ -11,6 +13,9 @@ import { Router } from 'express';
 const propertyRouter = Router();
 
 propertyRouter.get('/', getPropertyControllerByRooms);
+propertyRouter.get('/:tenant_id', getPropertyControllerByTenant);
+propertyRouter.get('/detail/:property_id', getPropertyControllerById);
+
 propertyRouter.post(
   '/',
   uploader('IMG', '/images').single('file'),

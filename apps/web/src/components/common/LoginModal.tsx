@@ -12,7 +12,6 @@ import {
   FormLabel,
   Input,
   Text,
-  useDisclosure,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
@@ -41,7 +40,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, setLoggedIn, s
       if (response.data) {
         const userData = response.data.data;
         const userToken = response.data.token;
-        localStorage.setItem('user', JSON.stringify(userData)); // Store user data
+        localStorage.setItem('user', JSON.stringify(userData));
         Cookies.set('token', userToken, { expires: 1 });
         console.log('Login successful', response.data);
         setLoggedIn(true);

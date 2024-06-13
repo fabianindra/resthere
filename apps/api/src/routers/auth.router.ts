@@ -9,12 +9,9 @@ const authRouter = Router();
 authRouter.post('/register-user', registerUser);
 authRouter.post('/register-tenant', registerTenant);
 authRouter.post('/login', login);
-authRouter.post('/change-password-user',)
 
-authRouter.get('/verify-email', (req: Request, res: Response) => {
-  verifyEmail;
-  res.redirect('http://localhost:3000');
-});
+authRouter.get('/verify-email', verifyEmail);
+
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 authRouter.get('/google/callback', passport.authenticate('google', { 
