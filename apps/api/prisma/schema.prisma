@@ -68,15 +68,34 @@ model Room {
   updatedAt     DateTime @updatedAt
 
   property            Property  @relation(fields: [property_id], references: [id])
-  property_id         Int     
+  property_id         Int
+
+  special_price       SpecialPrice[]
+
+  room_availability RoomAvailability[]     
 }
 
 model SpecialPrice {
   id            Int      @id @default(autoincrement())
-  date          DateTime 
+  start_date          DateTime 
+  end_date          DateTime
   special_price      Int 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  room            Room @relation(fields: [room_id], references: [id])
+  room_id         Int 
+}
+
+model RoomAvailability {
+  id            Int      @id @default(autoincrement())
+  start_date          DateTime 
+  end_date          DateTime 
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  room            Room @relation(fields: [room_id], references: [id])
+  room_id         Int 
 }
 
 model Transaction {

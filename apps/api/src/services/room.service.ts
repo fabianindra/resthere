@@ -11,6 +11,7 @@ export const serviceGetALLRoom = async (req: any) => {
   const { room_id } = req.params;
   try {
     const data = await repoGetRoom(parseInt(room_id));
+    console.log(data, room_id);
     return {
       status: 200,
       success: true,

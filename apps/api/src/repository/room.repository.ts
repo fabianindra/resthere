@@ -58,6 +58,17 @@ export const repoGetRoomByProperty = async ({
   };
 };
 
+export const repoGetRoomSpecialPrice = async (id_room: number) => {
+  return prisma.room.findUnique({
+    where: {
+      id: id_room,
+    },
+    include: {
+      special_price: true,
+    },
+  });
+};
+
 export const repoAddRoom = async ({
   name,
   price,

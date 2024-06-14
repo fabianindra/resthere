@@ -7,6 +7,7 @@ import session from 'express-session';
 import authRouter from './routers/auth.router';
 import propertyRouter from './routers/property.router';
 import roomRouter from './routers/room.router';
+import specialPriceRouter from './routers/specialprice.router';
 
 import passport from './passport.config';
 
@@ -21,7 +22,9 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(session({ secret: sessionSecret, resave: false, saveUninitialized: false }));
+app.use(
+  session({ secret: sessionSecret, resave: false, saveUninitialized: false }),
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -29,6 +32,7 @@ app.use(passport.session());
 app.use('/api/auth', authRouter);
 app.use('/api/property', propertyRouter);
 app.use('/api/room', roomRouter);
+app.use('/api/specialprice', specialPriceRouter);
 
 const PORT = 6570;
 
