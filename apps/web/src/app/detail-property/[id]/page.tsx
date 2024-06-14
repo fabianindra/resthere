@@ -13,6 +13,7 @@ import {
   Divider,
   Box,
   useDisclosure,
+  Heading,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -24,6 +25,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import ModalAddRoom from '@/components/layout/property-detail/ModalAddRoom';
 import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
+import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
+import Link from 'next/link';
 
 export default function Page() {
   const [page, setPage] = useState<number>(1);
@@ -65,7 +68,16 @@ export default function Page() {
 
   return (
     <Box className="px-16">
-      <HStack my={20} justifyContent={'space-between'}>
+      <Link href={'/dashboard'}>
+        <HStack my={10}>
+          <ArrowLeft size={32} />
+          <Heading ml={8} size={'lg'}>
+            {property ? property.name : 'Property Details'}
+          </Heading>
+        </HStack>
+      </Link>
+
+      <HStack my={10} justifyContent={'space-between'}>
         <InputGroup w={300}>
           <Input
             onChange={(e) => setSearch(e.target.value)}
@@ -121,7 +133,7 @@ export default function Page() {
           </Button>
         </HStack>
       </HStack>
-      <HStack justifyContent={'start'} gap={8} my={10}>
+      <HStack justifyContent={'start'} gap={8} my={8}>
         {rooms.map((item: any) => (
           <CustomCardRoom
             key={item.id}
