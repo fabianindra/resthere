@@ -16,7 +16,7 @@ import React from 'react';
 import Link from 'next/link';
 import ModalEditRoom from './ModalEditRoom';
 import ModalDeleteRoom from './ModalDeleteRoom';
-import ModalRoomDetail from './ModalRoomDetail';
+import ModalRoomDetail from '../property-detail/ModalRoomDetail';
 
 export default function CustomCardRoom({
   id,

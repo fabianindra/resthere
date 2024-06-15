@@ -1,16 +1,25 @@
 import {
   serviceAddSpecialPrice,
   serviceDeleteSpecialPrice,
-  serviceGetDetailSpecialPrice,
+  serviceGetSpecialPriceById,
+  serviceGetSpecialPriceByRoom,
   serviceUpdateSpecialPrice,
 } from '../services/sepecialprice.service';
 import { NextFunction, Request, Response } from 'express';
 
-export const getDetailSpecialPriceController = async (
+export const getSpecialPriceByRoomController = async (
   req: Request,
   res: Response,
 ) => {
-  const response = await serviceGetDetailSpecialPrice(req);
+  const response = await serviceGetSpecialPriceByRoom(req);
+  return res.status(Number(response?.status)).send(response);
+};
+
+export const getSpecialPriceByIdController = async (
+  req: Request,
+  res: Response,
+) => {
+  const response = await serviceGetSpecialPriceById(req);
   return res.status(Number(response?.status)).send(response);
 };
 

@@ -2,10 +2,18 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getDetailSpecialPrice = async (room_id: number) => {
+export const getSpecialPriceByRoom = async (room_id: number) => {
+  return prisma.specialPrice.findMany({
+    where: {
+      room_id: room_id,
+    },
+  });
+};
+
+export const getSpecialPriceById = async (id: number) => {
   return prisma.specialPrice.findUnique({
     where: {
-      id: room_id,
+      id: id,
     },
   });
 };

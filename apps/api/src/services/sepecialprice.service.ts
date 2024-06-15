@@ -2,13 +2,33 @@ import {
   addSpecialPrice,
   deleteSpecialRoom,
   editSpecialPrice,
-  getDetailSpecialPrice,
+  getSpecialPriceById,
+  getSpecialPriceByRoom,
 } from '../repository/specialprice.repository';
 
-export const serviceGetDetailSpecialPrice = async (req: any) => {
+export const serviceGetSpecialPriceByRoom = async (req: any) => {
   const { room_id } = req.params;
   try {
-    const data = await getDetailSpecialPrice(parseInt(room_id));
+    const data = await getSpecialPriceByRoom(parseInt(room_id));
+    return {
+      status: 200,
+      success: true,
+      message: 'get detail special price successfully',
+      data: data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: 'server error',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceGetSpecialPriceById = async (req: any) => {
+  const { id } = req.params;
+  try {
+    const data = await getSpecialPriceById(parseInt(id));
     return {
       status: 200,
       success: true,

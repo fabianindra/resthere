@@ -7,6 +7,10 @@ export const repoGetRoom = async (id: number) => {
     where: {
       id: id,
     },
+    include: {
+      special_price: true,
+      room_availability: true,
+    },
   });
 };
 
