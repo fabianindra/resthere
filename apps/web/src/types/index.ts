@@ -37,6 +37,6 @@ export interface HeaderProps {
 export interface UserMenuProps {
   loggedIn: boolean;
   user: User | null;
-  onOpen: () => void;
+  onOpen?: () => void;
   handleLogout: () => void;
 }

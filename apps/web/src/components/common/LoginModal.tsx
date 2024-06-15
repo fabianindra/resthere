@@ -40,8 +40,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, setLoggedIn, s
       if (response.data) {
         const userData = response.data.data;
         const userToken = response.data.token;
-        localStorage.setItem('user', JSON.stringify(userData));
+        const userRole = response.data.role;
+        Cookies.set('user', JSON.stringify(userData));
         Cookies.set('token', userToken, { expires: 1 });
+        Cookies.set('role', userRole, { expires: 1 });
         console.log('Login successful', response.data);
         setLoggedIn(true);
         setUser(userData)

@@ -14,7 +14,7 @@ authRouter.get('/verify-email', verifyEmail);
 
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-authRouter.get('/google/callback', passport.authenticate('google', { 
+authRouter.get('/google/callback', passport.authenticate('google', {
   failureRedirect: 'http://localhost:3000',
 }), (req: Request, res: Response) => {
   try {
@@ -24,7 +24,9 @@ authRouter.get('/google/callback', passport.authenticate('google', {
     const user = req.user as User;
     const { username, email } = user;
     const token = sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
-    res.redirect(`http://localhost:3000/?token=${token}&username=${username}&email=${email}`);
+    const role = 'user';
+
+    res.redirect(`http://localhost:3000/?token=${token}&username=${username}&email=${email}&role=${role}`);
   } catch (error) {
     console.error('Error generating token:', error);
     res.status(500).json({ message: 'Internal server error' });
