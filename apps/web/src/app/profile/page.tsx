@@ -4,18 +4,37 @@ import { VStack, Box, Text, Button, Avatar } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import Cookies from 'js-cookie';
+import { verifyTokenClient } from '../verifyToken';
+import Link from 'next/link';
 
 export default function ProfilePage() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-
+  const [verified, setVerified] = useState(false);
+  
   useEffect(() => {
     const storedUser = Cookies.get('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setLoggedIn(true);
     }
-  }, []);
+    }, []);
+
+  useEffect(() => {
+        const verifyAndSet = async () => {
+            try {
+                const isValidToken = await verifyTokenClient();
+                setVerified(isValidToken)
+                //check verified
+                console.log(isValidToken)
+
+            } catch (error) {
+                console.error("Error verifying token:", error);
+                setVerified(false);
+            }
+        };
+        verifyAndSet();
+    }, []);
 
   const handleLogout = () => {
     Cookies.remove('user');
@@ -26,7 +45,18 @@ export default function ProfilePage() {
     window.location.href = '/';
   };
 
-  return (
+if (!verified) {
+    return (
+        <div>
+          <VStack mt={100} mb={200}>
+            <Text>You are not authorized. Please log in to access this page.</Text>
+            <Link href="/">Go to Home Page</Link>
+          </VStack>
+        </div>
+    );
+  } 
+  
+return (
     <div className="z-50">
       <VStack align="stretch" pr={20} pt={8} spacing={8}>
         {loggedIn && user ? (

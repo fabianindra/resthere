@@ -19,7 +19,8 @@ const comparePasswords = async (password: string, hashedPassword: string): Promi
 };
 
 // Token creation function
-const createToken = (payload: object, secret: string, expiresIn: string): string => {
+const createToken = (payload: object, expiresIn: string): string => {
+  const secret = process.env.JWT_SECRET!;
   return sign(payload, secret, { expiresIn });
 };
 
@@ -60,7 +61,7 @@ export const serviceLogin = async (request: any) => {
     const isValidPassword = await comparePasswords(password, entity.password);
     if (isValidPassword) {
       const jwtPayload = { email, userType };
-      const token = createToken(jwtPayload, 'keyOFkey', '1h');
+      const token = createToken(jwtPayload, '1h');
       const { password, ...entityWithoutPassword } = entity; // Destructuring to remove password
       return {
         status: 201,

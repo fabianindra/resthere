@@ -39,6 +39,7 @@ export default function Nav() {
 
   const handleLogout = () => {
     Cookies.remove('token');
+    Cookies.remove('user');
     Cookies.remove('role');
     setLoggedIn(false);
     setUser(null);
