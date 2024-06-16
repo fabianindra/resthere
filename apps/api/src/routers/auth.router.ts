@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import passport from '../passport.config';
 import { sign } from 'jsonwebtoken';
 import { User } from '@prisma/client';
-import { login, registerTenant, registerUser, verifyEmail } from '../controllers/auth.controller';
+import { changeTenantPassword, changeUserPassword, login, registerTenant, registerUser, verifyEmail } from '../controllers/auth.controller';
 import { serviceVerifyToken } from '@/middlewares/auth.middleware';
 
 const authRouter = Router();
@@ -36,5 +36,8 @@ authRouter.get('/google/callback', passport.authenticate('google', {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+authRouter.post('/change-password-user', changeUserPassword);
+authRouter.post('/change-password-tenant', changeTenantPassword);
 
 export default authRouter;

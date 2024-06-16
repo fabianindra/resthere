@@ -24,9 +24,12 @@ import usePropertyData from '../../hooks/property/usePropertyData';
 import ModalAddProperty from '../../components/layout/dashboard/ModalAddProperty';
 import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
+import ChangePasswordModal from '@/components/layout/profile/changePassword';
 
 export default function Page() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isAddPropertyModalOpen, onOpen: onAddPropertyModalOpen, onClose: onAddPropertyModalClose } = useDisclosure();
+  const { isOpen: isChangePasswordModalOpen, onOpen: onChangePasswordModalOpen, onClose: onChangePasswordModalClose } = useDisclosure();
+  
   const [verified, setVerified] = useState(false);
   const {
     dataRoom,
@@ -116,12 +119,14 @@ if (!verified) {
             />
           </Center>
           <Button
-            onClick={onOpen}
+            onClick={onAddPropertyModalOpen}
             rightIcon={<Plus size={20} />}
             variant="outline"
           >
             Add Property
           </Button>
+          {/* Button to open ChangePasswordModal */}
+          <Button onClick={onChangePasswordModalOpen}>Change Password</Button>
         </HStack>
       </HStack>
       <HStack justifyContent={'start'} gap={8} my={10}>
@@ -139,7 +144,9 @@ if (!verified) {
             ))}
       </HStack>
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
-      <ModalAddProperty isOpen={isOpen} onClose={onClose} />
+      <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={onChangePasswordModalClose} />
+      {/* Render the ModalAddProperty component */}
+      <ModalAddProperty isOpen={isAddPropertyModalOpen} onClose={onAddPropertyModalClose} />
     </Box>
   );
 }

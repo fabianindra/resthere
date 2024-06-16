@@ -43,6 +43,7 @@ export default function Nav() {
     Cookies.remove('role');
     setLoggedIn(false);
     setUser(null);
+    window.location.href = '/';
   };
 
   return (

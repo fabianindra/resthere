@@ -6,57 +6,59 @@ import { User } from '@/types';
 import Cookies from 'js-cookie';
 import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
+import { useDisclosure } from '@chakra-ui/react';
+import ChangePasswordModal from '@/components/layout/profile/changePassword';
 
 export default function ProfilePage() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [verified, setVerified] = useState(false);
-  
+
   useEffect(() => {
     const storedUser = Cookies.get('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setLoggedIn(true);
     }
-    }, []);
+  }, []);
 
   useEffect(() => {
-        const verifyAndSet = async () => {
-            try {
-                const isValidToken = await verifyTokenClient();
-                setVerified(isValidToken)
-                //check verified
-                console.log(isValidToken)
-
-            } catch (error) {
-                console.error("Error verifying token:", error);
-                setVerified(false);
-            }
-        };
-        verifyAndSet();
-    }, []);
+    const verifyAndSet = async () => {
+      try {
+        const isValidToken = await verifyTokenClient();
+        setVerified(isValidToken);
+        // Check verified
+        console.log(isValidToken);
+      } catch (error) {
+        console.error("Error verifying token:", error);
+        setVerified(false);
+      }
+    };
+    verifyAndSet();
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove('user');
     Cookies.remove('token');
-    Cookies.remove('role')
+    Cookies.remove('role');
     setLoggedIn(false);
     setUser(null);
     window.location.href = '/';
   };
 
-if (!verified) {
+  if (!verified) {
     return (
-        <div>
-          <VStack mt={100} mb={200}>
-            <Text>You are not authorized. Please log in to access this page.</Text>
-            <Link href="/">Go to Home Page</Link>
-          </VStack>
-        </div>
+      <div>
+        <VStack mt={100} mb={200}>
+          <Text>You are not authorized. Please log in to access this page.</Text>
+          <Link href="/">Go to Home Page</Link>
+        </VStack>
+      </div>
     );
-  } 
-  
-return (
+  }
+
+  return (
     <div className="z-50">
       <VStack align="stretch" pr={20} pt={8} spacing={8}>
         {loggedIn && user ? (
@@ -65,11 +67,15 @@ return (
             <Text fontSize="2xl" mt={4}>{user.username}</Text>
             <Text fontSize="lg" color="gray.500">{user.email}</Text>
             <Button mt={4} colorScheme="teal" onClick={handleLogout}>Logout</Button>
+            <Button mt={4} colorScheme="blue" onClick={onOpen}>Change Password</Button>
           </Box>
         ) : (
-          <Text fontSize="xl" textAlign="center" marginTop={100} marginBottom={150}>You need to log in to view your profile.</Text>
+          <Text fontSize="xl" textAlign="center" marginTop={100} marginBottom={150}>
+            You need to log in to view your profile.
+          </Text>
         )}
       </VStack>
+      <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
     </div>
   );
 }
