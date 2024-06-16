@@ -9,6 +9,7 @@ export interface User extends PrismaUser {}
 interface ServiceRegisterGoogleResponse {
   user: User;
   token: string;
+  role: string;
 }
 
 function generateRandomPassword(length: number = 12): string {
@@ -35,7 +36,7 @@ export const serviceRegisterGoogle = async (accessToken: string, refreshToken: s
         data: {
           username: profile.displayName || '',
           email,
-          password: generateRandomPassword(), 
+          password: generateRandomPassword(),
         },
       });
     }
@@ -43,7 +44,7 @@ export const serviceRegisterGoogle = async (accessToken: string, refreshToken: s
     const jwtPayload = { email: user.email, userType: 'user' };
     const token = sign(jwtPayload, process.env.JWT_SECRET!, { expiresIn: '1h' });
 
-    return { user, token };
+    return { user, token, role: 'user' };
   } catch (error) {
     throw error;
   }

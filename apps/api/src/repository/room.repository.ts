@@ -73,7 +73,7 @@ export const repoAddRoom = async ({
   weekend_price: number;
   capacity_person: number;
   capacity_room: number;
-  room_size: string;
+  room_size: number;
   property_id: number;
   image: string;
 }) => {
@@ -106,7 +106,7 @@ export const repoUpdateRoom = async ({
   weekend_price: number;
   capacity_person: number;
   capacity_room: number;
-  room_size: string;
+  room_size: number;
   id: number;
   image: string;
 }) => {

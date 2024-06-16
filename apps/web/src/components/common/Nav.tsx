@@ -14,11 +14,14 @@ export default function Nav() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = Cookies.get('user');
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     const username = urlParams.get('username');
     const email = urlParams.get('email');
+    const roleGoogle = urlParams.get('role');
+
+    console.log(Cookies.get('role'))
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -26,16 +29,18 @@ export default function Nav() {
     }
 
     if (token) {
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify({ username, email }));
-      setLoggedIn(true);
+      Cookies.set('token', token);
+      Cookies.set('user', JSON.stringify({ username, email }));
+      Cookies.set('role', String(roleGoogle).toLowerCase());
       window.location.href = '/';
     }
+    
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
     Cookies.remove('token');
+    Cookies.remove('user');
+    Cookies.remove('role');
     setLoggedIn(false);
     setUser(null);
   };

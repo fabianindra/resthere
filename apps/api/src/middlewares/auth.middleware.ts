@@ -1,39 +1,31 @@
-import { verify } from "jsonwebtoken";
+// middleware/serviceVerifyToken.ts
+import { verify } from 'jsonwebtoken';
+import type { NextFunction, Request, Response } from 'express';
 
-// Token verification function
 const verifyToken = (token: string, secret: string): any => {
   return verify(token, secret);
 };
 
-// Token verification middleware
-export const serviceVerifyToken = async (request: any, next: any) => {
+export const serviceVerifyToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = request.header("Authorization")?.replace("Bearer ", "").trim();
+    const token = req.headers.authorization?.replace('Bearer ', '').trim();
 
     if (!token) {
-      return {
-        status: 401,
-        message: "Invalid token, unauthorized",
-      };
+      return res.status(401).json({ message: 'Invalid token, unauthorized' });
     }
 
-    const verifiedUser = verifyToken(token, "keyOFkey");
+    const verifiedUser = verifyToken(token, process.env.JWT_SECRET!);
     if (!verifiedUser) {
-      return {
-        status: 401,
-        message: "Expired token",
-      };
+      return res.status(401).json({ message: 'Expired token' });
     }
 
-    request.user = verifiedUser;
-
+    req.user = verifiedUser;
     next();
   } catch (error) {
-    console.log(error);
-    return {
-      status: 500,
-      message: "Register Error",
+    console.error(error);
+    return res.status(500).json({
+      message: 'Verification error',
       error: (error as Error).message,
-    };
+    });
   }
 };
