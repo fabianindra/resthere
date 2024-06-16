@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
 import {
@@ -12,7 +12,7 @@ import {
   InputGroup,
   InputRightElement,
   Select,
-  useDisclosure,
+  useDisclosure, VStack, Text
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -22,9 +22,12 @@ import {
 } from '@phosphor-icons/react/dist/ssr';
 import usePropertyData from '../../hooks/property/usePropertyData';
 import ModalAddProperty from '../../components/layout/dashboard/ModalAddProperty';
+import { verifyTokenClient } from '../verifyToken';
+import Link from 'next/link';
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [verified, setVerified] = useState(false);
   const {
     dataRoom,
     page,
@@ -37,6 +40,33 @@ export default function Page() {
     sortDirection,
     handleDirections,
   } = usePropertyData();
+
+  useEffect(() => {
+    const verifyAndSet = async () => {
+        try {
+            const isValidToken = await verifyTokenClient();
+            setVerified(isValidToken)
+            //check verified
+            console.log(isValidToken)
+
+        } catch (error) {
+            console.error("Error verifying token:", error);
+            setVerified(false);
+        }
+    };
+    verifyAndSet();
+}, []);
+
+if (!verified) {
+  return (
+      <div>
+        <VStack mt={100} mb={200}>
+          <Text>You are not authorized. Please log in to access this page.</Text>
+          <Link href="/">Go to Home Page</Link>
+        </VStack>
+      </div>
+  );
+} 
 
   return (
     <Box className="px-16">
