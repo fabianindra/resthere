@@ -1,19 +1,19 @@
 import {
-  addSpecialPrice,
-  deleteSpecialRoom,
-  editSpecialPrice,
-  getSpecialPriceById,
-  getSpecialPriceByRoom,
-} from '../repository/specialprice.repository';
+  addRoomAvailability,
+  deleteRoomAvailability,
+  editRoomAvailability,
+  getRoomAvailabilityById,
+  getRoomAvailabilityByRoom,
+} from '../repository/roomavailability.repository';
 
-export const serviceGetSpecialPriceByRoom = async (req: any) => {
+export const serviceGetRoomAvailabilityByRoom = async (req: any) => {
   const { room_id } = req.params;
   try {
-    const data = await getSpecialPriceByRoom(parseInt(room_id));
+    const data = await getRoomAvailabilityByRoom(parseInt(room_id));
     return {
       status: 200,
       success: true,
-      message: 'get detail special price successfully',
+      message: 'get detail room availability successfully',
       data: data,
     };
   } catch (error) {
@@ -25,14 +25,14 @@ export const serviceGetSpecialPriceByRoom = async (req: any) => {
   }
 };
 
-export const serviceGetSpecialPriceById = async (req: any) => {
+export const serviceGetRoomAvailabilityById = async (req: any) => {
   const { id } = req.params;
   try {
-    const data = await getSpecialPriceById(parseInt(id));
+    const data = await getRoomAvailabilityById(parseInt(id));
     return {
       status: 200,
       success: true,
-      message: 'get detail special price successfully',
+      message: 'get detail room availability successfully',
       data: data,
     };
   } catch (error) {
@@ -44,19 +44,18 @@ export const serviceGetSpecialPriceById = async (req: any) => {
   }
 };
 
-export const serviceAddSpecialPrice = async (req: any) => {
-  const { room_id, start_date, end_date, special_price } = req.body;
+export const serviceAddRoomAvailability = async (req: any) => {
+  const { room_id, start_date, end_date } = req.body;
   try {
-    const data = await addSpecialPrice({
+    const data = await addRoomAvailability({
       room_id,
       start_date,
       end_date,
-      special_price,
     });
     return {
       status: 201,
       success: true,
-      message: 'add special price successfully',
+      message: 'add room availability successfully',
       data: data,
     };
   } catch (error) {
@@ -69,20 +68,19 @@ export const serviceAddSpecialPrice = async (req: any) => {
   }
 };
 
-export const serviceUpdateSpecialPrice = async (req: any) => {
-  const { specialprice_id, start_date, end_date, special_price } = req.body;
+export const serviceUpdateRoomAvailability = async (req: any) => {
+  const { roomavailability_id, start_date, end_date } = req.body;
   console.log(req.body);
   try {
-    const data = await editSpecialPrice({
-      specialprice_id,
+    const data = await editRoomAvailability({
+      roomavailability_id,
       start_date,
       end_date,
-      special_price: parseInt(special_price as string),
     });
     return {
       status: 201,
       success: true,
-      message: 'update special price successfully',
+      message: 'update room availability successfully',
       data: data,
     };
   } catch (error) {
@@ -95,17 +93,18 @@ export const serviceUpdateSpecialPrice = async (req: any) => {
   }
 };
 
-export const serviceDeleteSpecialPrice = async (req: any) => {
-  const { specialprice_id } = req.params;
+export const serviceDeleteRoomAvailability = async (req: any) => {
+  const { roomavailability_id } = req.params;
   try {
-    const data = await deleteSpecialRoom(parseInt(specialprice_id));
+    const data = await deleteRoomAvailability(parseInt(roomavailability_id));
     return {
       status: 201,
       success: true,
-      message: 'delete special price successfully',
+      message: 'delete room availability successfully',
       data: data,
     };
   } catch (error) {
+    console.log(error);
     return {
       status: 500,
       message: 'server error',

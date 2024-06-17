@@ -10,6 +10,7 @@ import roomRouter from './routers/room.router';
 import specialPriceRouter from './routers/specialprice.router';
 
 import passport from './passport.config';
+import roomAvailability from './routers/roomavailability.router';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/property', propertyRouter);
 app.use('/api/room', roomRouter);
 app.use('/api/specialprice', specialPriceRouter);
+app.use('/api/rommavailability', roomAvailability);
 
 const PORT = 6570;
 
