@@ -1,4 +1,3 @@
-// SpecialPriceTable.tsx
 import React from 'react';
 import {
   Table,
@@ -16,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { EditTableDate } from '@/components/ui/EditTableDate';
 import { TrashSimple } from '@phosphor-icons/react';
-import { useSpecialPriceForm } from '../../hooks/specialprice/useSpecialForm';
+import { useSpecialPriceForm } from '../../../hooks/specialprice/useSpecialForm';
 import { deleteSpecialPrice, editSpecialPrice } from '@/api/specialprice';
 
 export function SpecialPriceTable({

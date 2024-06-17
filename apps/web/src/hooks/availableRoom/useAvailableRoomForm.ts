@@ -1,40 +1,38 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useToast } from '@chakra-ui/react';
-import { addSpecialPrice } from '@/api/specialprice';
+import { addAvailableRoom } from '@/api/availableroom';
 
-const specialPriceSchema = Yup.object().shape({
+const availableRoomSchema = Yup.object().shape({
   room_id: Yup.number().required('Room ID is required'),
   start_date: Yup.string().required('Start date is required'),
   end_date: Yup.string().required('End date is required'),
-  special_price: Yup.number().required('Special price is required'),
 });
 
-export function useSpecialPriceForm(
+export function useAvailableRoomForm(
   initialValues: any,
-  toggleSpecialPrice: any,
+  toggleAvailableRoom: any,
 ) {
   const toast = useToast();
 
   const handleSubmit = async (values: any) => {
-    const { room_id, start_date, end_date, special_price } = values;
+    const { room_id, start_date, end_date } = values;
     console.log(room_id);
     try {
-      const response = await addSpecialPrice({
+      const response = await addAvailableRoom({
         room_id,
         start_date: new Date(start_date),
         end_date: new Date(end_date),
-        special_price,
       });
       toast({
-        title: 'Add special price successfuly',
+        title: 'Add available room successfuly',
         status: 'success',
         position: 'top',
         isClosable: true,
       });
     } catch (error) {
       toast({
-        title: 'Failed to add special price',
+        title: 'Failed to add available room',
         status: 'error',
         position: 'top',
         isClosable: true,
@@ -44,9 +42,9 @@ export function useSpecialPriceForm(
 
   const formik = useFormik({
     initialValues,
-    validationSchema: specialPriceSchema,
+    validationSchema: availableRoomSchema,
     onSubmit: (values) => {
-      toggleSpecialPrice();
+      toggleAvailableRoom();
       handleSubmit(values);
     },
   });
