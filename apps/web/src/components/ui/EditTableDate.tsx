@@ -6,12 +6,22 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-export function EditTableDate({ type, value }: { type: string; value: any }) {
+export function EditTableDate({
+  type,
+  value,
+  onSubmit,
+}: {
+  type: string;
+  value: any;
+  onSubmit: any;
+}) {
   return (
     <Editable
       textAlign="center"
-      defaultValue={type == 'date' ? 'YYYY-MM-DD' : '0'}
-      value={value}
+      defaultValue={
+        type == 'date' ? (value ? value : 'YYYY-MM-DD') : value ? value : '0'
+      }
+      onSubmit={onSubmit}
     >
       <EditablePreview />
       <Input type={type} as={EditableInput} />

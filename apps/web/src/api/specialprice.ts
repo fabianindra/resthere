@@ -34,8 +34,8 @@ export function editSpecialPrice({
   special_price,
 }: {
   specialprice_id: string;
-  start_date: number;
-  end_date: number;
+  start_date: string;
+  end_date: string;
   special_price: number;
 }) {
   axios.put(`http://localhost:6570/api/specialprice`, {

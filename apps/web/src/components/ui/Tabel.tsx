@@ -17,7 +17,7 @@ import {
 import { EditTableDate } from '@/components/ui/EditTableDate';
 import { TrashSimple } from '@phosphor-icons/react';
 import { useSpecialPriceForm } from '../../hooks/specialprice/useSpecialForm';
-import { deleteSpecialPrice } from '@/api/specialprice';
+import { deleteSpecialPrice, editSpecialPrice } from '@/api/specialprice';
 
 export function SpecialPriceTable({
   addSpecialPrice: boleanData,
@@ -53,6 +53,35 @@ export function SpecialPriceTable({
     } catch (error) {
       toast({
         title: 'Failed to delete special price',
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleEdit = async (
+    specialprice_id: string,
+    start_date: string,
+    end_date: string,
+    special_price: number,
+  ) => {
+    try {
+      const response = await editSpecialPrice({
+        specialprice_id,
+        start_date,
+        end_date,
+        special_price,
+      });
+      toast({
+        title: 'Edit successfuly',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Failed to edit',
         status: 'error',
         position: 'top',
         isClosable: true,
@@ -119,16 +148,41 @@ export function SpecialPriceTable({
           {dataSpecialPrice.map((value: any, index: number) => (
             <Tr key={index}>
               <Td>
-                <EditTableDate value={value.special_price} type="number" />
+                <EditTableDate
+                  onSubmit={(e: any) =>
+                    handleEdit(value.id, value.start_date, value.end_date, e)
+                  }
+                  value={value.special_price}
+                  type="number"
+                />
               </Td>
               <Td>
                 <EditTableDate
                   value={formatDate(value.start_date)}
                   type="date"
+                  onSubmit={(e: any) =>
+                    handleEdit(
+                      value.id,
+                      `${e}T00:00:00.000Z`,
+                      value.end_date,
+                      value.special_price,
+                    )
+                  }
                 />
               </Td>
               <Td>
-                <EditTableDate value={formatDate(value.end_date)} type="date" />
+                <EditTableDate
+                  value={formatDate(value.end_date)}
+                  type="date"
+                  onSubmit={(e: any) =>
+                    handleEdit(
+                      value.id,
+                      value.start_date,
+                      `${e}T00:00:00.000Z`,
+                      value.special_price,
+                    )
+                  }
+                />
               </Td>
               <Td>
                 <HStack
