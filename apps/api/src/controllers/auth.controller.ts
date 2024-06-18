@@ -29,13 +29,13 @@ export const verifyEmail = async (req: Request, res: Response) => {
 };
 
 export const changeUserPassword = async (req: Request, res: Response) => {
-  const { email, newPassword } = req.body;
-  const result = await serviceChangeUserPassword(email, newPassword);
+  const { email, currentPassword, newPassword } = req.body;
+  const result = await serviceChangeUserPassword(email, currentPassword, newPassword);
   return res.status(Number(result?.status)).send(result);
 };
 
 export const changeTenantPassword = async (req: Request, res: Response) => {
-  const { email, newPassword } = req.body;
-  const result = await serviceChangeTenantPassword(email, newPassword);
+  const { email, currentPassword, newPassword } = req.body;
+  const result = await serviceChangeTenantPassword(email, currentPassword, newPassword);
   return res.status(Number(result?.status)).send(result);
 };

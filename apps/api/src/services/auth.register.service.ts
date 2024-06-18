@@ -1,4 +1,4 @@
-import { genSalt, hash } from "bcrypt";
+import { genSalt, hash, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
@@ -133,8 +133,28 @@ export const serviceRegisterTenant = async (request: Tenant) => {
 };
 
 // Change password for a user
-export const serviceChangeUserPassword = async (email: string, newPassword: string) => {
+export const serviceChangeUserPassword = async (email: string, currentPassword: string, newPassword: string) => {
   try {
+    const user = await repoFindUser(email);
+
+    if (!user) {
+      return {
+        status: 404,
+        success: false,
+        message: "User not found",
+      };
+    }
+
+    const isMatch = await compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return {
+        status: 400,
+        success: false,
+        message: "Current password is incorrect",
+      };
+    }
+
     const hashedPassword = await hashPassword(newPassword);
     await repoUserChangePassword(email, hashedPassword);
     console.log("User password changed successfully.");
@@ -155,8 +175,28 @@ export const serviceChangeUserPassword = async (email: string, newPassword: stri
 };
 
 // Change password for a tenant
-export const serviceChangeTenantPassword = async (email: string, newPassword: string) => {
+export const serviceChangeTenantPassword = async (email: string, currentPassword: string, newPassword: string) => {
   try {
+    const tenant = await repoFindTenant(email);
+
+    if (!tenant) {
+      return {
+        status: 404,
+        success: false,
+        message: "Tenant not found",
+      };
+    }
+
+    const isMatch = await compare(currentPassword, tenant.password);
+
+    if (!isMatch) {
+      return {
+        status: 400,
+        success: false,
+        message: "Current password is incorrect",
+      };
+    }
+
     const hashedPassword = await hashPassword(newPassword);
     await repoTenantChangePassword(email, hashedPassword);
     console.log("Tenant password changed successfully.");
