@@ -13,7 +13,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import { addDataProperty } from '@/api/property';
 

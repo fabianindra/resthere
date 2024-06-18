@@ -16,6 +16,7 @@ import React from 'react';
 import Link from 'next/link';
 import ModalEditRoom from './ModalEditRoom';
 import ModalDeleteRoom from './ModalDeleteRoom';
+import ModalRoomDetail from '../property-detail/ModalRoomDetail';
 
 export default function CustomCardRoom({
   id,
@@ -31,6 +32,11 @@ export default function CustomCardRoom({
   dashboard: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenDetail,
+    onOpen: onOpenDetail,
+    onClose: onCloseDetail,
+  } = useDisclosure();
   return (
     <Card maxW="xs">
       <CardBody>
@@ -39,7 +45,7 @@ export default function CustomCardRoom({
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
-        <Link href={dashboard ? `detail-room/${id}` : ''}>
+        <Link href={dashboard ? `/detail-room/${id}` : ''}>
           <Heading size="md" mt={4}>
             {name}
           </Heading>
@@ -57,8 +63,16 @@ export default function CustomCardRoom({
             </Text>
           </Box>
         </HStack>
+        <Text
+          mt={8}
+          fontSize={'sm'}
+          className=" text-primary underline cursor-pointer"
+          onClick={onOpenDetail}
+        >
+          See Details
+        </Text>
         {dashboard ? (
-          <HStack justifyContent={'end'} mb={4} mt={10}>
+          <HStack justifyContent={'end'} mb={4} mt={6}>
             <Button
               onClick={onOpen}
               rightIcon={<PencilSimple size={20} />}
@@ -69,6 +83,11 @@ export default function CustomCardRoom({
             <ModalDeleteRoom id={id} />
           </HStack>
         ) : null}
+        <ModalRoomDetail
+          isOpen={isOpenDetail}
+          onClose={onCloseDetail}
+          roomId={id}
+        />
         <ModalEditRoom isOpen={isOpen} onClose={onClose} roomId={id} />
       </CardFooter>
     </Card>
