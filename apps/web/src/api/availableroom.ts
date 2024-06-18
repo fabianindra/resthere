@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 export function getDetailAvailableRoom(id: string) {
-  return axios.get(`http://localhost:6570/api/rommavailability/${id}`);
+  return axios.get(`http://localhost:6570/api/romm-availability/${id}`);
 }
 
 export function getAvailableRoomByRoom(room_id: string) {
-  return axios.get(`http://localhost:6570/api/rommavailability/${room_id}`);
+  return axios.get(`http://localhost:6570/api/romm-availability/${room_id}`);
 }
 
 export function addAvailableRoom({
@@ -17,7 +17,7 @@ export function addAvailableRoom({
   start_date: Date;
   end_date: Date;
 }) {
-  axios.post(`http://localhost:6570/api/rommavailability`, {
+  axios.post(`http://localhost:6570/api/romm-availability`, {
     room_id,
     start_date,
     end_date,
@@ -34,7 +34,7 @@ export function editAvailableRoom({
   end_date: string;
 }) {
   console.log();
-  axios.put(`http://localhost:6570/api/rommavailability`, {
+  axios.put(`http://localhost:6570/api/romm-availability`, {
     roomavailability_id,
     start_date,
     end_date,
@@ -43,6 +43,6 @@ export function editAvailableRoom({
 
 export function deleteAvailableRoom(roomavailability_id: string) {
   axios.delete(
-    `http://localhost:6570/api/rommavailability/${roomavailability_id}`,
+    `http://localhost:6570/api/romm-availability/${roomavailability_id}`,
   );
 }

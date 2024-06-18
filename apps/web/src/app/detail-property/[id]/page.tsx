@@ -14,6 +14,7 @@ import {
   Box,
   useDisclosure,
   Heading,
+  Image,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -21,12 +22,14 @@ import {
   SortDescending,
   Plus,
 } from '@phosphor-icons/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import ModalAddRoom from '@/components/layout/property-detail/ModalAddRoom';
 import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
+// import MyMap from '@/components/layout/property-detail/Map';
 import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 export default function Page() {
   const [page, setPage] = useState<number>(1);
@@ -64,7 +67,20 @@ export default function Page() {
     if (propertyId) {
       fetchRooms();
     }
+    console.log(search);
   }, [propertyId, page, search, category, sortBy, sortDirection]);
+
+  const MyMap = useMemo(
+    () =>
+      dynamic(() => import('@/components/layout/property-detail/Map'), {
+        loading: () => <p>A map is loading</p>,
+        ssr: false,
+      }),
+    [],
+  );
+
+  const position = [51.505, -0.09];
+  const zoom = 13;
 
   return (
     <Box className="px-16">
@@ -76,6 +92,17 @@ export default function Page() {
           </Heading>
         </HStack>
       </Link>
+
+      <Image
+        src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+        alt="Green double couch with wooden legs"
+        h={400}
+        mx={'auto'}
+        my={20}
+        borderRadius="lg"
+      />
+
+      <MyMap position={position} zoom={zoom} />
 
       <HStack my={10} justifyContent={'space-between'}>
         <InputGroup w={300}>
@@ -99,7 +126,7 @@ export default function Page() {
               <option value="price">Price</option>
             </Select>
           </HStack>
-          <HStack>
+          {/* <HStack>
             <Select
               onChange={(e) => setCategory(e.target.value)}
               placeholder="Category"
@@ -109,7 +136,7 @@ export default function Page() {
               <option value="Vila">Vila</option>
               <option value="Home Stay">Home Stay</option>
             </Select>
-          </HStack>
+          </HStack> */}
           <Button onClick={handleDirections} colorScheme="gray">
             {sortDirection === 'asc' ? (
               <SortAscending size={30} />
