@@ -70,7 +70,7 @@ export const serviceAddRoomAvailability = async (req: any) => {
 
 export const serviceUpdateRoomAvailability = async (req: any) => {
   const { roomavailability_id, start_date, end_date } = req.body;
-  console.log(req.body);
+  console.log(roomavailability_id);
   try {
     const data = await editRoomAvailability({
       roomavailability_id,

@@ -34,7 +34,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/property', propertyRouter);
 app.use('/api/room', roomRouter);
 app.use('/api/specialprice', specialPriceRouter);
-app.use('/api/rommavailability', roomAvailability);
+app.use('/api/romm-availability', roomAvailability);
 
 const PORT = 6570;
 

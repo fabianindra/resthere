@@ -29,12 +29,11 @@ export const serviceGetALLRoom = async (req: any) => {
 
 export const serviceGetRoomByProperty = async (req: any) => {
   const { property_id } = req.params;
-  const { search, category, page, sortBy, sortDirection } = req.query;
+  const { search, page, sortBy, sortDirection } = req.query;
   try {
     const data = await repoGetRoomByProperty({
       property_id,
       search,
-      category,
       page,
       sortBy,
       sortDirection,

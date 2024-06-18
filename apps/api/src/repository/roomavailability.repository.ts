@@ -37,6 +37,7 @@ export const editRoomAvailability = async ({
   start_date,
   end_date,
 }: any) => {
+  console.log(roomavailability_id);
   return prisma.roomAvailability.update({
     where: { id: roomavailability_id },
     data: {

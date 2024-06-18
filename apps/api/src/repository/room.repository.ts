@@ -17,14 +17,12 @@ export const repoGetRoom = async (id: number) => {
 export const repoGetRoomByProperty = async ({
   property_id,
   search,
-  category,
   page,
   sortBy,
   sortDirection,
 }: {
   property_id: string;
   search: string;
-  category: string;
   page: string;
   sortBy: 'name' | 'price';
   sortDirection: 'asc' | 'desc';
@@ -33,7 +31,6 @@ export const repoGetRoomByProperty = async ({
 
   const whereClause = {
     property_id: parseInt(property_id),
-    ...(category ? { category_property: category } : {}),
     ...(search ? { OR: [{ name: { contains: search } }] } : {}),
   };
   const count = await prisma.room.aggregate({

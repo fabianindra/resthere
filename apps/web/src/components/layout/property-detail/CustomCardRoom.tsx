@@ -45,11 +45,9 @@ export default function CustomCardRoom({
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
-        <Link href={dashboard ? `/detail-room/${id}` : ''}>
-          <Heading size="md" mt={4}>
-            {name}
-          </Heading>
-        </Link>
+        <Heading size="md" mt={4}>
+          {name}
+        </Heading>
       </CardBody>
       <CardFooter flexDirection={'column'}>
         <HStack justifyContent={'space-between'}>
