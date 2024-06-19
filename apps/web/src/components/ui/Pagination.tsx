@@ -1,9 +1,9 @@
-import { HStack, Heading, Text } from '@chakra-ui/react';
+import { Box, HStack, Heading, Text } from '@chakra-ui/react';
 
 export default function SimplePagination(props: any) {
   const { page, setPage, maxPage } = props;
   return (
-    <div className="flex mt-8 mb-16 text-black">
+    <Box className="flex mt-8 mb-16 text-black">
       <button
         onClick={() => (page >= 2 ? setPage(page - 1) : null)}
         className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
@@ -23,6 +23,6 @@ export default function SimplePagination(props: any) {
       >
         Next
       </button>
-    </div>
+    </Box>
   );
 }

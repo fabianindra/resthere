@@ -38,7 +38,7 @@ export default function ModalDeleteRoom({ id }: { id: number }) {
     }
   };
   return (
-    <div>
+    <>
       <Button
         rightIcon={<TrashSimple size={20} />}
         colorScheme="red"
@@ -75,6 +75,6 @@ export default function ModalDeleteRoom({ id }: { id: number }) {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </div>
+    </>
   );
 }

@@ -12,7 +12,9 @@ import {
   InputGroup,
   InputRightElement,
   Select,
-  useDisclosure, VStack, Text
+  useDisclosure,
+  VStack,
+  Text,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -27,10 +29,18 @@ import Link from 'next/link';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
 
 export default function Page() {
-  const { isOpen: isAddPropertyModalOpen, onOpen: onAddPropertyModalOpen, onClose: onAddPropertyModalClose } = useDisclosure();
-  const { isOpen: isChangePasswordModalOpen, onOpen: onChangePasswordModalOpen, onClose: onChangePasswordModalClose } = useDisclosure();
-  
-  const [verified, setVerified] = useState(false);
+  const {
+    isOpen: isAddPropertyModalOpen,
+    onOpen: onAddPropertyModalOpen,
+    onClose: onAddPropertyModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isChangePasswordModalOpen,
+    onOpen: onChangePasswordModalOpen,
+    onClose: onChangePasswordModalClose,
+  } = useDisclosure();
+
+  const [verified, setVerified] = useState<any>(null); // Initialize as null
   const {
     dataRoom,
     page,
@@ -46,30 +56,34 @@ export default function Page() {
 
   useEffect(() => {
     const verifyAndSet = async () => {
-        try {
-            const isValidToken = await verifyTokenClient();
-            setVerified(isValidToken)
-            //check verified
-            console.log(isValidToken)
-
-        } catch (error) {
-            console.error("Error verifying token:", error);
-            setVerified(false);
-        }
+      try {
+        const isValidToken: any = await verifyTokenClient();
+        setVerified(isValidToken);
+      } catch (error) {
+        console.error('Error verifying token:', error);
+        setVerified(false);
+      }
     };
     verifyAndSet();
-}, []);
+  }, []);
 
-if (!verified) {
-  return (
-      <div>
-        <VStack mt={100} mb={200}>
-          <Text>You are not authorized. Please log in to access this page.</Text>
-          <Link href="/">Go to Home Page</Link>
-        </VStack>
-      </div>
-  );
-} 
+  // Render a loading state while verification is in progress
+  if (verified == null) {
+    return (
+      <Center mt={100} mb={200}>
+        <Text>Loading...</Text>
+      </Center>
+    );
+  }
+
+  if (!verified) {
+    return (
+      <VStack mt={100} mb={200}>
+        <Text>You are not authorized. Please log in to access this page.</Text>
+        <Link href="/">Go to Home Page</Link>
+      </VStack>
+    );
+  }
 
   return (
     <Box className="px-16">
@@ -105,7 +119,7 @@ if (!verified) {
             </Select>
           </HStack>
           <Button onClick={handleDirections} colorScheme="gray">
-            {sortDirection === 'asc' ? (
+            {sortDirection == 'asc' ? (
               <SortAscending size={30} />
             ) : (
               <SortDescending size={30} />
@@ -125,12 +139,11 @@ if (!verified) {
           >
             Add Property
           </Button>
-          {/* Button to open ChangePasswordModal */}
           <Button onClick={onChangePasswordModalOpen}>Change Password</Button>
         </HStack>
       </HStack>
       <HStack justifyContent={'start'} gap={8} my={10}>
-        {dataRoom.length === 0
+        {dataRoom.length == 0
           ? null
           : dataRoom.map((item: any) => (
               <CustomCard
@@ -144,9 +157,14 @@ if (!verified) {
             ))}
       </HStack>
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
-      <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={onChangePasswordModalClose} />
-      {/* Render the ModalAddProperty component */}
-      <ModalAddProperty isOpen={isAddPropertyModalOpen} onClose={onAddPropertyModalClose} />
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={onChangePasswordModalClose}
+      />
+      <ModalAddProperty
+        isOpen={isAddPropertyModalOpen}
+        onClose={onAddPropertyModalClose}
+      />
     </Box>
   );
 }

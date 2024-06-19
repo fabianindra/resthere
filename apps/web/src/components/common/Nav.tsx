@@ -1,6 +1,6 @@
 'use client';
 
-import { HStack, useDisclosure } from '@chakra-ui/react';
+import { Box, HStack, useDisclosure } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import LoginModal from './LoginModal';
@@ -21,7 +21,7 @@ export default function Nav() {
     const email = urlParams.get('email');
     const roleGoogle = urlParams.get('role');
 
-    console.log(Cookies.get('role'))
+    console.log(Cookies.get('role'));
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -34,7 +34,6 @@ export default function Nav() {
       Cookies.set('role', String(roleGoogle).toLowerCase());
       window.location.href = '/';
     }
-    
   }, []);
 
   const handleLogout = () => {
@@ -47,7 +46,7 @@ export default function Nav() {
   };
 
   return (
-    <div className="z-50">
+    <Box className="z-50">
       <HStack justifyContent="space-between" pr={20} pt={8}>
         <Header
           loggedIn={loggedIn}
@@ -68,6 +67,6 @@ export default function Nav() {
         setLoggedIn={setLoggedIn}
         setUser={setUser}
       />
-    </div>
+    </Box>
   );
 }

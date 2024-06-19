@@ -30,13 +30,13 @@ export default function Hero() {
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? Math.ceil(heroItem.length) - 1 : prevIndex - 1,
+      prevIndex == 0 ? Math.ceil(heroItem.length) - 1 : prevIndex - 1,
     );
   };
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === Math.ceil(heroItem.length) - 1 ? 0 : prevIndex + 1,
+      prevIndex == Math.ceil(heroItem.length) - 1 ? 0 : prevIndex + 1,
     );
   };
   return (

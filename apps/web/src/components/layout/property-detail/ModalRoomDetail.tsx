@@ -17,7 +17,13 @@ import { SpecialPriceTable } from './TabelSpecialPrice';
 import { getDetailRoom } from '@/api/rooms';
 import { AvailableRoomTable } from './TabelAvailableRoom';
 
-export default function ModalRoomDetail({ onClose, isOpen, roomId }: any) {
+export default function ModalRoomDetail({
+  onClose,
+  isOpen,
+  roomId,
+  dashboard,
+  title,
+}: any) {
   const [addSpecialPrice, setAddSpecialPrice] = useState(true);
   const [addAvailableRoom, setaddAvailableRoom] = useState(true);
   const toggleSpecialPrice = () => setAddSpecialPrice(!addSpecialPrice);
@@ -46,7 +52,7 @@ export default function ModalRoomDetail({ onClose, isOpen, roomId }: any) {
     <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
+        <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <RoomImage />
@@ -55,22 +61,26 @@ export default function ModalRoomDetail({ onClose, isOpen, roomId }: any) {
             bed={roomDetail?.capacity_room}
             size={roomDetail?.room_size}
           />
-          <SpecialPriceTable
-            room_id={roomId}
-            addSpecialPrice={addSpecialPrice}
-            toggleSpecialPrice={toggleSpecialPrice}
-            dataSpecialPrice={specialPrice}
-          />
-          <AvailableRoomTable
-            room_id={roomId}
-            addAvailableRoom={addAvailableRoom}
-            toggleAvailableRoom={toggleAvailableRoom}
-            dataAvailableRoom={availableRoom}
-          />
+          {dashboard ? (
+            <>
+              <SpecialPriceTable
+                room_id={roomId}
+                addSpecialPrice={addSpecialPrice}
+                toggleSpecialPrice={toggleSpecialPrice}
+                dataSpecialPrice={specialPrice}
+              />
+              <AvailableRoomTable
+                room_id={roomId}
+                addAvailableRoom={addAvailableRoom}
+                toggleAvailableRoom={toggleAvailableRoom}
+                dataAvailableRoom={availableRoom}
+              />
+            </>
+          ) : null}
         </ModalBody>
         <ModalFooter justifyContent={'space-between'}>
           <Heading size={'md'}>Rp. {roomDetail?.price}</Heading>
-          <Button onClick={onClose}>Close</Button>
+          <Button colorScheme="blue">Booking</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

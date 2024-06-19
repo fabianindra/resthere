@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Input, FormControl, FormLabel, FormErrorMessage, Text } from '@chakra-ui/react';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  Input,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Text,
+} from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -8,7 +22,10 @@ interface ChangePasswordModalProps {
   onClose: () => void;
 }
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,16 +45,20 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
       return;
     }
 
-    const isConfirmed = window.confirm("Are you sure you want to change your password?");
+    const isConfirmed = window.confirm(
+      'Are you sure you want to change your password?',
+    );
     if (!isConfirmed) {
       return;
     }
 
     try {
       const role = Cookies.get('role');
-      const apiEndpoint = role === 'tenant' ? 
-      'http://localhost:6570/api/auth/change-password-tenant' : 'http://localhost:6570/api/auth/change-password-user';
-      
+      const apiEndpoint =
+        role == 'tenant'
+          ? 'http://localhost:6570/api/auth/change-password-tenant'
+          : 'http://localhost:6570/api/auth/change-password-user';
+
       const response = await axios.post(apiEndpoint, {
         email,
         currentPassword,
@@ -91,11 +112,19 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
             />
           </FormControl>
           {error && <FormErrorMessage mt={4}>{error}</FormErrorMessage>}
-          {success && <Text color="green.500" mt={4}>{success}</Text>}
+          {success && (
+            <Text color="green.500" mt={4}>
+              {success}
+            </Text>
+          )}
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" onClick={handleChangePassword}>Change Password</Button>
-          <Button onClick={onClose} ml={3}>Cancel</Button>
+          <Button colorScheme="teal" onClick={handleChangePassword}>
+            Change Password
+          </Button>
+          <Button onClick={onClose} ml={3}>
+            Cancel
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -4,10 +4,18 @@ export function getDataPropertyByRoom(
   page: number,
   city?: string,
   search?: string,
+  sortBy?: string,
+  sortDirection?: string,
 ) {
-  return axios.get(
-    `http://localhost:6570/api/property/?page=${page}&city=${city ? city : ''}&search=${search ? search : ''}`,
-  );
+  const params = new URLSearchParams();
+  params.append('page', page.toString());
+
+  if (city) params.append('city', city);
+  if (search) params.append('search', search);
+  if (sortBy) params.append('sortBy', sortBy);
+  if (sortDirection) params.append('sortDirection', sortDirection);
+
+  return axios.get(`http://localhost:6570/api/property/?${params.toString()}`);
 }
 
 export function getDataPropertyByTenant(
