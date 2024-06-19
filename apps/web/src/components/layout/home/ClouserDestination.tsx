@@ -20,13 +20,13 @@ export default function ClouserDestination() {
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? Math.ceil(cities.length) - 1 : prevIndex - 1,
+      prevIndex == 0 ? Math.ceil(cities.length) - 1 : prevIndex - 1,
     );
   };
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === Math.ceil(cities.length) - 1 ? 0 : prevIndex + 1,
+      prevIndex == Math.ceil(cities.length) - 1 ? 0 : prevIndex + 1,
     );
   };
 

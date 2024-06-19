@@ -18,7 +18,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/list-room?city=${city ? `${city}` : ''}`);
+    router.push(`/list-property?city=${city ? `${city}` : ''}`);
   };
 
   return (

@@ -31,7 +31,7 @@ export default function ProfilePage() {
         // Check verified
         console.log(isValidToken);
       } catch (error) {
-        console.error("Error verifying token:", error);
+        console.error('Error verifying token:', error);
         setVerified(false);
       }
     };
@@ -49,33 +49,48 @@ export default function ProfilePage() {
 
   if (!verified) {
     return (
-      <div>
+      <Box>
         <VStack mt={100} mb={200}>
-          <Text>You are not authorized. Please log in to access this page.</Text>
+          <Text>
+            You are not authorized. Please log in to access this page.
+          </Text>
           <Link href="/">Go to Home Page</Link>
         </VStack>
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div className="z-50">
+    <Box className="z-50">
       <VStack align="stretch" pr={20} pt={8} spacing={8}>
         {loggedIn && user ? (
           <Box borderWidth="1px" borderRadius="lg" p={6}>
             <Avatar size="xl" name={user.username} />
-            <Text fontSize="2xl" mt={4}>{user.username}</Text>
-            <Text fontSize="lg" color="gray.500">{user.email}</Text>
-            <Button mt={4} colorScheme="teal" onClick={handleLogout}>Logout</Button>
-            <Button mt={4} colorScheme="blue" onClick={onOpen}>Change Password</Button>
+            <Text fontSize="2xl" mt={4}>
+              {user.username}
+            </Text>
+            <Text fontSize="lg" color="gray.500">
+              {user.email}
+            </Text>
+            <Button mt={4} colorScheme="teal" onClick={handleLogout}>
+              Logout
+            </Button>
+            <Button mt={4} colorScheme="blue" onClick={onOpen}>
+              Change Password
+            </Button>
           </Box>
         ) : (
-          <Text fontSize="xl" textAlign="center" marginTop={100} marginBottom={150}>
+          <Text
+            fontSize="xl"
+            textAlign="center"
+            marginTop={100}
+            marginBottom={150}
+          >
             You need to log in to view your profile.
           </Text>
         )}
       </VStack>
       <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
-    </div>
+    </Box>
   );
 }

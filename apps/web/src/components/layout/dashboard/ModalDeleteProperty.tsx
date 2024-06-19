@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { TrashSimple } from '@phosphor-icons/react/dist/ssr';
+import Cookies from 'js-cookie';
 import React from 'react';
 
 export default function ModalDeleteProperty({ id }: { id: number }) {
@@ -38,7 +39,7 @@ export default function ModalDeleteProperty({ id }: { id: number }) {
     }
   };
   return (
-    <div>
+    <>
       <Button
         rightIcon={<TrashSimple size={20} />}
         colorScheme="red"
@@ -75,6 +76,6 @@ export default function ModalDeleteProperty({ id }: { id: number }) {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </div>
+    </>
   );
 }

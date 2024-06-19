@@ -36,9 +36,7 @@ export default function page() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (city !== null) {
-      fetchData();
-    }
+    fetchData();
   }, [city, page]);
 
   return (
@@ -60,7 +58,7 @@ export default function page() {
         <SearchButton />
       </HStack>
       <HStack justifyContent={'start'} gap={8} mt={10}>
-        {dataRoom.length === 0
+        {dataRoom.length == 0
           ? null
           : dataRoom.map((item: any) => {
               return (

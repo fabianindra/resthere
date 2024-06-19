@@ -1,24 +1,22 @@
 import { useState, useEffect } from 'react';
-import { getDataPropertyByTenant } from '@/api/property';
-import Cookies from 'js-cookie';
+import { getDataPropertyByRoom, getDataPropertyByTenant } from '@/api/property';
+import { City } from '@phosphor-icons/react';
 
-const usePropertyData = () => {
+const usePropertyAll = () => {
   const [dataRoom, setDataRoom] = useState<any>([]);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
+  const [city, setCity] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortDirection, setDirection] = useState('asc');
-  const tenant_id: any = JSON.parse(Cookies.get('user') as string).id;
 
   const fetchData = async () => {
     try {
-      const response = await getDataPropertyByTenant(
-        tenant_id,
+      const response = await getDataPropertyByRoom(
         page,
+        city,
         search,
-        category,
         sortBy,
         sortDirection,
       );
@@ -31,7 +29,7 @@ const usePropertyData = () => {
 
   useEffect(() => {
     fetchData();
-  }, [page, sortDirection, sortBy, search, category]);
+  }, [page, sortDirection, sortBy, search, City]);
 
   const handleDirections = () => {
     setDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
@@ -44,8 +42,8 @@ const usePropertyData = () => {
     maxPage,
     search,
     setSearch,
-    category,
-    setCategory,
+    city,
+    setCity,
     sortBy,
     setSortBy,
     sortDirection,
@@ -53,4 +51,4 @@ const usePropertyData = () => {
   };
 };
 
-export default usePropertyData;
+export default usePropertyAll;

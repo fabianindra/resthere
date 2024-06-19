@@ -8,6 +8,7 @@ import {
   ModalCloseButton,
   ModalBody,
   useToast,
+  Box,
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
@@ -25,11 +26,7 @@ const propertySchema = Yup.object().shape({
   property_id: Yup.number().required('property id is required'),
 });
 
-export default function ModalEditRoom({
-  isOpen,
-  onClose,
-  roomId,
-}: any) {
+export default function ModalEditRoom({ isOpen, onClose, roomId }: any) {
   const { room, loading, error, fetchRoom } = useDetailRoom();
   const [file, setFile] = useState<any>(null);
   const toast = useToast();
@@ -127,9 +124,9 @@ export default function ModalEditRoom({
                 onChange={formik.handleChange}
               />
               {formik.touched.name && formik.errors.name && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.name as string}
-                </div>
+                </Box>
               )}
               <InputText
                 placeholder={'price'}
@@ -140,9 +137,9 @@ export default function ModalEditRoom({
                 onChange={formik.handleChange}
               />
               {formik.touched.price && formik.errors.price && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.price as string}
-                </div>
+                </Box>
               )}
               <InputText
                 placeholder={'weekend_price'}
@@ -153,9 +150,9 @@ export default function ModalEditRoom({
                 onChange={formik.handleChange}
               />
               {formik.touched.weekend_price && formik.errors.weekend_price && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.weekend_price as string}
-                </div>
+                </Box>
               )}
               <InputText
                 placeholder={'capacity_person'}
@@ -167,9 +164,9 @@ export default function ModalEditRoom({
               />
               {formik.touched.capacity_person &&
                 formik.errors.capacity_person && (
-                  <div style={{ color: 'red' }}>
+                  <Box style={{ color: 'red' }}>
                     {formik.errors.capacity_person as string}
-                  </div>
+                  </Box>
                 )}
               <InputText
                 placeholder={'capacity_room'}
@@ -180,9 +177,9 @@ export default function ModalEditRoom({
                 onChange={formik.handleChange}
               />
               {formik.touched.capacity_room && formik.errors.capacity_room && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.capacity_room as string}
-                </div>
+                </Box>
               )}
               <InputText
                 placeholder={'room_size'}
@@ -192,11 +189,11 @@ export default function ModalEditRoom({
                 onChange={formik.handleChange}
               />
               {formik.touched.room_size && formik.errors.room_size && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.room_size as string}
-                </div>
+                </Box>
               )}
-              <div className=" my-6">
+              <Box className=" my-6">
                 <input
                   type="file"
                   onChange={handleChangeFile}
@@ -204,8 +201,8 @@ export default function ModalEditRoom({
                   value={formik.values.file}
                   className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 border-2 rounded-md border-redDark"
                 />
-                {!file && <div style={{ color: 'red' }}>File is required</div>}
-              </div>
+                {!file && <Box style={{ color: 'red' }}>File is required</Box>}
+              </Box>
               <Button type="submit" mb={10} w={'full'} colorScheme="blue">
                 Submit
               </Button>

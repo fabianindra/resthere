@@ -85,6 +85,8 @@ export default function CustomCardRoom({
           isOpen={isOpenDetail}
           onClose={onCloseDetail}
           roomId={id}
+          dashboard={dashboard}
+          title={name}
         />
         <ModalEditRoom isOpen={isOpen} onClose={onClose} roomId={id} />
       </CardFooter>

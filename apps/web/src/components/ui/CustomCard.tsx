@@ -43,7 +43,9 @@ export default function CustomCard({
           <MapPin size={20} weight="fill" />
           <Text fontSize={'sm'}>{city}</Text>
         </HStack>
-        <Link href={dashboard ? `detail-property/${id}` : ''}>
+        <Link
+          href={dashboard ? `detail-property/${id}` : `list-property/${id}`}
+        >
           <Heading size="md" mt={4}>
             {name}
           </Heading>

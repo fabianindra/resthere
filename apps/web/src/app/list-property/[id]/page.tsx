@@ -1,5 +1,9 @@
 'use client';
+import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
+import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
+import usePropertyAll from '@/hooks/property/usePropertyAll';
+import usePropertyData from '@/hooks/property/usePropertyData';
 import usePropertyDetails from '@/hooks/property/usePropertyDetail';
 import useRoomsData from '@/hooks/room/useRoomsData';
 import {
@@ -12,26 +16,19 @@ import {
   Center,
   Divider,
   Box,
-  useDisclosure,
+  Link,
   Heading,
-  Image,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
   SortAscending,
   SortDescending,
-  Plus,
 } from '@phosphor-icons/react';
-import React, { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'next/navigation';
-import ModalAddRoom from '@/components/layout/property-detail/ModalAddRoom';
-import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
-// import MyMap from '@/components/layout/property-detail/Map';
 import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
-export default function Page() {
+export default function page() {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>('');
   const [category, setCategory] = useState<string>('');
@@ -39,7 +36,6 @@ export default function Page() {
   const [sortDirection, setSortDirection] = useState<string>('asc');
   const [propertyId, setPropertyId] = useState<number>(0);
   const params: { id: string } = useParams<{ id: string }>();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
     property,
@@ -59,32 +55,18 @@ export default function Page() {
   };
 
   useEffect(() => {
-    fetchProperty(parseInt(params.id));
-    setPropertyId(parseInt(params.id));
-  }, []);
-
-  useEffect(() => {
     if (propertyId) {
       fetchRooms();
     }
-    console.log(search);
   }, [propertyId, page, search, category, sortBy, sortDirection]);
 
-  const MyMap = useMemo(
-    () =>
-      dynamic(() => import('@/components/layout/property-detail/Map'), {
-        loading: () => <p>A map is loading</p>,
-        ssr: false,
-      }),
-    [],
-  );
-
-  const position = [51.505, -0.09];
-  const zoom = 13;
-
+  useEffect(() => {
+    fetchProperty(parseInt(params.id));
+    setPropertyId(parseInt(params.id));
+  }, []);
   return (
     <Box className="px-16">
-      <Link href={'/dashboard'}>
+      <Link href={'/list-property'}>
         <HStack my={10}>
           <ArrowLeft size={32} />
           <Heading ml={8} size={'lg'}>
@@ -92,23 +74,11 @@ export default function Page() {
           </Heading>
         </HStack>
       </Link>
-
-      <Image
-        src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-        alt="Green double couch with wooden legs"
-        h={400}
-        mx={'auto'}
-        my={20}
-        borderRadius="lg"
-      />
-
-      <MyMap position={position} zoom={zoom} />
-
-      <HStack my={10} justifyContent={'space-between'}>
+      <HStack my={20} justifyContent={'space-between'}>
         <InputGroup w={300}>
           <Input
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search"
+            placeholder="Enter amount"
             value={search}
           />
           <InputRightElement>
@@ -120,10 +90,9 @@ export default function Page() {
             <Select
               onChange={(e) => setSortBy(e.target.value)}
               placeholder="Sort By"
-              value={sortBy}
             >
-              <option value="name">Name</option>
-              <option value="price">Price</option>
+              <option value="name">name</option>
+              <option value="price">price</option>
             </Select>
           </HStack>
           <Button onClick={handleDirections} colorScheme="gray">
@@ -140,13 +109,6 @@ export default function Page() {
               orientation="vertical"
             />
           </Center>
-          <Button
-            onClick={onOpen}
-            rightIcon={<Plus size={20} />}
-            variant="outline"
-          >
-            Add Room
-          </Button>
         </HStack>
       </HStack>
       <HStack justifyContent={'start'} gap={8} my={8}>
@@ -157,13 +119,11 @@ export default function Page() {
             capacity={item.capacity_person}
             name={item.name}
             price={item.price}
-            dashboard
+            dashboard={false}
           />
         ))}
       </HStack>
-
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
-      <ModalAddRoom id={params.id} isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }
