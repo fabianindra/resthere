@@ -1,6 +1,6 @@
 'use client';
 
-import { VStack, Box, Text, Button, Avatar } from '@chakra-ui/react';
+import { VStack, Box, Text, Button, Avatar, HStack } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import Cookies from 'js-cookie';
@@ -8,6 +8,7 @@ import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
+import EditProfile from '@/components/layout/profile/EditProfile';
 
 export default function ProfilePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,15 +39,6 @@ export default function ProfilePage() {
     verifyAndSet();
   }, []);
 
-  const handleLogout = () => {
-    Cookies.remove('user');
-    Cookies.remove('token');
-    Cookies.remove('role');
-    setLoggedIn(false);
-    setUser(null);
-    window.location.href = '/';
-  };
-
   if (!verified) {
     return (
       <Box>
@@ -61,24 +53,13 @@ export default function ProfilePage() {
   }
 
   return (
-    <Box className="z-50">
-      <VStack align="stretch" pr={20} pt={8} spacing={8}>
+    <HStack className="w-full">
+      <VStack className="w-full" mx={16} align="stretch" spacing={8}>
         {loggedIn && user ? (
-          <Box borderWidth="1px" borderRadius="lg" p={6}>
+          <VStack borderWidth="1px" borderRadius="lg" p={6}>
             <Avatar size="xl" name={user.username} />
-            <Text fontSize="2xl" mt={4}>
-              {user.username}
-            </Text>
-            <Text fontSize="lg" color="gray.500">
-              {user.email}
-            </Text>
-            <Button mt={4} colorScheme="teal" onClick={handleLogout}>
-              Logout
-            </Button>
-            <Button mt={4} colorScheme="blue" onClick={onOpen}>
-              Change Password
-            </Button>
-          </Box>
+            <EditProfile onOpen={onOpen} />
+          </VStack>
         ) : (
           <Text
             fontSize="xl"
@@ -91,6 +72,6 @@ export default function ProfilePage() {
         )}
       </VStack>
       <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
-    </Box>
+    </HStack>
   );
 }
