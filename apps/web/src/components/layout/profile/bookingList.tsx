@@ -18,9 +18,9 @@ const BookingList: React.FC<any> = () => {
     const fetchBookings = async () => {
       try {
         const response = await axios.get(`http://localhost:6570/api/booking-list/all-booking/${userId}`);
-        const responseData = response.data; // Access the data property
-        console.log('Response data:', responseData); // For debugging
-        setBookings(responseData.data); // Set the state with the array
+        const responseData = response.data;
+        console.log('Response data:', responseData);
+        setBookings(responseData.data);
       } catch (error) {
         console.error('Error fetching bookings:', error);
       }
