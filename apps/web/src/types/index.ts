@@ -27,6 +27,12 @@ export interface Tenant {
   password: string; 
 };
 
+export interface Booking {
+  room_name: string;
+  property_name: string;
+  date: string;
+}
+
 export interface HeaderProps {
   loggedIn: boolean;
   user: User | null;
