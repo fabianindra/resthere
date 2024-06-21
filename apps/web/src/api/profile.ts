@@ -10,18 +10,11 @@ export function updateDataProfile(
   username: string,
   gender: 'male' | `female`,
   brithday: string,
-  file: any,
 ) {
-  const formData = new FormData();
-  formData.append('email', email);
-  formData.append('username', username);
-  formData.append('gender', gender);
-  formData.append('brithday', brithday);
-  formData.append('file', file);
-  return axios.put(`http://localhost:6570/api/profile/${user_id}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      Authorization: '',
-    },
+  return axios.put(`http://localhost:6570/api/profile/${user_id}`, {
+    email,
+    username,
+    gender,
+    brithday,
   });
 }

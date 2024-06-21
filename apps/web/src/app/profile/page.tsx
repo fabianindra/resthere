@@ -29,8 +29,6 @@ export default function ProfilePage() {
       try {
         const isValidToken = await verifyTokenClient();
         setVerified(isValidToken);
-        // Check verified
-        console.log(isValidToken);
       } catch (error) {
         console.error('Error verifying token:', error);
         setVerified(false);

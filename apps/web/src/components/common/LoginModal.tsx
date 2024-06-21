@@ -25,28 +25,37 @@ interface LoginModalProps {
   setUser: (user: User | null) => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, setLoggedIn, setUser }) => {
+const LoginModal: React.FC<LoginModalProps> = ({
+  isOpen,
+  onClose,
+  setLoggedIn,
+  setUser,
+}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:6570/api/auth/login', {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        'http://localhost:6570/api/auth/login',
+        {
+          email,
+          password,
+        },
+      );
 
       if (response.data) {
         const userData = response.data.data;
         const userToken = response.data.token;
         const userRole = response.data.role;
+        console.log(userData);
         Cookies.set('user', JSON.stringify(userData));
         Cookies.set('token', userToken, { expires: 1 });
         Cookies.set('role', userRole, { expires: 1 });
         console.log('Login successful', response.data);
         setLoggedIn(true);
-        setUser(userData)
+        setUser(userData);
         setError('');
         onClose();
       } else {
@@ -97,7 +106,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, setLoggedIn, s
             Log In
           </Button>
           <Link href="/register" passHref>
-            <Button variant="link" colorScheme="blue" ml={3} onClick={handleCloseModal}>
+            <Button
+              variant="link"
+              colorScheme="blue"
+              ml={3}
+              onClick={handleCloseModal}
+            >
               Register
             </Button>
           </Link>
@@ -112,7 +126,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, setLoggedIn, s
             colorScheme="blue"
             onClick={handleGoogleLogin}
           >
-            Google 
+            Google
           </Button>
         </ModalFooter>
       </ModalContent>

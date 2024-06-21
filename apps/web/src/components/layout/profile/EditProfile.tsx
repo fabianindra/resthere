@@ -1,42 +1,87 @@
 'use client';
 
-import { Button, HStack, Input, Text, VStack } from '@chakra-ui/react';
-import { User } from '@/types';
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Input,
+  Text,
+  VStack,
+  useToast,
+} from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import * as Yup from 'yup';
+import { Form, Formik, Field, ErrorMessage } from 'formik';
+import { updateDataProfile } from '@/api/profile';
 
 interface EditProfileProps {
   onOpen: () => void;
 }
 
+const validationSchema = Yup.object({
+  username: Yup.string().required('Required'),
+  gender: Yup.string().required('Required'),
+  email: Yup.string().email('Invalid email address').required('Required'),
+  brithday: Yup.date().required('Required'),
+});
+
 export default function EditProfile({ onOpen }: EditProfileProps) {
   const [isEdit, setIsEdit] = useState(false);
   const [user, setUser] = useState<any | null>(null);
-  const [editedUser, setEditedUser] = useState<any | null>(null);
+  const [userId, setUserId] = useState<any | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     const storedUser = Cookies.get('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      setEditedUser(parsedUser);
+      console.log(parsedUser.id);
+      setUserId(parsedUser.id);
     }
+    console.log(storedUser);
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditedUser((prevState: any) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  useEffect(() => {}, [user]);
+
+  const initialValues = {
+    username: user?.username || '',
+    gender: user?.gender || '',
+    email: user?.email || '',
+    brithday: user?.brithday ? user.brithday.split('T')[0] : '',
   };
 
-  const handleSave = () => {
-    if (editedUser) {
-      setUser(editedUser);
-      Cookies.set('user', JSON.stringify(editedUser));
-      setIsEdit(false);
+  const handleSave = async (values: typeof initialValues) => {
+    console.log(user, userId);
+    try {
+      const { username, gender, email, brithday } = values;
+      const response = await updateDataProfile(
+        userId,
+        email,
+        username,
+        gender,
+        brithday,
+      );
+      toast({
+        title: 'Update profile succesfuly',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Failed to update profile',
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
     }
+    setUser(values);
+    Cookies.set('user', JSON.stringify(values));
+    setIsEdit(false);
   };
 
   return (
@@ -57,68 +102,67 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
           </Text>
         </VStack>
       ) : (
-        <VStack mt={4}>
-          <Input
-            name="username"
-            value={editedUser?.username || ''}
-            onChange={handleInputChange}
-            size="lg"
-            placeholder="Username"
-          />
-          <Input
-            name="gender"
-            value={editedUser?.gender || ''}
-            onChange={handleInputChange}
-            size="lg"
-            placeholder="Gender"
-          />
-          <Input
-            name="email"
-            value={editedUser?.email || ''}
-            onChange={handleInputChange}
-            size="lg"
-            placeholder="Email"
-          />
-          <Input
-            type="date"
-            name="brithday"
-            value={
-              editedUser?.brithday ? editedUser.brithday.split('T')[0] : ''
-            }
-            onChange={handleInputChange}
-            size="lg"
-            placeholder="brithday"
-          />
-        </VStack>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSave}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <VStack mt={4} spacing={4}>
+                <FormControl>
+                  <FormLabel htmlFor="username">Username</FormLabel>
+                  <Field as={Input} id="username" name="username" />
+                  <ErrorMessage name="username" component={FormErrorMessage} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="gender">Gender</FormLabel>
+                  <Field as={Input} id="gender" name="gender" />
+                  <ErrorMessage name="gender" component={FormErrorMessage} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="email">Email</FormLabel>
+                  <Field as={Input} id="email" name="email" />
+                  <ErrorMessage name="email" component={FormErrorMessage} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="brithday">brithday</FormLabel>
+                  <Field as={Input} type="date" id="brithday" name="brithday" />
+                  <ErrorMessage name="brithday" component={FormErrorMessage} />
+                </FormControl>
+              </VStack>
+              <HStack gap={8} mt={4}>
+                <Button
+                  w={200}
+                  colorScheme="green"
+                  isLoading={isSubmitting}
+                  type="submit"
+                >
+                  Save
+                </Button>
+                <Button
+                  w={200}
+                  colorScheme="red"
+                  onClick={() => setIsEdit(false)}
+                >
+                  Cancel
+                </Button>
+              </HStack>
+            </Form>
+          )}
+        </Formik>
       )}
       <HStack gap={8}>
-        {isEdit ? (
-          <>
-            <Button w={200} mt={4} colorScheme="green" onClick={handleSave}>
-              Save
+        {!isEdit && (
+          <HStack gap={8} mt={4}>
+            <Button w={200} colorScheme="gray" onClick={() => setIsEdit(true)}>
+              Edit Profile
             </Button>
-            <Button
-              w={200}
-              mt={4}
-              colorScheme="red"
-              onClick={() => setIsEdit(false)}
-            >
-              Cancel
+            <Button w={200} colorScheme="gray" onClick={onOpen}>
+              Change Password
             </Button>
-          </>
-        ) : (
-          <Button
-            w={200}
-            mt={4}
-            colorScheme="gray"
-            onClick={() => setIsEdit(true)}
-          >
-            Edit Profile
-          </Button>
+          </HStack>
         )}
-        <Button w={200} mt={4} colorScheme="gray" onClick={onOpen}>
-          Change Password
-        </Button>
       </HStack>
     </div>
   );
