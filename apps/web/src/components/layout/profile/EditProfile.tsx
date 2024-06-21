@@ -36,16 +36,15 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
 
   useEffect(() => {
     const storedUser = Cookies.get('user');
+    const storedUserId = Cookies.get('userId');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       console.log(parsedUser.id);
-      setUserId(parsedUser.id);
+      setUserId(storedUserId);
     }
-    console.log(storedUser);
+    console.log(storedUserId);
   }, []);
-
-  useEffect(() => {}, [user]);
 
   const initialValues = {
     username: user?.username || '',
@@ -92,13 +91,7 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
             {user?.username}
           </Text>
           <Text fontSize="lg" color="gray.500">
-            {user?.gender || null}
-          </Text>
-          <Text fontSize="lg" color="gray.500">
             {user?.email}
-          </Text>
-          <Text fontSize="lg" color="gray.500">
-            {user?.brithday || null}
           </Text>
         </VStack>
       ) : (

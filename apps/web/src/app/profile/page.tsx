@@ -1,6 +1,6 @@
 'use client';
 
-import { VStack, Box, Text, Button, Avatar, HStack } from '@chakra-ui/react';
+import { VStack, Box, Text, HStack } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import Cookies from 'js-cookie';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
 import EditProfile from '@/components/layout/profile/EditProfile';
+import EditFotoProfile from '@/components/layout/profile/EditFotoProfile';
 
 export default function ProfilePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,7 +56,7 @@ export default function ProfilePage() {
       <VStack className="w-full" mx={16} align="stretch" spacing={8}>
         {loggedIn && user ? (
           <VStack borderWidth="1px" borderRadius="lg" p={6}>
-            <Avatar size="xl" name={user.username} />
+            <EditFotoProfile foto={user.username} />
             <EditProfile onOpen={onOpen} />
           </VStack>
         ) : (
