@@ -4,6 +4,7 @@ CREATE TABLE `User` (
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
+    `verified` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -18,6 +19,7 @@ CREATE TABLE `Tenant` (
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
+    `verified` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -51,7 +53,7 @@ CREATE TABLE `Room` (
     `weekend_price` INTEGER NOT NULL,
     `capacity_person` INTEGER NOT NULL,
     `capacity_room` INTEGER NOT NULL,
-    `room_size` INTEGER NOT NULL,
+    `room_size` VARCHAR(191) NOT NULL,
     `image` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -63,10 +65,24 @@ CREATE TABLE `Room` (
 -- CreateTable
 CREATE TABLE `SpecialPrice` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `date` DATETIME(3) NOT NULL,
+    `start_date` DATETIME(3) NOT NULL,
+    `end_date` DATETIME(3) NOT NULL,
     `special_price` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `room_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `RoomAvailability` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `start_date` DATETIME(3) NOT NULL,
+    `end_date` DATETIME(3) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `room_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -101,6 +117,12 @@ ALTER TABLE `Property` ADD CONSTRAINT `Property_tenant_id_fkey` FOREIGN KEY (`te
 
 -- AddForeignKey
 ALTER TABLE `Room` ADD CONSTRAINT `Room_property_id_fkey` FOREIGN KEY (`property_id`) REFERENCES `Property`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `SpecialPrice` ADD CONSTRAINT `SpecialPrice_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `Room`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `RoomAvailability` ADD CONSTRAINT `RoomAvailability_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `Room`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Review` ADD CONSTRAINT `Review_property_id_fkey` FOREIGN KEY (`property_id`) REFERENCES `Property`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -21,6 +21,8 @@ model User {
   verified      Boolean  @default(false)  
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  transaction   Transaction[]
 }
 
 model Tenant {
@@ -70,7 +72,8 @@ model Room {
   property            Property  @relation(fields: [property_id], references: [id])
   property_id         Int
 
-  special_price       SpecialPrice[]
+  special_price     SpecialPrice[]
+  transaction       Transaction[]
 
   room_availability RoomAvailability[]     
 }
@@ -89,8 +92,8 @@ model SpecialPrice {
 
 model RoomAvailability {
   id            Int      @id @default(autoincrement())
-  start_date          DateTime 
-  end_date          DateTime 
+  start_date    DateTime 
+  end_date      DateTime 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -99,13 +102,19 @@ model RoomAvailability {
 }
 
 model Transaction {
-  id            Int      @id @default(autoincrement())
-  total_price   Int 
-  total_room    Int 
-  check_in      DateTime
-  check_out     DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  total_price     Int 
+  total_room      Int 
+  check_in        DateTime
+  check_out       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  room            Room @relation(fields: [room_id], references: [id])
+  room_id         Int 
+
+  user            User @relation(fields: [user_id], references: [id])
+  user_id         Int 
 }
 
 model Review {

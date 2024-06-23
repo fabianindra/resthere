@@ -16,6 +16,25 @@ import { RoomInfo } from './RoomInfo';
 import { SpecialPriceTable } from './TabelSpecialPrice';
 import { getDetailRoom } from '@/api/rooms';
 import { AvailableRoomTable } from './TabelAvailableRoom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { User } from '@/types'
+
+const getUserFromCookie = (): User | null => {
+  const userCookie = Cookies.get('user');
+  if (userCookie) {
+    try {
+      return JSON.parse(userCookie);
+    } catch (error) {
+      console.error('Error parsing user cookie:', error);
+      return null;
+    }
+  }
+  return null;
+};
+
+const user = getUserFromCookie();
+const userId = user?.id;
 
 export default function ModalRoomDetail({
   onClose,
@@ -40,6 +59,20 @@ export default function ModalRoomDetail({
       setAvailableRoom(response.data.data.room_availability);
       console.log(roomId);
     } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBooking = async () => {
+    try {
+      const price = specialPrice ? specialPrice : roomDetail?.price;
+      const response = await axios.post('http://localhost:6570/api/transaction/booking', {
+        roomId,
+        userId,
+        price,
+      });
+      console.log(response.data);
+    } catch (error: any) {
       console.log(error);
     }
   };
@@ -80,7 +113,7 @@ export default function ModalRoomDetail({
         </ModalBody>
         <ModalFooter justifyContent={'space-between'}>
           <Heading size={'md'}>Rp. {roomDetail?.price}</Heading>
-          <Button colorScheme="blue">Booking</Button>
+          <Button onClick={handleBooking} colorScheme="blue">Booking</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
