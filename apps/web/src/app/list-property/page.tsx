@@ -10,7 +10,7 @@ import { Box, HStack } from '@chakra-ui/react';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-export default function page() {
+export default function Page() {
   const searchParams = useSearchParams();
   const [guest, setGuest] = useState(1);
   const [dataRoom, setDataRoom] = useState<any>([]);

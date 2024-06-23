@@ -28,7 +28,7 @@ import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-export default function page() {
+export default function Page() {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>('');
   const [category, setCategory] = useState<string>('');
