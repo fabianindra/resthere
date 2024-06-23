@@ -6,20 +6,29 @@ interface GetPropertyParams {
   city?: string;
   search?: string;
   page?: string;
-  sortBy: 'name' | 'price';
-  sortDirection: 'asc' | 'desc';
+  startDate?: string;
+  endDate?: string;
+  sortBy?: 'price' | 'name';
+  sortDirection?: 'asc' | 'desc';
 }
 
 export const repoGetPropertyByRooms = async ({
   city,
   search,
   page,
+  startDate,
+  endDate,
   sortBy,
   sortDirection,
 }: GetPropertyParams) => {
+  console.log(startDate, endDate);
   const pageN = page ? (parseInt(page) - 1) * 4 : 0;
 
-  const whereClause = {
+  // Parse the startDate and endDate to Date objects
+  const start = startDate ? new Date(startDate) : undefined;
+  const end = endDate ? new Date(endDate) : undefined;
+
+  const whereClause: any = {
     ...(city ? { city_name: city } : {}),
     ...(search
       ? {
@@ -30,7 +39,30 @@ export const repoGetPropertyByRooms = async ({
         }
       : {}),
     rooms: {
-      some: {},
+      some: {
+        room_availability:
+          start && end
+            ? {
+                some: {
+                  AND: [
+                    { start_date: { gte: start } }, // check_out is after startDate
+                    { end_date: { lte: end } }, // check_in is before endDate
+                  ],
+                },
+              }
+            : undefined,
+        transaction:
+          start && end
+            ? {
+                some: {
+                  AND: [
+                    { check_out: { gte: start } }, // check_out is after startDate
+                    { check_in: { lte: end } }, // check_in is before endDate
+                  ],
+                },
+              }
+            : undefined,
+      },
     },
   };
 

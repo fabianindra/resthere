@@ -58,10 +58,10 @@ export const serviceUpdateFotoProfile = async (req: any) => {
 
 export const serviceUpdateProfile = async (req: any) => {
   const { profile_id } = req.params;
-  const { email, username, brithday, gender } = req.body;
+  const { email, username, birthday, gender } = req.body;
 
-  if (!email && !username && !brithday && !gender) {
-    console.log(email, username, brithday, gender);
+  if (!email && !username && !birthday && !gender) {
+    console.log(email, username, birthday, gender);
     return {
       status: 401,
       success: true,
@@ -73,7 +73,7 @@ export const serviceUpdateProfile = async (req: any) => {
       profile_id: parseInt(profile_id),
       email,
       username,
-      brithday,
+      birthday,
       gender,
     });
 

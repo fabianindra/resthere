@@ -14,13 +14,13 @@ export const repoUpdateProfileUser = async ({
   profile_id,
   email,
   username,
-  brithday,
+  birthday,
   gender,
 }: {
   profile_id: number;
   email: string;
   username: string;
-  brithday: string;
+  birthday: string;
   gender: string;
 }) => {
   return prisma.user.update({
@@ -30,7 +30,7 @@ export const repoUpdateProfileUser = async ({
     data: {
       username,
       email,
-      brithday,
+      birthday,
       gender,
     },
   });

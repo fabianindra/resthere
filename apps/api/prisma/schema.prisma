@@ -1,3 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,120 +13,120 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Property {
-  id                Int      @id @default(autoincrement())
-  name              String
-  address           String
-  city_name         String
-  province_name     String
-  category_property String
-  room_count        Int
-  image             String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant_id         Int
-  tenant            Tenant   @relation(fields: [tenant_id], references: [id], map: "Property_tenant_id_fkey")
-  review            Review[]
-  room              Room[]
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String 
+  username      String   @unique
+  verified      Boolean  @default(false)
+  gender        String?  
+  birthday      DateTime?
+  foto          String?  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  @@index([tenant_id], map: "Property_tenant_id_fkey")
+  transaction   Transaction[]
 }
 
-model Review {
-  id          Int      @id @default(autoincrement())
-  star        Int
-  feed_back   String
-  createdAt   DateTime @default(now())
-  uupdatedAt  DateTime @updatedAt
-  property_id Int
-  property    Property @relation(fields: [property_id], references: [id], map: "Review_property_id_fkey")
+model Tenant {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String 
+  username      String   @unique  
+  verified      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  @@index([property_id], map: "Review_property_id_fkey")
+  properties    Property[] 
+}
+
+model Property {
+  id            Int      @id @default(autoincrement())
+  name          String   
+  address       String 
+  city_name     String
+  province_name String
+  category_property      String   
+  room_count    Int
+  image         String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  rooms         Room[]
+
+  tenant        Tenant  @relation(fields: [tenant_id], references: [id])
+  tenant_id     Int    
+
+  reviews       Review[]
 }
 
 model Room {
-  id               Int                @id @default(autoincrement())
-  name             String
-  price            Int
-  weekend_price    Int
-  capacity_person  Int
-  capacity_room    Int
-  room_size        String
-  image            String
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime @updatedAt
-  property_id      Int
-  property         Property           @relation(fields: [property_id], references: [id], map: "Room_property_id_fkey")
-  roomavailability RoomAvailability[]
-  specialprice     SpecialPrice[]
-  transaction      Transaction[]
+  id            Int      @id @default(autoincrement())
+  name          String   
+  price               Int 
+  weekend_price       Int    
+  capacity_person     Int
+  capacity_room       Int
+  room_size           String
+  image         String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  @@index([property_id], map: "Room_property_id_fkey")
-}
+  property            Property  @relation(fields: [property_id], references: [id])
+  property_id         Int
 
-model RoomAvailability {
-  id         Int      @id @default(autoincrement())
-  start_date DateTime
-  end_date   DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  room_id    Int
-  room       Room     @relation(fields: [room_id], references: [id], map: "RoomAvailability_room_id_fkey")
+  special_price     SpecialPrice[]
+  transaction       Transaction[]
 
-  @@index([room_id], map: "RoomAvailability_room_id_fkey")
+  room_availability RoomAvailability[]     
 }
 
 model SpecialPrice {
   id            Int      @id @default(autoincrement())
-  start_date    DateTime
-  end_date      DateTime
-  special_price Int
+  start_date          DateTime 
+  end_date          DateTime
+  special_price      Int 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  room_id       Int
-  room          Room     @relation(fields: [room_id], references: [id], map: "SpecialPrice_room_id_fkey")
 
-  @@index([room_id], map: "SpecialPrice_room_id_fkey")
+  room            Room @relation(fields: [room_id], references: [id])
+  room_id         Int 
 }
 
-model Tenant {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique(map: "Tenant_email_key")
-  password  String
-  username  String     @unique(map: "Tenant_username_key")
-  verified  Boolean    @default(false)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime @updatedAt
-  property  Property[]
+model RoomAvailability {
+  id            Int      @id @default(autoincrement())
+  start_date    DateTime 
+  end_date      DateTime 
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  room            Room @relation(fields: [room_id], references: [id])
+  room_id         Int 
 }
 
 model Transaction {
-  id          Int      @id @default(autoincrement())
-  total_price Int
-  total_room  Int
-  check_in    DateTime
-  check_out   DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  room_id     Int
-  user_id     Int
-  room        Room     @relation(fields: [room_id], references: [id], map: "Transaction_room_id_fkey")
-  user        User     @relation(fields: [user_id], references: [id], map: "Transaction_user_id_fkey")
+  id              Int      @id @default(autoincrement())
+  total_price     Int 
+  total_room      Int 
+  check_in        DateTime
+  check_out       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  @@index([room_id], map: "Transaction_room_id_fkey")
-  @@index([user_id], map: "Transaction_user_id_fkey")
+  room            Room @relation(fields: [room_id], references: [id])
+  room_id         Int 
+
+  user            User @relation(fields: [user_id], references: [id])
+  user_id         Int 
 }
 
-model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique(map: "User_email_key")
-  password    String
-  username    String        @unique(map: "User_username_key")
-  verified    Boolean       @default(false)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime @updatedAt
-  brithday    String?
-  foto        String?
-  gender      String?
-  transaction Transaction[]
+model Review {
+  id            Int      @id @default(autoincrement())
+  star          Int 
+  feed_back     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  property      Property @relation(fields: [property_id], references: [id])
+  property_id   Int
 }
