@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Button } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BookingTenant } from '@/types';
@@ -9,25 +9,36 @@ const TenantBookingList: React.FC = () => {
   const userData = Cookies.get('user');
   const tenantId = userData ? JSON.parse(userData).id : null;
 
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get(`http://localhost:6570/api/booking-list/all-booking-tenant/${tenantId}`);
+      const responseData = response.data;
+      console.log('Response data:', responseData);
+      setBookings(responseData.data);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+    }
+  };
+
   useEffect(() => {
     if (!tenantId) {
       console.error('Tenant ID not found in cookies');
       return;
     }
   
-    const fetchBookings = async () => {
-      try {
-        const response = await axios.get(`http://localhost:6570/api/booking-list/all-booking-tenant/${tenantId}`);
-        const responseData = response.data;
-        console.log('Response data:', responseData);
-        setBookings(responseData.data);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-      }
-    };
-  
     fetchBookings();
   }, [tenantId]);
+
+  const handleApprove = async (bookingId: string) => {
+    try {
+      const response = await axios.post('http://localhost:6570/api/transaction/update-status', { transactionId: bookingId, status: 'approved' });
+      console.log('Booking approved successfully');
+      // Refetch all bookings after approval
+      fetchBookings();
+    } catch (error) {
+      console.error('Failed to approve booking:', error);
+    }
+  }
 
   if (bookings.length === 0) {
     return <>No bookings found for this tenant.</>;
@@ -73,6 +84,11 @@ const TenantBookingList: React.FC = () => {
             </Text>{' '}
             {new Date(booking.check_out).toLocaleDateString()}
           </Text>
+          {booking.status === 'waiting payment confirmation' && (
+            <Button colorScheme="blue" onClick={() => handleApprove(booking.id)}>
+              Approve Booking
+            </Button>
+          )}
         </Box>
       ))}
     </Box>

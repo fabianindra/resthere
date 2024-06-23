@@ -38,6 +38,7 @@ export const repoAddTransaction = async (roomId: any, userId: any, price: any) =
         total_room: 1,
         check_in: now,
         check_out: checkOutDate,
+        status: 'waiting payment'
       },
     });
 
@@ -75,4 +76,44 @@ export const repoGetSalesReport = async (sortBy: string, sortDirection: string, 
   }
 };
 
+export const repoUpdateTransactionStatus = async (transactionId: any, status: string) => {
+  try {
+    await prisma.transaction.update({
+      where: { id: transactionId },
+      data: { status },
+    });
+    return { success: true, message: "Transaction status updated successfully" };
+  } catch (error: any) {
+    return { success: false, message: "Failed to update transaction status", error: error.message };
+  }
+};
 
+export const repoGetTransactionStatus = async (transactionId: any) => {
+  try {
+    const transaction = await prisma.transaction.findUnique({
+      where: { id: transactionId },
+      select: { status: true },
+    });
+    if (!transaction) {
+      throw new Error("Transaction not found");
+    }
+    return { success: true, status: transaction.status };
+  } catch (error: any) {
+    return { success: false, message: "Failed to get transaction status", error: error.message };
+  }
+};
+
+export const repoUploadPaymentProof = async (transactionId: string, proofPath: string) => {
+  try {
+    await prisma.transaction.update({
+      where: { id: parseInt(transactionId) },
+      data: { 
+        proof: proofPath,
+        status: 'waiting payment confirmation',
+      },
+    });
+    return { success: true };
+  } catch (error: any) {
+    throw new Error("Failed to upload payment proof: " + error.message);
+  }
+};

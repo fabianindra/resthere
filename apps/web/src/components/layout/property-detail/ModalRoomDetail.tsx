@@ -70,8 +70,10 @@ export default function ModalRoomDetail({
         roomId,
         userId,
         price,
+        status: 'waiting payment'
       });
       console.log(response.data);
+      window.location.href = `/profile`;
     } catch (error: any) {
       console.log(error);
     }
