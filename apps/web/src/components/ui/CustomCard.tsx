@@ -29,6 +29,8 @@ export default function CustomCard({
   name: string;
   price: number;
   dashboard: boolean;
+  date?: string;
+  user?: string;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (

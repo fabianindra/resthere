@@ -28,6 +28,7 @@ import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
 import TenantBookingList from '@/components/layout/dashboard/TenantBookingList';
+import SalesReport from '@/components/layout/dashboard/SalesReport';
 
 export default function Page() {
   const {
@@ -157,6 +158,7 @@ export default function Page() {
               />
             ))}
       </HStack>
+      <SalesReport />
       <TenantBookingList />
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
       <ChangePasswordModal
