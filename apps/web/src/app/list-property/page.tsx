@@ -17,10 +17,20 @@ export default function Page() {
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
   const [city, setCity] = useState<any>();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
 
   const fetchData = async () => {
     try {
-      const response = await getDataPropertyByRoom(page, city);
+      const response = await getDataPropertyByRoom(
+        page,
+        city,
+        undefined,
+        undefined,
+        undefined,
+        startDate ? startDate.toISOString().split('T')[0] : undefined,
+        endDate ? endDate.toISOString().split('T')[0] : undefined,
+      );
       setMaxPage(Math.ceil(response.data.count / 4));
       setDataRoom(response.data.data);
     } catch (error) {
@@ -30,14 +40,14 @@ export default function Page() {
 
   useEffect(() => {
     const cityParam = searchParams.get('city');
-    if (cityParam && cityParam != undefined) {
+    if (cityParam && cityParam !== undefined) {
       setCity(cityParam);
     }
   }, [searchParams]);
 
   useEffect(() => {
     fetchData();
-  }, [city, page]);
+  }, [city, page, startDate, endDate]);
 
   return (
     <Box className="mx-10">
@@ -52,13 +62,13 @@ export default function Page() {
           flexWrap={'wrap'}
           className="py-4 px-8 border-2 border-solid border-gray text-start flex-2"
         >
-          <DateRangePicker label="from" />
-          <DateRangePicker label="until" />
+          <DateRangePicker setValue={setStartDate} label="from" />
+          <DateRangePicker setValue={setEndDate} label="until" />
         </HStack>
         <SearchButton />
       </HStack>
       <HStack justifyContent={'start'} gap={8} mt={10}>
-        {dataRoom.length == 0
+        {dataRoom.length === 0
           ? null
           : dataRoom.map((item: any) => {
               return (

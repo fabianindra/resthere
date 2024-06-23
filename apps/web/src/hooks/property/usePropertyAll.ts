@@ -8,6 +8,8 @@ const usePropertyAll = () => {
   const [maxPage, setMaxPage] = useState(1);
   const [search, setSearch] = useState('');
   const [city, setCity] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortDirection, setDirection] = useState('asc');
 
@@ -19,6 +21,8 @@ const usePropertyAll = () => {
         search,
         sortBy,
         sortDirection,
+        startDate,
+        endDate,
       );
       setMaxPage(Math.ceil(response.data.count / 4));
       setDataRoom(response.data.data);
@@ -46,6 +50,10 @@ const usePropertyAll = () => {
     setCity,
     sortBy,
     setSortBy,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
     sortDirection,
     handleDirections,
   };
