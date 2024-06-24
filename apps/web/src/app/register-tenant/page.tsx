@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import React, { useState } from 'react';
 import {
@@ -11,7 +11,6 @@ import {
   FormLabel,
   Container,
   Box,
-  Switch,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
@@ -21,7 +20,6 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isTenant, setIsTenant] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
@@ -31,17 +29,12 @@ export default function Register() {
       return;
     }
     try {
-      let response;
       const payload = {
         username,
         email,
         password,
       };
-      if (isTenant) {
-        response = await axios.post('http://localhost:6570/api/auth/register-tenant', payload);
-      } else {
-        response = await axios.post('http://localhost:6570/api/auth/register-user', payload);
-      }
+      const response = await axios.post('http://localhost:6570/api/auth/register-tenant', payload);
       if (response.data.success) {
         console.log('Registration successful', response);
         setSuccess(true);
@@ -49,7 +42,7 @@ export default function Register() {
       } else {
         setError(response.data.message || 'Registration failed');
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Registration error:', error);
       setError('Registration failed: ' + (error.response?.data?.message || error.message));
     }
@@ -66,7 +59,7 @@ export default function Register() {
           bg="white"
         >
           <Heading mb={6} textAlign="center" color={'primary'}>
-            {isTenant ? 'Tenant Registration' : 'User Registration'}
+            Tenant Registration
           </Heading>
           {error && <Text color="red.500" mb={4}>{error}</Text>}
           <FormControl id="username" mb={4}>
@@ -100,15 +93,6 @@ export default function Register() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-          </FormControl>
-          <FormControl display="flex" alignItems="center" mb={4} marginTop={5}>
-            <FormLabel htmlFor="tenant" mb="0">
-              User
-            </FormLabel>
-            <Switch id="tenant" isChecked={isTenant} onChange={() => setIsTenant(!isTenant)} />
-            <FormLabel htmlFor="tenant" mb="0" marginLeft={3}>
-              Tenant
-            </FormLabel> 
           </FormControl>
           <VStack spacing={4} marginTop={12}>
             <Button colorScheme="blue" onClick={handleRegister}>
