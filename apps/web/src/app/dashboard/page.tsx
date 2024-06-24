@@ -42,7 +42,7 @@ export default function Page() {
     onClose: onChangePasswordModalClose,
   } = useDisclosure();
 
-  const [verified, setVerified] = useState<any>(null); // Initialize as null
+  const [verified, setVerified] = useState<any>(false);
   const {
     dataRoom,
     page,
@@ -59,7 +59,7 @@ export default function Page() {
   useEffect(() => {
     const verifyAndSet = async () => {
       try {
-        const isValidToken: any = await verifyTokenClient();
+        const isValidToken: boolean = await verifyTokenClient();
         setVerified(isValidToken);
       } catch (error) {
         console.error('Error verifying token:', error);

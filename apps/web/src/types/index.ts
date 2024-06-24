@@ -28,18 +28,22 @@ export interface Tenant {
 };
 
 export interface Booking {
+  id: number,
   room_name: string;
   property_name: string;
   date: string;
+  status: string;
 }
 
 export type BookingTenant = {
+  id: string,
   username: string;
   email: string;
   room_name: string;
   property_name: string;
   check_in: Date;
   check_out: Date;
+  status: string;
 };
 
 
