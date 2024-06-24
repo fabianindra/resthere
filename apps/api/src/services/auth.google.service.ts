@@ -71,7 +71,7 @@ export const configureGoogleStrategyUser = () => {
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: 'http://localhost:6570/api/auth/google/callback',
+      callbackURL: 'http://localhost:6570/api/auth/google-user/callback',
     },
     async (accessToken: string, refreshToken: string, profile: Profile, done) => {
       try {
@@ -136,7 +136,7 @@ export const configureGoogleStrategyTenant = () => {
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: 'http://localhost:6570/api/auth/google/callback',
+      callbackURL: 'http://localhost:6570/api/auth/google-tenant/callback',
     },
     async (accessToken: string, refreshToken: string, profile: Profile, done) => {
       try {
