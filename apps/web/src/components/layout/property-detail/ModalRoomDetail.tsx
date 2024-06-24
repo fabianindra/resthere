@@ -57,7 +57,7 @@ export default function ModalRoomDetail({
       setRoomDetail(response.data.data);
       setSpecialPrice(response.data.data.special_price);
       setAvailableRoom(response.data.data.room_availability);
-      console.log(roomId);
+      
     } catch (error) {
       console.log(error);
     }
@@ -65,14 +65,12 @@ export default function ModalRoomDetail({
 
   const handleBooking = async () => {
     try {
-      const price = specialPrice ? specialPrice : roomDetail?.price;
+      const price = roomDetail?.price;
       const response = await axios.post('http://localhost:6570/api/transaction/booking', {
         roomId,
         userId,
         price,
-        status: 'waiting payment'
       });
-      console.log(response.data);
       window.location.href = `/profile`;
     } catch (error: any) {
       console.log(error);

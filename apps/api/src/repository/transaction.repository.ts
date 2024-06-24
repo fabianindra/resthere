@@ -38,7 +38,6 @@ export const repoAddTransaction = async (roomId: any, userId: any, price: any) =
         total_room: 1,
         check_in: now,
         check_out: checkOutDate,
-        status: 'waiting payment'
       },
     });
 

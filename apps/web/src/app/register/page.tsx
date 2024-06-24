@@ -1,4 +1,5 @@
-'use client'
+"use client"
+
 import React, { useState } from 'react';
 import {
   Button,
@@ -65,7 +66,7 @@ export default function Register() {
           bg="white"
         >
           <Heading mb={6} textAlign="center" color={'primary'}>
-            Register
+            {isTenant ? 'Tenant Registration' : 'User Registration'}
           </Heading>
           {error && <Text color="red.500" mb={4}>{error}</Text>}
           <FormControl id="username" mb={4}>

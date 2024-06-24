@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, 
-  ModalBody, ModalFooter
- } from '@chakra-ui/react';
+import { Box, Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Booking } from '@/types';
@@ -50,9 +48,7 @@ const BookingList: React.FC<any> = () => {
   };
 
   const handleUpload = async () => {
-    // Implement upload logic here
     if (paymentProof) {
-      // Example: Upload payment proof using axios
       const formData = new FormData();
       formData.append('paymentProof', paymentProof);
       formData.append('transactionId', String(selectedBooking?.id) || '');
@@ -63,10 +59,6 @@ const BookingList: React.FC<any> = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
-
-        console.log(response.data);
-
-        // Close modal after successful upload
         setIsModalOpen(false);
       } catch (error) {
         console.error('Error uploading payment proof:', error);
@@ -74,46 +66,102 @@ const BookingList: React.FC<any> = () => {
     }
   };
 
-  if (bookings.length === 0) {
-    return <>No bookings found for this user.</>;
-  }
+  const pendingPaymentBookings = bookings.filter(booking => booking.status === 'waiting payment');
+  const pendingApprovalBookings = bookings.filter(booking => booking.status === 'waiting payment confirmation');
+  const approvedBookings = bookings.filter(booking => booking.status === 'approved');
 
   return (
     <>
-      {bookings.map((booking, index) => (
-        <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-          <Text fontSize="xl" fontWeight="bold" mb={2}>
-            Property Bookings
-          </Text>
-          <Text>
-            <Text as="span" fontWeight="bold">
-              Property:
-            </Text>{' '}
-            {booking.property_name}
-          </Text>
-          <Text>
-            <Text as="span" fontWeight="bold">
-              Room:
-            </Text>{' '}
-            {booking.room_name}
-          </Text>
-          <Text>
-            <Text as="span" fontWeight="bold">
-              Booking Date:
-            </Text>{' '}
-            {booking.date}
-          </Text>
+      <Box>
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          Bookings Needing Payment Proof
+        </Text>
+        {pendingPaymentBookings.length === 0 ? (
+          <Text>No bookings needing payment proof found.</Text>
+        ) : (
+          pendingPaymentBookings.map((booking, index) => (
+            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
+              <Text fontSize="xl" fontWeight="bold" mb={2}>
+                {booking.property_name}
+              </Text>
+              <Text>
+                <Text as="span" fontWeight="bold">
+                  Room:
+                </Text>{' '}
+                {booking.room_name}
+              </Text>
+              <Text>
+                <Text as="span" fontWeight="bold">
+                  Booking Date:
+                </Text>{' '}
+                {booking.date}
+              </Text>
+              <Button colorScheme="blue" onClick={() => handleUploadPaymentProof(booking)}>
+                Upload Payment Proof
+              </Button>
+            </Box>
+          ))
+        )}
+      </Box>
 
-          {/* Conditional rendering for Upload Payment Proof button */}
-          {booking.status === 'waiting payment' && (
-            <Button colorScheme="blue" onClick={() => handleUploadPaymentProof(booking)}>
-              Upload Payment Proof
-            </Button>
-          )}
-        </Box>
-      ))}
+      <Box>
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          Bookings Waiting for Approval
+        </Text>
+        {pendingApprovalBookings.length === 0 ? (
+          <Text>No bookings waiting for approval found.</Text>
+        ) : (
+          pendingApprovalBookings.map((booking, index) => (
+            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
+              <Text fontSize="xl" fontWeight="bold" mb={2}>
+                {booking.property_name}
+              </Text>
+              <Text>
+                <Text as="span" fontWeight="bold">
+                  Room:
+                </Text>{' '}
+                {booking.room_name}
+              </Text>
+              <Text>
+                <Text as="span" fontWeight="bold">
+                  Booking Date:
+                </Text>{' '}
+                {booking.date}
+              </Text>
+            </Box>
+          ))
+        )}
+      </Box>
 
-      {/* Modal for uploading payment proof */}
+      <Box>
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          Approved Bookings
+        </Text>
+        {approvedBookings.length === 0 ? (
+          <Text>No approved bookings found.</Text>
+        ) : (
+          approvedBookings.map((booking, index) => (
+            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
+              <Text fontSize="xl" fontWeight="bold" mb={2}>
+                {booking.property_name}
+              </Text>
+              <Text>
+                <Text as="span" fontWeight="bold">
+                  Room:
+                </Text>{' '}
+                {booking.room_name}
+              </Text>
+              <Text>
+                <Text as="span" fontWeight="bold">
+                  Booking Date:
+                </Text>{' '}
+                {booking.date}
+              </Text>
+            </Box>
+          ))
+        )}
+      </Box>
+
       {selectedBooking && (
         <Modal onClose={handleCloseModal} isOpen={isModalOpen}>
           <ModalOverlay />
