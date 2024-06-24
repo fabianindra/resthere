@@ -22,6 +22,8 @@ function generateRandomPassword(length: number = 12): string {
   return password;
 }
 
+//user
+
 export const serviceRegisterUserGoogle = async (accessToken: string, refreshToken: string, profile: Profile): Promise<ServiceRegisterGoogleResponse> => {
   try {
     const email = profile.emails?.[0]?.value;

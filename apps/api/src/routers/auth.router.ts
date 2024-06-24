@@ -27,11 +27,11 @@ authRouter.get('/google-user/callback', passport.authenticate('google-user', {
       throw new Error('User not found');
     }
     const user = req.user as User;
-    const { username, email } = user;
+    const { id, username, email } = user;
     const token = sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
     const role = 'user';
 
-    res.redirect(`http://localhost:3000/?token=${token}&username=${username}&email=${email}&role=${role}`);
+    res.redirect(`http://localhost:3000/?token=${token}&username=${username}&email=${email}&role=${role}&userId=${id}`);
   } catch (error) {
     console.error('Error generating token:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -47,11 +47,11 @@ authRouter.get('/google-tenant/callback', passport.authenticate('google-tenant',
       throw new Error('User not found');
     }
     const user = req.user as User;
-    const { username, email } = user;
+    const { id, username, email } = user;
     const token = sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
     const role = 'tenant';
 
-    res.redirect(`http://localhost:3000/?token=${token}&username=${username}&email=${email}&role=${role}`);
+    res.redirect(`http://localhost:3000/?token=${token}&username=${username}&email=${email}&role=${role}&userId=${id}`);
   } catch (error) {
     console.error('Error generating token:', error);
     res.status(500).json({ message: 'Internal server error' });
