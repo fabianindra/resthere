@@ -22,8 +22,8 @@ export default function Nav() {
     const username = urlParams.get('username');
     const email = urlParams.get('email');
     const roleGoogle = urlParams.get('role');
-
-    console.log(Cookies.get('role'));
+    const idGoogle = urlParams.get('userId');
+    const id = urlParams.get('userId')
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -32,8 +32,9 @@ export default function Nav() {
 
     if (token) {
       Cookies.set('token', token);
-      Cookies.set('user', JSON.stringify({ username, email }));
+      Cookies.set('user', JSON.stringify({ id, username, email }));
       Cookies.set('role', String(roleGoogle).toLowerCase());
+      Cookies.set('id', String(idGoogle))
       window.location.href = '/';
     }
   }, []);

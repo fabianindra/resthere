@@ -8,7 +8,21 @@ const TenantBookingList: React.FC = () => {
   const [pendingBookings, setPendingBookings] = useState<BookingTenant[]>([]);
   const [approvedBookings, setApprovedBookings] = useState<BookingTenant[]>([]);
   const userData = Cookies.get('user');
-  const tenantId = userData ? JSON.parse(userData).id : null;
+  const idGoogle = Cookies.get('id')
+  
+  let tenantId: string | null = null;
+
+  if (idGoogle) {
+    tenantId = idGoogle;
+  } else if (userData) {
+    try {
+      const parsedUserData = JSON.parse(userData);
+      console.log('Parsed User Data:', parsedUserData);
+      tenantId = parsedUserData.id;
+    } catch (error) {
+      console.error('Error parsing user data from cookies:', error);
+    }
+  }
 
   const fetchBookings = async () => {
     try {

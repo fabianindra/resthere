@@ -38,6 +38,8 @@ const getUserFromCookie = (): User | null => {
 const user = getUserFromCookie();
 const userId = user?.id;
 
+console.log("userID: ", userId)
+
 export default function ModalRoomDetail({
   onClose,
   isOpen,
@@ -67,6 +69,7 @@ export default function ModalRoomDetail({
   };
 
   const handleBooking = async () => {
+    console.log("Booking button clicked");
     if (!userId) {
       setIsAlertOpen(true);
       return;
@@ -79,7 +82,8 @@ export default function ModalRoomDetail({
         userId,
         price,
       });
-      window.location.href = `/profile`;
+      console.log("Booking response:", response);
+      // window.location.href = `/profile`;
     } catch (error: any) {
       console.log(error);
     }
