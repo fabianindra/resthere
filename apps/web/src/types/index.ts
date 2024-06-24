@@ -50,13 +50,15 @@ export type BookingTenant = {
 export interface HeaderProps {
   loggedIn: boolean;
   user: User | null;
-  onOpen: () => void;
+  onOpenUserModal?: () => void;
+  onOpenTenantModal?: () => void;
   handleLogout: () => void;
 }
 
 export interface UserMenuProps {
   loggedIn: boolean;
   user: User | null;
-  onOpen?: () => void;
+  onOpenUserModal?: () => void;
+  onOpenTenantModal?: () => void;
   handleLogout: () => void;
 }

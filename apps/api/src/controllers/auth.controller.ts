@@ -5,7 +5,7 @@ import {
   serviceChangeUserPassword,
   serviceChangeTenantPassword,
 } from '../services/auth.register.service';
-import { serviceLogin } from '../services/auth.login.service';
+import { serviceTenantLogin, serviceUserLogin } from '../services/auth.login.service';
 import { serviceVerifyEmail } from '../services/auth.verify.service';
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -18,10 +18,16 @@ export const registerTenant = async (req: Request, res: Response) => {
   return res.status(Number(result?.status)).send(result);
 };
 
-export const login = async (req: Request, res: Response) => {
-  const result = await serviceLogin(req.body);
+export const userLogin = async (req: Request, res: Response) => {
+  const result = await serviceUserLogin(req.body);
   return res.status(Number(result?.status)).send(result);
 };
+
+export const tenantLogin = async (req: Request, res: Response) => {
+  const result = await serviceTenantLogin(req.body);
+  return res.status(Number(result?.status)).send(result);
+};
+
 
 export const verifyEmail = async (req: Request, res: Response) => {
   const result = await serviceVerifyEmail(req);

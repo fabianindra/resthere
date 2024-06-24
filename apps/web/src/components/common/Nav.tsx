@@ -4,12 +4,14 @@ import { Box, HStack, useDisclosure } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import LoginModal from './LoginModal';
+import LoginTenantModal from './LoginTenantModal';
 import Header from './Header';
 import Cookies from 'js-cookie';
 import UserMenu from './UserMenu';
 
 export default function Nav() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isUserModalOpen, onOpen: onOpenUserModal, onClose: onCloseUserModal } = useDisclosure();
+  const { isOpen: isTenantModalOpen, onOpen: onOpenTenantModal, onClose: onCloseTenantModal } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
@@ -48,22 +50,30 @@ export default function Nav() {
   return (
     <Box className="z-50">
       <HStack justifyContent="space-between" pr={20} pt={8}>
-        <Header
+      <Header
           loggedIn={loggedIn}
           user={user}
-          onOpen={onOpen}
+          onOpenUserModal={onOpenUserModal}
+          onOpenTenantModal={onOpenTenantModal}
           handleLogout={handleLogout}
         />
         <UserMenu
           loggedIn={loggedIn}
           user={user}
-          onOpen={onOpen}
+          onOpenUserModal={onOpenUserModal}
+          onOpenTenantModal={onOpenTenantModal}
           handleLogout={handleLogout}
         />
       </HStack>
       <LoginModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isUserModalOpen}
+        onClose={onCloseUserModal}
+        setLoggedIn={setLoggedIn}
+        setUser={setUser}
+      />
+      <LoginTenantModal
+        isOpen={isTenantModalOpen}
+        onClose={onCloseTenantModal}
         setLoggedIn={setLoggedIn}
         setUser={setUser}
       />

@@ -9,6 +9,8 @@ import {
   Button,
   VStack,
   Heading,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { RoomImage } from './RoomImage';
@@ -18,7 +20,7 @@ import { getDetailRoom } from '@/api/rooms';
 import { AvailableRoomTable } from './TabelAvailableRoom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { User } from '@/types'
+import { User } from '@/types';
 
 const getUserFromCookie = (): User | null => {
   const userCookie = Cookies.get('user');
@@ -50,6 +52,7 @@ export default function ModalRoomDetail({
   const [roomDetail, setRoomDetail] = useState<any>();
   const [specialPrice, setSpecialPrice] = useState<any>();
   const [availableRoom, setAvailableRoom] = useState<any>();
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const getDetailsRoom = async () => {
     try {
@@ -64,6 +67,11 @@ export default function ModalRoomDetail({
   };
 
   const handleBooking = async () => {
+    if (!userId) {
+      setIsAlertOpen(true);
+      return;
+    }
+
     try {
       const price = roomDetail?.price;
       const response = await axios.post('http://localhost:6570/api/transaction/booking', {
@@ -82,40 +90,59 @@ export default function ModalRoomDetail({
   }, [isOpen]);
 
   return (
-    <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <RoomImage />
-          <RoomInfo
-            user={roomDetail?.capacity_person}
-            bed={roomDetail?.capacity_room}
-            size={roomDetail?.room_size}
-          />
-          {dashboard ? (
-            <>
-              <SpecialPriceTable
-                room_id={roomId}
-                addSpecialPrice={addSpecialPrice}
-                toggleSpecialPrice={toggleSpecialPrice}
-                dataSpecialPrice={specialPrice}
-              />
-              <AvailableRoomTable
-                room_id={roomId}
-                addAvailableRoom={addAvailableRoom}
-                toggleAvailableRoom={toggleAvailableRoom}
-                dataAvailableRoom={availableRoom}
-              />
-            </>
-          ) : null}
-        </ModalBody>
-        <ModalFooter justifyContent={'space-between'}>
-          <Heading size={'md'}>Rp. {roomDetail?.price}</Heading>
-          <Button onClick={handleBooking} colorScheme="blue">Booking</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{title}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <RoomImage />
+            <RoomInfo
+              user={roomDetail?.capacity_person}
+              bed={roomDetail?.capacity_room}
+              size={roomDetail?.room_size}
+            />
+            {dashboard ? (
+              <>
+                <SpecialPriceTable
+                  room_id={roomId}
+                  addSpecialPrice={addSpecialPrice}
+                  toggleSpecialPrice={toggleSpecialPrice}
+                  dataSpecialPrice={specialPrice}
+                />
+                <AvailableRoomTable
+                  room_id={roomId}
+                  addAvailableRoom={addAvailableRoom}
+                  toggleAvailableRoom={toggleAvailableRoom}
+                  dataAvailableRoom={availableRoom}
+                />
+              </>
+            ) : null}
+          </ModalBody>
+          <ModalFooter justifyContent={'space-between'}>
+            <Heading size={'md'}>Rp. {roomDetail?.price}</Heading>
+            <Button onClick={handleBooking} colorScheme="blue">Booking</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Alert</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Alert status="warning">
+              <AlertIcon />
+              You need to login to book
+            </Alert>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setIsAlertOpen(false)} colorScheme="blue">Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
