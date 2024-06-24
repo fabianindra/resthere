@@ -2,13 +2,16 @@ import { Router, Request, Response } from 'express';
 import passport from '../passport.config';
 import { sign } from 'jsonwebtoken';
 import { User } from '@prisma/client';
-import { changeTenantPassword, changeUserPassword, registerTenant, registerUser, tenantLogin, userLogin, verifyEmail } from '../controllers/auth.controller';
+import { changeTenantPassword, changeUserPassword, completeRegisterTenant, completeRegisterUser, registerTenant, registerUser, tenantLogin, userLogin, verifyEmail } from '../controllers/auth.controller';
 import { serviceVerifyToken } from '@/middlewares/auth.middleware';
 
 const authRouter = Router();
 
 authRouter.post('/register-user', registerUser);
+authRouter.post('/register-user-complete', completeRegisterUser);
 authRouter.post('/register-tenant', registerTenant);
+authRouter.post('/register-tenant-complete', completeRegisterTenant);
+
 authRouter.post('/user-login', userLogin);
 authRouter.post('/tenant-login', tenantLogin);
 
