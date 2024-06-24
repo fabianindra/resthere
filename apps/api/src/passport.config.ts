@@ -1,11 +1,33 @@
 import passport from 'passport';
-import { User } from '@prisma/client';
-import { configureGoogleStrategy, serializeUser, deserializeUser } from './services/auth.google.service';
+import { User, Tenant } from '@prisma/client';
+import { 
+  configureGoogleStrategyUser, 
+  configureGoogleStrategyTenant, 
+  serializeUser, 
+  deserializeUser, 
+  serializeTenant, 
+  deserializeTenant 
+} from './services/auth.google.service';
 
-passport.use(configureGoogleStrategy());
+passport.use('google-user', configureGoogleStrategyUser());
+passport.use('google-tenant', configureGoogleStrategyTenant());
 
-passport.serializeUser((user, done) => serializeUser(user as User, done));
+passport.serializeUser((user, done) => {
+  if ((user as User).email) {
+    serializeUser(user as User, done);
+  } else {
+    serializeTenant(user as Tenant, done);
+  }
+});
 
-passport.deserializeUser((id, done) => deserializeUser(id as number, done));
+passport.deserializeUser((id, done) => {
+  deserializeUser(id as number, (err, user) => {
+    if (err || !user) {
+      deserializeTenant(id as number, done);
+    } else {
+      done(null, user);
+    }
+  });
+});
 
 export default passport;

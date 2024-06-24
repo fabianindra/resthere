@@ -15,11 +15,11 @@ import Cookies from 'js-cookie';
 const UserMenu: React.FC<UserMenuProps> = ({
   loggedIn,
   user,
-  onOpen,
+  onOpenUserModal,
+  onOpenTenantModal,
   handleLogout,
 }) => {
-  const roleCookies = String(Cookies.get('role'));
-  const roleWithoutQuotes = roleCookies.slice(1, -1);
+  const roleCookies = Cookies.get('role');
 
   return (
     <Menu>
@@ -33,12 +33,20 @@ const UserMenu: React.FC<UserMenuProps> = ({
       </MenuButton>
       <MenuList>
         {!loggedIn ? (
-          <MenuItem color={'primary'} onClick={onOpen}>
-            <SignIn size={32} />
-            <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-              Log In
-            </Text>
-          </MenuItem>
+          <>
+            <MenuItem color={'primary'} onClick={onOpenUserModal}>
+              <SignIn size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Log In as User
+              </Text>
+            </MenuItem>
+            <MenuItem color={'primary'} onClick={onOpenTenantModal}>
+              <SignIn size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Log In as Tenant
+              </Text>
+            </MenuItem>
+          </>
         ) : (
           <MenuItem color={'primary'} onClick={handleLogout}>
             <SignOut size={32} />
@@ -47,18 +55,17 @@ const UserMenu: React.FC<UserMenuProps> = ({
             </Text>
           </MenuItem>
         )}
-        {roleWithoutQuotes == 'user' ||
-          (roleCookies == 'user' && (
-            <Link href="/profile">
-              <MenuItem color={'primary'}>
-                <Table size={32} />
-                <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                  Profile
-                </Text>
-              </MenuItem>
-            </Link>
-          ))}
-        {roleCookies == 'tenant' && (
+        {loggedIn && roleCookies === 'user' && (
+          <Link href="/profile">
+            <MenuItem color={'primary'}>
+              <Table size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Profile
+              </Text>
+            </MenuItem>
+          </Link>
+        )}
+        {loggedIn && roleCookies === 'tenant' && (
           <Link href="/dashboard">
             <MenuItem color={'primary'}>
               <Table size={32} />

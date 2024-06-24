@@ -25,13 +25,12 @@ const createToken = (payload: object, expiresIn: string): string => {
 };
 
 // Login service for both user and tenant
-export const serviceLogin = async (request: any) => {
+export const serviceUserLogin = async (request: any) => {
   const { email, password }: { email: string; password: string } = request;
   try {
     const existingUser = await repoFindUser(email);
-    const existingTenant = await repoFindTenant(email);
 
-    if (!existingUser && !existingTenant) {
+    if (!existingUser) {
       return {
         status: 401,
         success: false,
@@ -39,7 +38,7 @@ export const serviceLogin = async (request: any) => {
       };
     }
 
-    const entity: UserOrTenant | null = existingUser || existingTenant;
+    const entity: UserOrTenant | null = existingUser;
     if (!entity) {
       return {
         status: 401,
@@ -48,7 +47,69 @@ export const serviceLogin = async (request: any) => {
       };
     }
 
-    const userType = existingUser ? 'user' : 'tenant';
+    const userType = 'user';
+
+    if (!entity.verified) {
+      return {
+        status: 401,
+        success: false,
+        message: "Email not verified",
+      };
+    }
+
+    const isValidPassword = await comparePasswords(password, entity.password);
+    if (isValidPassword) {
+      const jwtPayload = { email, userType };
+      const token = createToken(jwtPayload, '1h');
+      const { password, ...entityWithoutPassword } = entity; // Destructuring to remove password
+      return {
+        status: 201,
+        success: true,
+        message: "Login successfully",
+        data: entityWithoutPassword,
+        token: token,
+        role: userType
+      };
+    }
+
+    return {
+      status: 401,
+      success: false,
+      message: "Invalid email or password",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: "Server error",
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceTenantLogin = async (request: any) => {
+  const { email, password }: { email: string; password: string } = request;
+  try {
+    const existingTenant = await repoFindTenant(email);
+
+    if (!existingTenant) {
+      return {
+        status: 401,
+        success: false,
+        message: "Invalid email or password",
+      };
+    }
+
+    const entity: UserOrTenant | null = existingTenant;
+    if (!entity) {
+      return {
+        status: 401,
+        success: false,
+        message: "Invalid email or password",
+      };
+    }
+
+    const userType = 'tenant';
 
     if (!entity.verified) {
       return {
