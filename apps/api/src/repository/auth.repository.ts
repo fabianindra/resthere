@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -55,7 +55,7 @@ export const repoUserChangePassword = async (email: any, password: any) => {
     where: { email },
     data: { password: password },
   });
-}
+};
 
 export const repoUserCompletePassword = async (email: any, username: any, password: any) => {
   await prisma.user.update({
@@ -69,12 +69,11 @@ export const repoTenantChangePassword = async (email: any, password: any) => {
     where: { email },
     data: { password: password },
   });
-}
+};
 
 export const repoTenantCompletePassword = async (email: any, username: any, password: any) => {
   await prisma.tenant.update({
     where: { email },
     data: { username: username, password: password },
   });
-}
-
+};

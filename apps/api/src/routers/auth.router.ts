@@ -3,7 +3,7 @@ import passport from '../passport.config';
 import { sign } from 'jsonwebtoken';
 import { User } from '@prisma/client';
 import { changeTenantPassword, changeUserPassword, completeRegisterTenant, completeRegisterUser, registerTenant, registerUser, tenantLogin, userLogin, verifyEmail } from '../controllers/auth.controller';
-import { serviceVerifyToken } from '@/middlewares/auth.middleware';
+import { serviceVerifyToken } from '../middlewares/auth.middleware';
 
 const authRouter = Router();
 
@@ -16,10 +16,13 @@ authRouter.post('/user-login', userLogin);
 authRouter.post('/tenant-login', tenantLogin);
 
 authRouter.get('/verify-email', verifyEmail);
-authRouter.post('/verify-token', serviceVerifyToken, (req: Request, res: Response) => {
-  res.status(200).json({ message: 'Token is valid' });
-});
-
+authRouter.post(
+  '/verify-token',
+  serviceVerifyToken,
+  (req: Request, res: Response) => {
+    res.status(200).json({ message: 'Token is valid' });
+  },
+);
 
 authRouter.get('/google-user', passport.authenticate('google-user', { scope: ['profile', 'email'] }));
 authRouter.get('/google-user/callback', passport.authenticate('google-user', {

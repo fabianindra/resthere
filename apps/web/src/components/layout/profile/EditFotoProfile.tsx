@@ -1,5 +1,5 @@
 import { updateFotoProfile } from '@/api/profile';
-import { Avatar, Box, Button, VStack, useToast } from '@chakra-ui/react';
+import { Avatar, Box, Button, Input, VStack, useToast } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
 
@@ -49,16 +49,16 @@ export default function EditFotoProfile(foto: any) {
 
   return (
     <VStack justifyContent={'center'}>
-      <input
+      <Input
         ref={fileInputRef}
         type="file"
         accept="image/*"
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
-      <div>
+      <>
         <Avatar size="xl" src={preview ? preview : foto} />
-      </div>
+      </>
       <Button w={200} colorScheme="gray" onClick={handleUploadClick}>
         Ubah Foto
       </Button>

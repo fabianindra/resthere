@@ -1,8 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const repoAddTransaction = async (roomId: any, userId: any, price: any) => {
+export const repoAddTransaction = async (
+  roomId: number,
+  userId: number,
+  price: number,
+) => {
   try {
     // Check if the user with the given userId exists
     const user = await prisma.user.findUnique({
@@ -12,7 +16,7 @@ export const repoAddTransaction = async (roomId: any, userId: any, price: any) =
     });
 
     if (!user) {
-      throw new Error("User with the given userId does not exist.");
+      throw new Error('User with the given userId does not exist.');
     }
 
     // Check if the room with the given roomId exists
@@ -23,11 +27,11 @@ export const repoAddTransaction = async (roomId: any, userId: any, price: any) =
     });
 
     if (!room) {
-      throw new Error("Room with the given roomId does not exist.");
+      throw new Error('Room with the given roomId does not exist.');
     }
 
-    const now = new Date();
-    const checkOutDate = new Date(now);
+    const now: Date = new Date();
+    const checkOutDate: Date = new Date(now);
     checkOutDate.setDate(checkOutDate.getDate() + 1);
 
     await prisma.transaction.create({
@@ -41,9 +45,13 @@ export const repoAddTransaction = async (roomId: any, userId: any, price: any) =
       },
     });
 
-    return { success: true, message: "Transaction added successfully" };
-  } catch (error:any) {
-    return { success: false, message: "Failed to add transaction", error: error.message };
+    return { success: true, message: 'Transaction added successfully' };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: 'Failed to add transaction',
+      error: error.message,
+    };
   }
 };
 

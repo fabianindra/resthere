@@ -1,4 +1,4 @@
-import { repoAddTransaction, repoGetSalesReport, repoGetTransactionStatus, repoUpdateTransactionStatus, repoUploadPaymentProof } from "@/repository/transaction.repository";
+import { repoAddTransaction, repoGetSalesReport, repoGetTransactionStatus, repoUpdateTransactionStatus, repoUploadPaymentProof } from "../repository/transaction.repository";
 import path from 'path';
 
 interface PaymentProofRequestBody {
@@ -6,12 +6,8 @@ interface PaymentProofRequestBody {
 }
 
 export const serviceAddTransaction = async (req: any) => {
-  const {
-    roomId,
-    userId,
-    price
-  } = req.body;
-  
+  const { roomId, userId, price } = req.body;
+
   if (!roomId || !userId || !price) {
     return {
       status: 401,

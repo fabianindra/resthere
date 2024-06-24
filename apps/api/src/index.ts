@@ -11,6 +11,7 @@ import specialPriceRouter from './routers/specialprice.router';
 
 import passport from './passport.config';
 import roomAvailability from './routers/roomavailability.router';
+import profileRouter from './routers/profile.router';
 import transactionRouter from './routers/transaction.router';
 import bookingRouter from './routers/booking.router';
 
@@ -37,6 +38,7 @@ app.use('/api/property', propertyRouter);
 app.use('/api/room', roomRouter);
 app.use('/api/specialprice', specialPriceRouter);
 app.use('/api/romm-availability', roomAvailability);
+app.use('/api/profile', profileRouter);
 app.use('/api/transaction', transactionRouter);
 app.use('/api/booking-list', bookingRouter);
 

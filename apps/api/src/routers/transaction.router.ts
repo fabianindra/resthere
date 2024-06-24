@@ -1,6 +1,6 @@
-import { addTransactionController, getSalesReportController, getTransactionStatusController, updateTransactionStatusController, uploadPaymentProofController } from "@/controllers/transaction.controller";
+import { addTransactionController, getSalesReportController, getTransactionStatusController, updateTransactionStatusController, uploadPaymentProofController } from "../controllers/transaction.controller";
 import { Router } from "express";
-import { uploader } from "@/middlewares/uploder";
+import { uploader } from "../middlewares/uploder";
 
 const transactionRouter = Router();
 
@@ -11,4 +11,3 @@ transactionRouter.get('/status', getTransactionStatusController);
 transactionRouter.post('/upload-payment-proof', uploader('IMG', '/images').single('paymentProof'), uploadPaymentProofController);
 
 export default transactionRouter;
-
