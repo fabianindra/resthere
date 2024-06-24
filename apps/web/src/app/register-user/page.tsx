@@ -28,7 +28,7 @@ export default function InitialRegister() {
       {!success && (
         <Box p={8} borderWidth={1} borderRadius={8} boxShadow="lg" bg="white">
           <Heading mb={6} textAlign="center" color={'primary'}>
-            Register with Email
+            User Register with Email
           </Heading>
           {error && <Text color="red.500" mb={4}>{error}</Text>}
           <FormControl id="email" mb={4}>

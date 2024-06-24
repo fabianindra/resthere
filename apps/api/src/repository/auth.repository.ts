@@ -72,7 +72,7 @@ export const repoTenantChangePassword = async (email: any, password: any) => {
 }
 
 export const repoTenantCompletePassword = async (email: any, username: any, password: any) => {
-  await prisma.user.update({
+  await prisma.tenant.update({
     where: { email },
     data: { username: username, password: password },
   });

@@ -43,13 +43,25 @@ export const tenantLogin = async (req: Request, res: Response) => {
 export const verifyEmail = async (req: Request, res: Response) => {
   const result = await serviceVerifyEmail(req);
 
-  if (result.status === 200) {  // Check if the email verification was successful
-    const email = result.email;  // Use the email from the service result
-    return res.redirect(`http://localhost:3000/register-user/complete-register-user?email=${email}`);
+  if (result.status === 200) {
+    const email = result.email;
+    const type = result.type;
+
+    if (type === 'user') {
+      return res.redirect(`http://localhost:3000/register-user/complete-register-user?email=${email}`);
+    } else if (type === 'tenant') {
+      return res.redirect(`http://localhost:3000/register-tenant/complete-register-tenant?email=${email}`);
+    } else {
+      return res.status(400).send({
+        status: 400,
+        message: "Unknown verification type"
+      });
+    }
   } else {
     return res.status(Number(result?.status)).send(result);
   }
 };
+
 
 export const changeUserPassword = async (req: Request, res: Response) => {
   const { email, currentPassword, newPassword } = req.body;
