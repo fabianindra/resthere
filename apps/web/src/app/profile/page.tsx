@@ -2,11 +2,16 @@
 
 import { VStack, Box, Text, Button, Avatar, useToast } from '@chakra-ui/react';
 import React, { useState, useEffect, useRef } from 'react';
+
 import { User } from '@/types';
 import Cookies from 'js-cookie';
 import { verifyTokenClient } from '../verifyToken';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
+import EditProfile from '@/components/layout/profile/EditProfile';
+import EditFotoProfile from '@/components/layout/profile/EditFotoProfile';
+import BookingList from '@/components/layout/profile/bookingList';
+
 
 export default function ProfilePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -39,6 +44,7 @@ export default function ProfilePage() {
       try {
         const isValidToken = await verifyTokenClient();
         setVerified(isValidToken);
+
         if (!isValidToken && !hasRedirected.current) {
           hasRedirected.current = true;
           toast({
@@ -52,6 +58,7 @@ export default function ProfilePage() {
             window.location.href = '/';
           }, 5000);
         }
+
       } catch (error) {
         console.error('Error verifying token:', error);
         setVerified(false);
@@ -83,6 +90,7 @@ export default function ProfilePage() {
   };
 
   if (verified === null) {
+
     return (
       <Box>
         <VStack mt={100} mb={200}>
@@ -112,6 +120,7 @@ export default function ProfilePage() {
           </Text>
           <Text fontSize="lg" color="gray.500">
             {user?.email}
+
           </Text>
           <Button mt={4} colorScheme="teal" onClick={handleLogout}>
             Logout
