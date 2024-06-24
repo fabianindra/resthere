@@ -14,6 +14,7 @@ const verifyToken = (token: string, secret: string): any => {
 // Email verification service
 export const serviceVerifyEmail = async (request: any) => {
   const token = request.query.token;
+  const email = request.query.email;
 
   if (!token) {
     return {
@@ -34,12 +35,14 @@ export const serviceVerifyEmail = async (request: any) => {
       return {
         status: 200,
         message: "Email verified successfully",
+        email: email
       };
     } else if (tenant) {
       await repoVerifyTenant(email);
       return {
         status: 200,
         message: "Email verified successfully",
+        email: email
       };
     } else {
       return {
