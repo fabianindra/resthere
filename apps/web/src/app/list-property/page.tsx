@@ -19,6 +19,9 @@ export default function Page() {
   const [city, setCity] = useState<any>();
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const cityParam = searchParams.get('city');
+  const startDateParam = searchParams.get('startDate');
+  const endDateParam = searchParams.get('endDate');
 
   const fetchData = async () => {
     try {
@@ -39,15 +42,20 @@ export default function Page() {
   };
 
   useEffect(() => {
-    const cityParam = searchParams.get('city');
-    if (cityParam && cityParam !== undefined) {
+    if (cityParam) {
       setCity(cityParam);
+    }
+    if (startDateParam) {
+      setStartDate(new Date(startDateParam));
+    }
+    if (endDateParam) {
+      setEndDate(new Date(endDateParam));
     }
   }, [searchParams]);
 
   useEffect(() => {
     fetchData();
-  }, [city, page, startDate, endDate]);
+  }, [city, page, startDate, endDate, searchParams]);
 
   return (
     <Box className="mx-10">
@@ -62,8 +70,16 @@ export default function Page() {
           flexWrap={'wrap'}
           className="py-4 px-8 border-2 border-solid border-gray text-start flex-2"
         >
-          <DateRangePicker setValue={setStartDate} label="from" />
-          <DateRangePicker setValue={setEndDate} label="until" />
+          <DateRangePicker
+            setValue={setStartDate}
+            label="from"
+            value={startDateParam}
+          />
+          <DateRangePicker
+            setValue={setEndDate}
+            label="until"
+            value={endDateParam}
+          />
         </HStack>
         <SearchButton />
       </HStack>

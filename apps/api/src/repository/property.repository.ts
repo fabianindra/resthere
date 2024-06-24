@@ -28,6 +28,7 @@ export const repoGetPropertyByRooms = async ({
   const start = startDate ? new Date(startDate) : undefined;
   const end = endDate ? new Date(endDate) : undefined;
 
+  // Build the whereClause
   const whereClause: any = {
     ...(city ? { city_name: city } : {}),
     ...(search
@@ -38,32 +39,35 @@ export const repoGetPropertyByRooms = async ({
           ],
         }
       : {}),
-    rooms: {
-      some: {
-        room_availability:
-          start && end
-            ? {
-                some: {
-                  AND: [
-                    { start_date: { gte: start } }, // check_out is after startDate
-                    { end_date: { lte: end } }, // check_in is before endDate
-                  ],
+    ...(start &&
+      end && {
+        rooms: {
+          none: {
+            OR: [
+              {
+                room_availability: {
+                  some: {
+                    AND: [
+                      { start_date: { lte: end } },
+                      { end_date: { gte: start } },
+                    ],
+                  },
                 },
-              }
-            : undefined,
-        transaction:
-          start && end
-            ? {
-                some: {
-                  AND: [
-                    { check_out: { gte: start } }, // check_out is after startDate
-                    { check_in: { lte: end } }, // check_in is before endDate
-                  ],
+              },
+              {
+                transaction: {
+                  some: {
+                    AND: [
+                      { check_out: { gte: start } },
+                      { check_in: { lte: end } },
+                    ],
+                  },
                 },
-              }
-            : undefined,
-      },
-    },
+              },
+            ],
+          },
+        },
+      }),
   };
 
   const count = await prisma.property.aggregate({

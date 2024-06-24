@@ -5,7 +5,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { CalendarDots } from '@phosphor-icons/react/dist/ssr';
 import { Box, Heading } from '@chakra-ui/react';
 
-const CustomDatePicker = ({ setValue }: { setValue: (date: Date) => void }) => {
+const CustomDatePicker = ({
+  setValue,
+  value,
+}: {
+  setValue: (date: Date) => void;
+  value: string | null;
+}) => {
   const [startDate, setStartDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,6 +24,14 @@ const CustomDatePicker = ({ setValue }: { setValue: (date: Date) => void }) => {
     setValue(date);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (value) {
+      let v = new Date(value);
+      setStartDate(v);
+      setValue(v);
+    }
+  }, [value]);
 
   return (
     <Box className="relative">
