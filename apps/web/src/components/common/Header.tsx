@@ -24,18 +24,10 @@ const Header: React.FC<HeaderProps> = () => {
           borderRadius={50}
           variant="outline"
         >
+          <Link href="/transaction">
           <Text fontWeight="light">Transaction</Text>
+          </Link>
         </Button>
-        <Link href="/register">
-          <Button
-            border="2px"
-            borderColor="gray.300"
-            borderRadius={50}
-            variant="outline"
-          >
-            <Text fontWeight="light">Register</Text>
-          </Button>
-        </Link>
       </Flex>
     </Flex>
   );

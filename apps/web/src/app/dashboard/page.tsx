@@ -28,8 +28,11 @@ import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
 import TenantBookingList from '@/components/layout/dashboard/TenantBookingList';
+import SalesReport from '@/components/layout/dashboard/SalesReport';
+import Cookies from 'js-cookie';
+import { User } from '@/types';
 
-export default function Page() {
+export default function DashboardPage() {
   const {
     isOpen: isAddPropertyModalOpen,
     onOpen: onAddPropertyModalOpen,
@@ -41,7 +44,11 @@ export default function Page() {
     onClose: onChangePasswordModalClose,
   } = useDisclosure();
 
-  const [verified, setVerified] = useState<any>(null); // Initialize as null
+  const [verified, setVerified] = useState<any>(false);
+  const [role, setRole] = useState('')
+  const [user, setUser] = useState<User | null>(null);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
   const {
     dataRoom,
     page,
@@ -56,9 +63,26 @@ export default function Page() {
   } = usePropertyData();
 
   useEffect(() => {
+    const storedUser = Cookies.get('user');
+    const storedRole = Cookies.get('role');
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+    if (storedRole) {
+        setRole(storedRole);
+      } else {
+        setRole('');
+      }
+  }, []);
+
+  useEffect(() => {
     const verifyAndSet = async () => {
       try {
-        const isValidToken: any = await verifyTokenClient();
+        const isValidToken: boolean = await verifyTokenClient();
         setVerified(isValidToken);
       } catch (error) {
         console.error('Error verifying token:', error);
@@ -77,7 +101,7 @@ export default function Page() {
     );
   }
 
-  if (!verified) {
+  if (!verified || role !== 'tenant') {
     return (
       <VStack mt={100} mb={200}>
         <Text>You are not authorized. Please log in to access this page.</Text>
@@ -157,6 +181,7 @@ export default function Page() {
               />
             ))}
       </HStack>
+      <SalesReport />
       <TenantBookingList />
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
       <ChangePasswordModal

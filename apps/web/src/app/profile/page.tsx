@@ -10,7 +10,6 @@ import { useDisclosure } from '@chakra-ui/react';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
 import EditProfile from '@/components/layout/profile/EditProfile';
 import EditFotoProfile from '@/components/layout/profile/EditFotoProfile';
-import BookingList from '@/components/layout/profile/bookingList';
 
 export default function ProfilePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,7 +70,6 @@ export default function ProfilePage() {
           </Text>
         )}
       </VStack>
-      {/* <BookingList /> */}
       <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
     </HStack>
   );

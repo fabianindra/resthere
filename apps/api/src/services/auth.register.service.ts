@@ -6,7 +6,8 @@ import {
   repoAddTenant,
   repoAddUser,
   repoFindTenant,
-  repoFindUser, repoTenantChangePassword, repoUserChangePassword
+  repoFindUser, repoTenantChangePassword, repoTenantCompletePassword, repoUserChangePassword,
+  repoUserCompletePassword
 } from "../repository/auth.repository";
 
 // Define types for User and Tenant
@@ -77,13 +78,10 @@ const sendEmail = async (emailOptions:any) => {
   await emailTransporter.sendMail(emailOptions);
 };
 
-// Common register function for both user and tenant
-const register = async (request: User | Tenant, isUser: boolean) => {
+// register function for both user and tenant
+const registerUser = async (request: User | Tenant, isUser: boolean) => {
   try {
-    const repoFind = isUser ? repoFindUser : repoFindTenant;
-    const repoAdd = isUser ? repoAddUser : repoAddTenant;
-
-    const existingEntity = await repoFind(request.email);
+    const existingEntity = await repoFindUser(request.email);
 
     if (existingEntity) {
       console.log(`${isUser ? 'User' : 'Tenant'} with email ${request.email} already exists.`);
@@ -94,8 +92,47 @@ const register = async (request: User | Tenant, isUser: boolean) => {
       };
     }
 
-    const hashedPassword = await hashPassword(request.password);
-    await repoAdd(request.username, request.email, hashedPassword);
+    await repoAddUser(request.email);
+
+    const verificationToken = createToken({ email: request.email }, 'verificationKey', '1d');
+      sendEmail({
+        subject: 'Email Verification',
+        text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}`,
+        to: request.email,
+        from: process.env.EMAIL
+      });
+
+    console.log(`${isUser ? 'User' : 'Tenant'} registered successfully. Verification email sent to ${request.email}.`);
+    return {
+      status: 201,
+      success: true,
+      message: "Register successfully. Please check your email to verify your account.",
+      data: request,
+    };
+  } catch (error) {
+    console.log(`Error during registration: ${(error as Error).message}`);
+    return {
+      status: 500,
+      message: "Server error",
+      error: (error as Error).message,
+    };
+  }
+};
+
+const registerTenant = async (request: User | Tenant, isUser: boolean) => {
+  try {
+    const existingEntity = await repoFindTenant(request.email);
+
+    if (existingEntity) {
+      console.log(`${isUser ? 'User' : 'Tenant'} with email ${request.email} already exists.`);
+      return {
+        status: 401,
+        success: false,
+        message: "Email already registered",
+      };
+    }
+
+    await repoAddTenant(request.email);
 
     const verificationToken = createToken({ email: request.email }, 'verificationKey', '1d');
       sendEmail({
@@ -124,12 +161,12 @@ const register = async (request: User | Tenant, isUser: boolean) => {
 
 // User registration service
 export const serviceRegisterUser = async (request: User) => {
-  return register(request, true);
+  return registerUser(request, true);
 };
 
 // Tenant registration service
 export const serviceRegisterTenant = async (request: Tenant) => {
-  return register(request, false);
+  return registerTenant(request, false);
 };
 
 // Change password for a user
@@ -212,6 +249,62 @@ export const serviceChangeTenantPassword = async (email: string, currentPassword
       success: false,
       message: "Server error",
       error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceCompleteRegistrationUser = async (data: { email: string, username: string, password: string }) => {
+  try {
+    const user = await repoFindUser(data.email);
+    if (!user || user.verified === false) {
+      return {
+        status: 400,
+        success: false,
+        message: 'Email not verified or user not found',
+      };
+    }
+
+    const hashedPassword = await hashPassword(data.password);
+    await repoUserCompletePassword(data.email, data.username, hashedPassword);
+
+    return {
+      status: 200,
+      success: true,
+      message: 'Registration completed successfully',
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: 'Server error',
+    };
+  }
+};
+
+export const serviceCompleteRegistrationTenant = async (data: { email: string, username: string, password: string }) => {
+  try {
+    const user = await repoFindTenant(data.email);
+    if (!user || user.verified === false) {
+      return {
+        status: 400,
+        success: false,
+        message: 'Email not verified or user not found',
+      };
+    }
+
+    const hashedPassword = await hashPassword(data.password);
+    await repoTenantCompletePassword(data.email, data.username, hashedPassword);
+
+    return {
+      status: 200,
+      success: true,
+      message: 'Registration completed successfully',
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: 'Server error',
     };
   }
 };
