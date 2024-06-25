@@ -71,7 +71,7 @@ export default function ProfilePage() {
           </Text>
         )}
       </VStack>
-      <BookingList />
+      {/* <BookingList /> */}
       <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
     </HStack>
   );
