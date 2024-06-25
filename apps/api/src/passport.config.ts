@@ -16,7 +16,7 @@ passport.serializeUser((user, done) => {
   if ((user as User).email) {
     serializeUser(user as User, done);
   } else {
-    serializeTenant(user as Tenant, done);
+    serializeTenant(user as User, done);
   }
 });
 

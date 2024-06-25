@@ -1,13 +1,16 @@
 import { Strategy as GoogleStrategy, Profile } from 'passport-google-oauth20';
-import { PrismaClient, User as PrismaUser } from '@prisma/client';
+import { PrismaClient, User, Tenant } from '@prisma/client';
 import { sign } from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
-export interface User extends PrismaUser {}
-
 interface ServiceRegisterGoogleResponse {
   user: User;
+  token: string;
+  role: string;
+}
+interface ServiceRegisterGoogleResponseTenant {
+  user: Tenant;
   token: string;
   role: string;
 }
@@ -89,17 +92,17 @@ export const configureGoogleStrategyUser = () => {
 
 //Tenant
 
-export const serviceRegisterTenantGoogle = async (accessToken: string, refreshToken: string, profile: Profile): Promise<ServiceRegisterGoogleResponse> => {
+export const serviceRegisterTenantGoogle = async (accessToken: string, refreshToken: string, profile: Profile): Promise<ServiceRegisterGoogleResponseTenant> => {
   try {
     const email = profile.emails?.[0]?.value;
     if (!email) {
       throw new Error('No email associated with this account');
     }
 
-    let user = await prisma.tenant.findUnique({ where: { email } });
+    let tenant = await prisma.tenant.findUnique({ where: { email } });
 
-    if (!user) {
-      user = await prisma.tenant.create({
+    if (!tenant) {
+      tenant = await prisma.tenant.create({
         data: {
           username: profile.displayName || '',
           email,
@@ -108,30 +111,32 @@ export const serviceRegisterTenantGoogle = async (accessToken: string, refreshTo
       });
     }
 
-    const jwtPayload = { email: user.email, userType: 'user' };
+    const jwtPayload = { email: tenant.email, userType: 'tenant' };
     const token = sign(jwtPayload, process.env.JWT_SECRET!, { expiresIn: '1h' });
 
-    return { user, token, role: 'user' };
+    return { user: tenant, token, role: 'tenant' }; 
   } catch (error) {
     throw error;
   }
 };
 
+
 export const serializeTenant = (user: User, done: (err: any, id?: number) => void) => {
   done(null, user.id);
 };
 
-export const deserializeTenant = async (id: number, done: (err: any, user?: User) => void) => {
+export const deserializeTenant = async (id: number, done: (err: any, tenant?: Tenant) => void) => {
   try {
-    const user = await prisma.tenant.findUnique({ where: { id } });
-    if (!user) {
-      throw new Error('User not found');
+    const tenant = await prisma.tenant.findUnique({ where: { id } });
+    if (!tenant) {
+      throw new Error('Tenant not found');
     }
-    done(null, user);
+    done(null, tenant);
   } catch (error) {
     done(error);
   }
 };
+
 
 export const configureGoogleStrategyTenant = () => {
   return new GoogleStrategy(
