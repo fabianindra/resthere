@@ -55,7 +55,7 @@ export default function Page() {
   } = useRoomsData(propertyId, page, search, category, sortBy, sortDirection);
 
   const handleDirections = () => {
-    setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    setSortDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
   };
 
   useEffect(() => {
@@ -126,19 +126,8 @@ export default function Page() {
               <option value="price">Price</option>
             </Select>
           </HStack>
-          {/* <HStack>
-            <Select
-              onChange={(e) => setCategory(e.target.value)}
-              placeholder="Category"
-              value={category}
-            >
-              <option value="Hotel">Hotel</option>
-              <option value="Vila">Vila</option>
-              <option value="Home Stay">Home Stay</option>
-            </Select>
-          </HStack> */}
           <Button onClick={handleDirections} colorScheme="gray">
-            {sortDirection === 'asc' ? (
+            {sortDirection == 'asc' ? (
               <SortAscending size={30} />
             ) : (
               <SortDescending size={30} />

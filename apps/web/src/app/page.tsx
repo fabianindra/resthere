@@ -15,10 +15,14 @@ import { useState } from 'react';
 export default function Home() {
   const [guest, setGuest] = useState(1);
   const [city, setCity] = useState();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/list-room?city=${city ? `${city}` : ''}`);
+    router.push(
+      `/list-property?city=${city ? `${city}` : ''}&startDate=${startDate ? `${startDate}` : ''}&endDate=${endDate ? `${endDate}` : ''}`,
+    );
   };
 
   return (
@@ -36,8 +40,12 @@ export default function Home() {
             flexWrap={'wrap'}
             className="py-4 px-8 border-2 border-solid border-gray text-start flex-2"
           >
-            <DateRangePicker label="from" />
-            <DateRangePicker label="until" />
+            <DateRangePicker
+              setValue={setStartDate}
+              label="from"
+              value={null}
+            />
+            <DateRangePicker setValue={setEndDate} label="until" value={null} />
           </HStack>
           <SearchButton onClick={handleClick} />
         </HStack>

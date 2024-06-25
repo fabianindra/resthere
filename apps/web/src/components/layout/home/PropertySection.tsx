@@ -35,7 +35,7 @@ export default function PropertySection() {
             Find Your Ideal Stay Perfectly Suited To You!
           </Text>
           <HStack mr={6}>
-            <Link className=" underline text-sm" href={'/list-room'}>
+            <Link className=" underline text-sm" href={'/list-property'}>
               See more
             </Link>
             <ArrowRight size={20} />
@@ -43,7 +43,7 @@ export default function PropertySection() {
         </HStack>
       </VStack>
       <HStack my={10} justifyContent={'space-between'}>
-        {dataRoom.length === 0
+        {dataRoom.length == 0
           ? null
           : dataRoom.map((item: any) => {
               return (

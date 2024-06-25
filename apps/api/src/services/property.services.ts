@@ -9,9 +9,18 @@ import {
 } from '../repository/property.repository';
 
 export const serviceGetPropertyByRooms = async (req: any) => {
-  const { city, guest, search, page } = req.query;
+  const { city, search, page, sortBy, sortDirection, startDate, endDate } =
+    req.query;
   try {
-    const data = await repoGetPropertyByRooms({ city, search, page });
+    const data = await repoGetPropertyByRooms({
+      city,
+      search,
+      page,
+      sortBy,
+      sortDirection,
+      startDate,
+      endDate,
+    });
     return {
       status: 200,
       success: true,

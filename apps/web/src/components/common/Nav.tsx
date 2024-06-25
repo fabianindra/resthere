@@ -1,15 +1,17 @@
 'use client';
 
-import { HStack, useDisclosure } from '@chakra-ui/react';
+import { Box, HStack, useDisclosure } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import LoginModal from './LoginModal';
+import LoginTenantModal from './LoginTenantModal';
 import Header from './Header';
 import Cookies from 'js-cookie';
 import UserMenu from './UserMenu';
 
 export default function Nav() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isUserModalOpen, onOpen: onOpenUserModal, onClose: onCloseUserModal } = useDisclosure();
+  const { isOpen: isTenantModalOpen, onOpen: onOpenTenantModal, onClose: onCloseTenantModal } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
@@ -20,8 +22,8 @@ export default function Nav() {
     const username = urlParams.get('username');
     const email = urlParams.get('email');
     const roleGoogle = urlParams.get('role');
-
-    console.log(Cookies.get('role'))
+    const idGoogle = urlParams.get('userId');
+    const id = urlParams.get('userId')
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -30,11 +32,11 @@ export default function Nav() {
 
     if (token) {
       Cookies.set('token', token);
-      Cookies.set('user', JSON.stringify({ username, email }));
+      Cookies.set('user', JSON.stringify({ id, username, email }));
       Cookies.set('role', String(roleGoogle).toLowerCase());
+      Cookies.set('id', String(idGoogle))
       window.location.href = '/';
     }
-    
   }, []);
 
   const handleLogout = () => {
@@ -47,27 +49,35 @@ export default function Nav() {
   };
 
   return (
-    <div className="z-50">
+    <Box className="z-50">
       <HStack justifyContent="space-between" pr={20} pt={8}>
-        <Header
+      <Header
           loggedIn={loggedIn}
           user={user}
-          onOpen={onOpen}
+          onOpenUserModal={onOpenUserModal}
+          onOpenTenantModal={onOpenTenantModal}
           handleLogout={handleLogout}
         />
         <UserMenu
           loggedIn={loggedIn}
           user={user}
-          onOpen={onOpen}
+          onOpenUserModal={onOpenUserModal}
+          onOpenTenantModal={onOpenTenantModal}
           handleLogout={handleLogout}
         />
       </HStack>
       <LoginModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isUserModalOpen}
+        onClose={onCloseUserModal}
         setLoggedIn={setLoggedIn}
         setUser={setUser}
       />
-    </div>
+      <LoginTenantModal
+        isOpen={isTenantModalOpen}
+        onClose={onCloseTenantModal}
+        setLoggedIn={setLoggedIn}
+        setUser={setUser}
+      />
+    </Box>
   );
 }

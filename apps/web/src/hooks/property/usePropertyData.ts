@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getDataPropertyByTenant } from '@/api/property';
+import Cookies from 'js-cookie';
 
 const usePropertyData = () => {
   const [dataRoom, setDataRoom] = useState<any>([]);
@@ -9,11 +10,12 @@ const usePropertyData = () => {
   const [category, setCategory] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortDirection, setDirection] = useState('asc');
+  const tenant_id: any = JSON.parse(Cookies.get('user') as string).id;
 
   const fetchData = async () => {
     try {
       const response = await getDataPropertyByTenant(
-        1,
+        tenant_id,
         page,
         search,
         category,
@@ -32,7 +34,7 @@ const usePropertyData = () => {
   }, [page, sortDirection, sortBy, search, category]);
 
   const handleDirections = () => {
-    setDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    setDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
   };
 
   return {

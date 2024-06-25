@@ -12,7 +12,9 @@ import {
   InputGroup,
   InputRightElement,
   Select,
-  useDisclosure, VStack, Text
+  useDisclosure,
+  VStack,
+  Text,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -25,12 +27,28 @@ import ModalAddProperty from '../../components/layout/dashboard/ModalAddProperty
 import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
+import TenantBookingList from '@/components/layout/dashboard/TenantBookingList';
+import SalesReport from '@/components/layout/dashboard/SalesReport';
+import Cookies from 'js-cookie';
+import { User } from '@/types';
 
-export default function Page() {
-  const { isOpen: isAddPropertyModalOpen, onOpen: onAddPropertyModalOpen, onClose: onAddPropertyModalClose } = useDisclosure();
-  const { isOpen: isChangePasswordModalOpen, onOpen: onChangePasswordModalOpen, onClose: onChangePasswordModalClose } = useDisclosure();
-  
-  const [verified, setVerified] = useState(false);
+export default function DashboardPage() {
+  const {
+    isOpen: isAddPropertyModalOpen,
+    onOpen: onAddPropertyModalOpen,
+    onClose: onAddPropertyModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isChangePasswordModalOpen,
+    onOpen: onChangePasswordModalOpen,
+    onClose: onChangePasswordModalClose,
+  } = useDisclosure();
+
+  const [verified, setVerified] = useState<any>(false);
+  const [role, setRole] = useState('')
+  const [user, setUser] = useState<User | null>(null);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
   const {
     dataRoom,
     page,
@@ -45,31 +63,52 @@ export default function Page() {
   } = usePropertyData();
 
   useEffect(() => {
-    const verifyAndSet = async () => {
-        try {
-            const isValidToken = await verifyTokenClient();
-            setVerified(isValidToken)
-            //check verified
-            console.log(isValidToken)
+    const storedUser = Cookies.get('user');
+    const storedRole = Cookies.get('role');
 
-        } catch (error) {
-            console.error("Error verifying token:", error);
-            setVerified(false);
-        }
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+    if (storedRole) {
+        setRole(storedRole);
+      } else {
+        setRole('');
+      }
+  }, []);
+
+  useEffect(() => {
+    const verifyAndSet = async () => {
+      try {
+        const isValidToken: boolean = await verifyTokenClient();
+        setVerified(isValidToken);
+      } catch (error) {
+        console.error('Error verifying token:', error);
+        setVerified(false);
+      }
     };
     verifyAndSet();
-}, []);
+  }, []);
 
-if (!verified) {
-  return (
-      <div>
-        <VStack mt={100} mb={200}>
-          <Text>You are not authorized. Please log in to access this page.</Text>
-          <Link href="/">Go to Home Page</Link>
-        </VStack>
-      </div>
-  );
-} 
+  // Render a loading state while verification is in progress
+  if (verified == null) {
+    return (
+      <Center mt={100} mb={200}>
+        <Text>Loading...</Text>
+      </Center>
+    );
+  }
+
+  if (!verified || role !== 'tenant') {
+    return (
+      <VStack mt={100} mb={200}>
+        <Text>You are not authorized. Please log in to access this page.</Text>
+        <Link href="/">Go to Home Page</Link>
+      </VStack>
+    );
+  }
 
   return (
     <Box className="px-16">
@@ -105,7 +144,7 @@ if (!verified) {
             </Select>
           </HStack>
           <Button onClick={handleDirections} colorScheme="gray">
-            {sortDirection === 'asc' ? (
+            {sortDirection == 'asc' ? (
               <SortAscending size={30} />
             ) : (
               <SortDescending size={30} />
@@ -125,12 +164,11 @@ if (!verified) {
           >
             Add Property
           </Button>
-          {/* Button to open ChangePasswordModal */}
           <Button onClick={onChangePasswordModalOpen}>Change Password</Button>
         </HStack>
       </HStack>
       <HStack justifyContent={'start'} gap={8} my={10}>
-        {dataRoom.length === 0
+        {dataRoom.length == 0
           ? null
           : dataRoom.map((item: any) => (
               <CustomCard
@@ -143,10 +181,17 @@ if (!verified) {
               />
             ))}
       </HStack>
+      <SalesReport />
+      <TenantBookingList />
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
-      <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={onChangePasswordModalClose} />
-      {/* Render the ModalAddProperty component */}
-      <ModalAddProperty isOpen={isAddPropertyModalOpen} onClose={onAddPropertyModalClose} />
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={onChangePasswordModalClose}
+      />
+      <ModalAddProperty
+        isOpen={isAddPropertyModalOpen}
+        onClose={onAddPropertyModalClose}
+      />
     </Box>
   );
 }

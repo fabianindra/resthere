@@ -34,12 +34,16 @@ export const serviceVerifyEmail = async (request: any) => {
       return {
         status: 200,
         message: "Email verified successfully",
+        email: email,
+        type: 'user'
       };
     } else if (tenant) {
       await repoVerifyTenant(email);
       return {
         status: 200,
         message: "Email verified successfully",
+        email: email,
+        type: 'tenant'
       };
     } else {
       return {

@@ -79,7 +79,7 @@ const LocationBox: React.FC<LocationBoxProps> = ({ location, setLocation }) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  {selectedProvince === item.id ? (
+                  {selectedProvince == item.id ? (
                     citiesLoading ? (
                       <Text>Loading cities...</Text>
                     ) : citiesError ? (

@@ -1,3 +1,4 @@
+'use client';
 import InputSelect from '@/components/ui/InputSelect';
 import InputText from '@/components/ui/InputText';
 import useCities from '@/hooks/property/useCities';
@@ -11,11 +12,13 @@ import {
   ModalCloseButton,
   ModalBody,
   useToast,
+  Box,
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import { addDataProperty } from '@/api/property';
+import Cookies from 'js-cookie';
 
 const propertySchema = Yup.object().shape({
   name: Yup.string()
@@ -47,6 +50,7 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
   const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
   const [file, setFile] = useState<any>(null);
   const toast = useToast();
+  const tenant_id: any = JSON.parse(Cookies.get('user') as string).id;
 
   const handleSubmit = async (values: any) => {
     try {
@@ -90,7 +94,7 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
       category_property: '',
       city_name: '',
       province_name: '',
-      tenant_id: 1,
+      tenant_id: tenant_id,
     },
     validationSchema: propertySchema,
     onSubmit: (values: any) => {
@@ -126,9 +130,9 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
                 onChange={formik.handleChange}
               />
               {formik.touched.name && formik.errors.name && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.name as string}
-                </div>
+                </Box>
               )}
               <InputText
                 placeholder={'address'}
@@ -138,9 +142,9 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
                 onChange={formik.handleChange}
               />
               {formik.touched.address && formik.errors.address && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.address as string}
-                </div>
+                </Box>
               )}
               <InputSelect
                 label={'Category'}
@@ -152,9 +156,9 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
               />
               {formik.touched.category_property &&
                 formik.errors.category_property && (
-                  <div style={{ color: 'red' }}>
+                  <Box style={{ color: 'red' }}>
                     {formik.errors.category_property as string}
-                  </div>
+                  </Box>
                 )}
               <InputSelect
                 label={'Province'}
@@ -165,9 +169,9 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
                 value={formik.values.province_name}
               />
               {formik.touched.province_name && formik.errors.province_name && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.province_name as string}
-                </div>
+                </Box>
               )}
               <InputSelect
                 label={'City'}
@@ -178,11 +182,11 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
                 value={formik.values.city_name}
               />
               {formik.touched.city_name && formik.errors.city_name && (
-                <div style={{ color: 'red' }}>
+                <Box style={{ color: 'red' }}>
                   {formik.errors.city_name as string}
-                </div>
+                </Box>
               )}
-              <div className=" my-6">
+              <Box className=" my-6">
                 <input
                   type="file"
                   onChange={handleChangeFile}
@@ -190,8 +194,8 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
                   value={formik.values.file}
                   className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 border-2 rounded-md border-redDark"
                 />
-                {!file && <div style={{ color: 'red' }}>File is required</div>}
-              </div>
+                {!file && <Box style={{ color: 'red' }}>File is required</Box>}
+              </Box>
               <Button type="submit" mb={10} w={'full'} colorScheme="blue">
                 Submit
               </Button>

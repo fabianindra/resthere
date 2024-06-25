@@ -26,6 +26,7 @@ const useRoomsData = (
         sortDirection,
       );
       setRooms(response.data.data);
+      console.log(response);
     } catch (err) {
       setError('Failed to fetch rooms data');
     } finally {

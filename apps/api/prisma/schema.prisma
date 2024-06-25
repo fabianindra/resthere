@@ -18,9 +18,14 @@ model User {
   email         String   @unique
   password      String 
   username      String   @unique
-  verified      Boolean  @default(false)  
+  verified      Boolean  @default(false)
+  gender        String?  
+  birthday      DateTime?
+  foto          String?  
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  transaction   Transaction[]
 }
 
 model Tenant {
@@ -36,76 +41,86 @@ model Tenant {
 }
 
 model Property {
-  id            Int      @id @default(autoincrement())
-  name          String   
-  address       String 
-  city_name     String
-  province_name String
+  id                     Int      @id @default(autoincrement())
+  name                   String   
+  address                String 
+  city_name              String
+  province_name          String
   category_property      String   
-  room_count    Int
-  image         String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  room_count             Int
+  image                  String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
-  rooms         Room[]
+  rooms                  Room[]
 
-  tenant        Tenant  @relation(fields: [tenant_id], references: [id])
-  tenant_id     Int    
+  tenant                 Tenant  @relation(fields: [tenant_id], references: [id])
+  tenant_id              Int    
 
-  reviews       Review[]
+  reviews                Review[]
 }
 
 model Room {
-  id            Int      @id @default(autoincrement())
-  name          String   
+  id                  Int      @id @default(autoincrement())
+  name                String   
   price               Int 
   weekend_price       Int    
   capacity_person     Int
   capacity_room       Int
   room_size           String
-  image         String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  image               String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   property            Property  @relation(fields: [property_id], references: [id])
   property_id         Int
 
   special_price       SpecialPrice[]
+  transaction         Transaction[]
 
-  room_availability RoomAvailability[]     
+  room_availability   RoomAvailability[]     
 }
 
 model SpecialPrice {
-  id            Int      @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   start_date          DateTime 
-  end_date          DateTime
-  special_price      Int 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  end_date            DateTime
+  special_price       Int 
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  room            Room @relation(fields: [room_id], references: [id])
-  room_id         Int 
+  room                Room @relation(fields: [room_id], references: [id])
+  room_id             Int 
 }
 
 model RoomAvailability {
-  id            Int      @id @default(autoincrement())
-  start_date          DateTime 
-  end_date          DateTime 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  start_date      DateTime 
+  end_date        DateTime 
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   room            Room @relation(fields: [room_id], references: [id])
   room_id         Int 
 }
 
 model Transaction {
-  id            Int      @id @default(autoincrement())
-  total_price   Int 
-  total_room    Int 
-  check_in      DateTime
-  check_out     DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  total_price     Int 
+  total_room      Int 
+  check_in        DateTime
+  check_out       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  status          String    @default("waiting payment")
+  proof           String?
+
+  room            Room @relation(fields: [room_id], references: [id])
+  room_id         Int 
+
+  user            User @relation(fields: [user_id], references: [id])
+  user_id         Int 
 }
 
 model Review {
