@@ -10,8 +10,16 @@ import Cookies from 'js-cookie';
 import UserMenu from './UserMenu';
 
 export default function Nav() {
-  const { isOpen: isUserModalOpen, onOpen: onOpenUserModal, onClose: onCloseUserModal } = useDisclosure();
-  const { isOpen: isTenantModalOpen, onOpen: onOpenTenantModal, onClose: onCloseTenantModal } = useDisclosure();
+  const {
+    isOpen: isUserModalOpen,
+    onOpen: onOpenUserModal,
+    onClose: onCloseUserModal,
+  } = useDisclosure();
+  const {
+    isOpen: isTenantModalOpen,
+    onOpen: onOpenTenantModal,
+    onClose: onCloseTenantModal,
+  } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
@@ -23,7 +31,7 @@ export default function Nav() {
     const email = urlParams.get('email');
     const roleGoogle = urlParams.get('role');
     const idGoogle = urlParams.get('userId');
-    const id = urlParams.get('userId')
+    const id = urlParams.get('userId');
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -34,7 +42,7 @@ export default function Nav() {
       Cookies.set('token', token);
       Cookies.set('user', JSON.stringify({ id, username, email }));
       Cookies.set('role', String(roleGoogle).toLowerCase());
-      Cookies.set('id', String(idGoogle))
+      Cookies.set('id', String(idGoogle));
       window.location.href = '/';
     }
   }, []);
@@ -49,9 +57,14 @@ export default function Nav() {
   };
 
   return (
-    <Box className="z-50">
-      <HStack justifyContent="space-between" pr={20} pt={8}>
-      <Header
+    <Box className="w-full z-50 shadow-sm">
+      <HStack
+        className=" w-full shadow-sm bg-white"
+        justifyContent="space-between"
+        px={'64px'}
+        py={8}
+      >
+        <Header
           loggedIn={loggedIn}
           user={user}
           onOpenUserModal={onOpenUserModal}

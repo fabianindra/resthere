@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Divider,
   HStack,
   Input,
   InputGroup,
@@ -15,6 +14,7 @@ import {
   useDisclosure,
   VStack,
   Text,
+  Heading,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -26,9 +26,6 @@ import usePropertyData from '../../hooks/property/usePropertyData';
 import ModalAddProperty from '../../components/layout/dashboard/ModalAddProperty';
 import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
-import ChangePasswordModal from '@/components/layout/profile/changePassword';
-import TenantBookingList from '@/components/layout/dashboard/TenantBookingList';
-import SalesReport from '@/components/layout/dashboard/SalesReport';
 import Cookies from 'js-cookie';
 import { User } from '@/types';
 
@@ -45,7 +42,7 @@ export default function DashboardPage() {
   } = useDisclosure();
 
   const [verified, setVerified] = useState<any>(false);
-  const [role, setRole] = useState('')
+  const [role, setRole] = useState('');
   const [user, setUser] = useState<User | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
@@ -60,6 +57,10 @@ export default function DashboardPage() {
     setCategory,
     sortDirection,
     handleDirections,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
   } = usePropertyData();
 
   useEffect(() => {
@@ -73,10 +74,10 @@ export default function DashboardPage() {
       setLoggedIn(false);
     }
     if (storedRole) {
-        setRole(storedRole);
-      } else {
-        setRole('');
-      }
+      setRole(storedRole);
+    } else {
+      setRole('');
+    }
   }, []);
 
   useEffect(() => {
@@ -112,17 +113,35 @@ export default function DashboardPage() {
 
   return (
     <Box className="px-16">
+      <HStack my={10} justifyContent={'space-between'}>
+        <Heading size={'lg'}>Property List</Heading>
+        <Button
+          onClick={onAddPropertyModalOpen}
+          rightIcon={<Plus size={20} />}
+          variant="outline"
+        >
+          Add Property
+        </Button>
+      </HStack>
+
       <HStack my={20} justifyContent={'space-between'}>
-        <InputGroup w={300}>
+        <HStack>
           <Input
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Enter amount"
-            value={search}
+            onChange={(e) => setStartDate(e.target.value)}
+            value={startDate}
+            placeholder="Select Date and Time"
+            size="md"
+            type="date"
           />
-          <InputRightElement>
-            <MagnifyingGlass size={20} />
-          </InputRightElement>
-        </InputGroup>
+          <Box w={10} className="border-b border-[#000000]" />
+          <Input
+            onChange={(e) => setEndDate(e.target.value)}
+            value={endDate}
+            placeholder="Select Date and Time"
+            size="md"
+            type="date"
+          />
+        </HStack>
         <HStack>
           <HStack>
             <Select
@@ -150,21 +169,17 @@ export default function DashboardPage() {
               <SortDescending size={30} />
             )}
           </Button>
-          <Center height="35px" mx={4}>
-            <Divider
-              border={'1px'}
-              borderColor={'black'}
-              orientation="vertical"
+          <InputGroup w={300}>
+            <Input
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Enter amount"
+              value={search}
             />
-          </Center>
-          <Button
-            onClick={onAddPropertyModalOpen}
-            rightIcon={<Plus size={20} />}
-            variant="outline"
-          >
-            Add Property
-          </Button>
-          <Button onClick={onChangePasswordModalOpen}>Change Password</Button>
+            <InputRightElement>
+              <MagnifyingGlass size={20} />
+            </InputRightElement>
+          </InputGroup>
+          {/* <Button onClick={onChangePasswordModalOpen}>Change Password</Button> */}
         </HStack>
       </HStack>
       <HStack justifyContent={'start'} gap={8} my={10}>
@@ -181,13 +196,13 @@ export default function DashboardPage() {
               />
             ))}
       </HStack>
-      <SalesReport />
-      <TenantBookingList />
+      {/* <SalesReport />
+      <TenantBookingList /> */}
       <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
-      <ChangePasswordModal
+      {/* <ChangePasswordModal
         isOpen={isChangePasswordModalOpen}
         onClose={onChangePasswordModalClose}
-      />
+      /> */}
       <ModalAddProperty
         isOpen={isAddPropertyModalOpen}
         onClose={onAddPropertyModalClose}

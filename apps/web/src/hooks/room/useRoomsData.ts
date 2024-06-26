@@ -8,6 +8,8 @@ const useRoomsData = (
   category: string,
   sortBy: string,
   sortDirection: string,
+  startDate: string,
+  endDate: string,
 ) => {
   const [rooms, setRooms] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -24,6 +26,8 @@ const useRoomsData = (
         category,
         sortBy,
         sortDirection,
+        startDate,
+        endDate,
       );
       setRooms(response.data.data);
       console.log(response);
@@ -38,7 +42,16 @@ const useRoomsData = (
     if (propertyId) {
       fetchRooms();
     }
-  }, [propertyId, page, search, category, sortBy, sortDirection]);
+  }, [
+    propertyId,
+    page,
+    search,
+    category,
+    sortBy,
+    sortDirection,
+    startDate,
+    endDate,
+  ]);
 
   return { rooms, loading, error, fetchRooms };
 };

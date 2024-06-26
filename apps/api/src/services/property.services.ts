@@ -40,7 +40,8 @@ export const serviceGetPropertyByRooms = async (req: any) => {
 
 export const serviceGetPropertyByTenant = async (req: any) => {
   const { tenant_id } = req.params;
-  const { search, category, page, sortBy, sortDirection } = req.query;
+  const { search, category, page, sortBy, sortDirection, startDate, endDate } =
+    req.query;
   try {
     const data = await repoGetPropertyByTenant({
       tenant_id,
@@ -49,6 +50,8 @@ export const serviceGetPropertyByTenant = async (req: any) => {
       page,
       sortBy,
       sortDirection,
+      startDate,
+      endDate,
     });
     return {
       status: 200,
