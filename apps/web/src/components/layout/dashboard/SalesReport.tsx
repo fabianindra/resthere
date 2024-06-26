@@ -18,7 +18,11 @@ import {
   Th,
   Td,
 } from '@chakra-ui/react';
-import { MagnifyingGlass, SortAscending, SortDescending } from '@phosphor-icons/react/dist/ssr';
+import {
+  MagnifyingGlass,
+  SortAscending,
+  SortDescending,
+} from '@phosphor-icons/react/dist/ssr';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import {
@@ -39,7 +43,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const SalesReport = () => {
@@ -52,14 +56,17 @@ const SalesReport = () => {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await axios.get('http://localhost:6570/api/transaction/sales-report', {
-          params: {
-            sortBy,
-            sortDirection,
-            startDate,
-            endDate,
+        const response = await axios.get(
+          'http://localhost:6570/api/transaction/sales-report',
+          {
+            params: {
+              sortBy,
+              sortDirection,
+              startDate,
+              endDate,
+            },
           },
-        });
+        );
         setSalesData(response.data.data);
       } catch (error) {
         console.error('Error fetching sales data:', error);
@@ -70,15 +77,19 @@ const SalesReport = () => {
   }, [sortBy, sortDirection, startDate, endDate]);
 
   const handleSortDirection = () => {
-    setSortDirection((prevDirection) => (prevDirection === 'asc' ? 'desc' : 'asc'));
+    setSortDirection((prevDirection) =>
+      prevDirection === 'asc' ? 'desc' : 'asc',
+    );
   };
 
   const chartData = {
-    labels: salesData.map(transaction => new Date(transaction.createdAt).toLocaleDateString()),
+    labels: salesData.map((transaction) =>
+      new Date(transaction.createdAt).toLocaleDateString(),
+    ),
     datasets: [
       {
         label: 'Total Sales',
-        data: salesData.map(transaction => transaction.total_price),
+        data: salesData.map((transaction) => transaction.total_price),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
       },
@@ -123,12 +134,19 @@ const SalesReport = () => {
           </InputRightElement>
         </InputGroup>
         <HStack>
-          <Select onChange={(e) => setSortBy(e.target.value)} placeholder="Sort By">
+          <Select
+            onChange={(e) => setSortBy(e.target.value)}
+            placeholder="Sort By"
+          >
             <option value="createdAt">Date</option>
             <option value="total_price">Total Sales</option>
           </Select>
           <Button onClick={handleSortDirection} colorScheme="gray">
-            {sortDirection === 'asc' ? <SortAscending size={30} /> : <SortDescending size={30} />}
+            {sortDirection === 'asc' ? (
+              <SortAscending size={30} />
+            ) : (
+              <SortDescending size={30} />
+            )}
           </Button>
         </HStack>
       </HStack>

@@ -10,6 +10,8 @@ const usePropertyData = () => {
   const [category, setCategory] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortDirection, setDirection] = useState('asc');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const tenant_id: any = JSON.parse(Cookies.get('user') as string).id;
 
   const fetchData = async () => {
@@ -21,6 +23,8 @@ const usePropertyData = () => {
         category,
         sortBy,
         sortDirection,
+        startDate,
+        endDate,
       );
       setMaxPage(Math.ceil(response.data.count / 4));
       setDataRoom(response.data.data);
@@ -31,7 +35,7 @@ const usePropertyData = () => {
 
   useEffect(() => {
     fetchData();
-  }, [page, sortDirection, sortBy, search, category]);
+  }, [page, sortDirection, sortBy, search, category, startDate, endDate]);
 
   const handleDirections = () => {
     setDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
@@ -50,6 +54,10 @@ const usePropertyData = () => {
     setSortBy,
     sortDirection,
     handleDirections,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
   };
 };
 
