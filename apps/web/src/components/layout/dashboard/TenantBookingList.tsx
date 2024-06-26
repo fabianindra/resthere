@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, Button } from '@chakra-ui/react';
+import { Box, Text, Button, Grid, Card, CardHeader, CardBody, CardFooter, Badge, Table, Thead, Tbody, Tr, Th, Td, IconButton, HStack } from '@chakra-ui/react';
+import { CheckCircleIcon, TimeIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BookingTenant } from '@/types';
@@ -7,9 +8,12 @@ import { BookingTenant } from '@/types';
 const TenantBookingList: React.FC = () => {
   const [pendingBookings, setPendingBookings] = useState<BookingTenant[]>([]);
   const [approvedBookings, setApprovedBookings] = useState<BookingTenant[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const bookingsPerPage = 5;
+
   const userData = Cookies.get('user');
-  const idGoogle = Cookies.get('id')
-  
+  const idGoogle = Cookies.get('id');
+
   let tenantId: string | null = null;
 
   if (idGoogle) {
@@ -31,7 +35,7 @@ const TenantBookingList: React.FC = () => {
       const allBookings = responseData.data;
 
       const pending = allBookings.filter((booking: BookingTenant) => booking.status === 'waiting payment confirmation');
-      const approved = allBookings.filter((booking: BookingTenant) => booking.status !== 'waiting payment confirmation');
+      const approved = allBookings.filter((booking: BookingTenant) => booking.status === 'approved');
 
       setPendingBookings(pending);
       setApprovedBookings(approved);
@@ -45,7 +49,7 @@ const TenantBookingList: React.FC = () => {
       console.error('Tenant ID not found in cookies');
       return;
     }
-  
+
     fetchBookings();
   }, [tenantId]);
 
@@ -59,103 +63,121 @@ const TenantBookingList: React.FC = () => {
     }
   }
 
-  return (
-    <Box>
-      <Box borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Pending Bookings
-        </Text>
+  const handleReject = async (bookingId: string) => {
+    try {
+      await axios.post('http://localhost:6570/api/transaction/update-status', { transactionId: bookingId, status: 'waiting payment' });
+      console.log('Booking rejected successfully');
+      fetchBookings();
+    } catch (error) {
+      console.error('Failed to reject booking:', error);
+    }
+  }
+
+  const renderBookingCard = (booking: BookingTenant, isPending: boolean) => (
+    <Card key={booking.id} borderRadius="lg" boxShadow="md" mb={4} p={4}>
+      <CardHeader>
+        <Text fontSize="xl" fontWeight="bold">{booking.property_name}</Text>
+        <Badge colorScheme={isPending ? "yellow" : "green"} ml={2}>
+          {isPending ? <TimeIcon mr={1} /> : <CheckCircleIcon mr={1} />}
+          {isPending ? "Pending" : "Approved"}
+        </Badge>
+      </CardHeader>
+      <CardBody>
+        <Text><strong>Username:</strong> {booking.username}</Text>
+        <Text><strong>Email:</strong> {booking.email}</Text>
+        <Text><strong>Room:</strong> {booking.room_name}</Text>
+        <Text><strong>Check-in Date:</strong> {new Date(booking.check_in).toLocaleDateString()}</Text>
+        <Text><strong>Check-out Date:</strong> {new Date(booking.check_out).toLocaleDateString()}</Text>
+      </CardBody>
+      {isPending && (
+        <CardFooter>
+          <Button colorScheme="blue" onClick={() => handleApprove(booking.id)}>
+            Approve
+          </Button>
+          <Button ml={20} colorScheme="red" onClick={() => handleReject(booking.id)}>
+            Reject
+          </Button>
+        </CardFooter>
+      )}
+    </Card>
+  );
+
+  const renderPendingBookings = () => {
+    const indexOfLastBooking = currentPage * bookingsPerPage;
+    const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
+    const currentBookings = pendingBookings.slice(indexOfFirstBooking, indexOfLastBooking);
+    const totalPages = Math.ceil(pendingBookings.length / bookingsPerPage);
+
+    return (
+      <Box borderWidth="1px" borderRadius="lg" p={6} mb={6} boxShadow="lg">
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>Pending Bookings</Text>
         {pendingBookings.length === 0 ? (
           <Text>No pending bookings found.</Text>
         ) : (
-          pendingBookings.map((booking, index) => (
-            <Box key={index} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Username:
-                </Text>{' '}
-                {booking.username}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Email:
-                </Text>{' '}
-                {booking.email}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Check-in Date:
-                </Text>{' '}
-                {new Date(booking.check_in).toLocaleDateString()}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Check-out Date:
-                </Text>{' '}
-                {new Date(booking.check_out).toLocaleDateString()}
-              </Text>
-              <Button colorScheme="blue" onClick={() => handleApprove(booking.id)}>
-                Approve Booking
-              </Button>
+          <>
+            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
+              {currentBookings.map(booking => renderBookingCard(booking, true))}
+            </Grid>
+            <Box mt={4} textAlign="center">
+              <HStack justify="center">
+                <Button
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <Text>{`Page ${currentPage} of ${totalPages}`}</Text>
+                <Button
+                  onClick={() => setCurrentPage(prev => (prev * bookingsPerPage < pendingBookings.length ? prev + 1 : prev))}
+                  disabled={currentPage * bookingsPerPage >= pendingBookings.length}
+                >
+                  Next
+                </Button>
+              </HStack>
             </Box>
-          ))
+          </>
         )}
       </Box>
-      <Box borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Approved Bookings
-        </Text>
-        {approvedBookings.length === 0 ? (
-          <Text>No approved bookings found.</Text>
-        ) : (
-          approvedBookings.map((booking, index) => (
-            <Box key={index} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Username:
-                </Text>{' '}
-                {booking.username}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Email:
-                </Text>{' '}
-                {booking.email}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Check-in Date:
-                </Text>{' '}
-                {new Date(booking.check_in).toLocaleDateString()}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Check-out Date:
-                </Text>{' '}
-                {new Date(booking.check_out).toLocaleDateString()}
-              </Text>
-            </Box>
-          ))
-        )}
-      </Box>
+    );
+  };
+
+  const renderApprovedBookingsTable = () => (
+    <Table variant="striped" colorScheme="gray" borderWidth="1px" borderRadius="lg" p={6} boxShadow="lg">
+      <Thead>
+        <Tr>
+          <Th>Property Name</Th>
+          <Th>Username</Th>
+          <Th>Email</Th>
+          <Th>Room</Th>
+          <Th>Check-in Date</Th>
+          <Th>Check-out Date</Th>
+          <Th>Status</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {approvedBookings.map(booking => (
+          <Tr key={booking.id}>
+            <Td>{booking.property_name}</Td>
+            <Td>{booking.username}</Td>
+            <Td>{booking.email}</Td>
+            <Td>{booking.room_name}</Td>
+            <Td>{new Date(booking.check_in).toLocaleDateString()}</Td>
+            <Td>{new Date(booking.check_out).toLocaleDateString()}</Td>
+            <Td>
+              <Badge colorScheme="green">
+                <CheckCircleIcon mr={1} /> Approved
+              </Badge>
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  );
+
+  return (
+    <Box p={6}>
+      {renderPendingBookings()}
+      {renderApprovedBookingsTable()}
     </Box>
   );
 };

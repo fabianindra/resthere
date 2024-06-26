@@ -4,14 +4,14 @@ import { VStack, Box, Text, HStack } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import Cookies from 'js-cookie';
-import { verifyTokenClient } from '../verifyToken';
+import { verifyTokenClient } from '@/app/verifyToken';
 import Link from 'next/link';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
 import EditProfile from '@/components/layout/profile/EditProfile';
 import EditFotoProfile from '@/components/layout/profile/EditFotoProfile';
 
-export default function ProfilePage() {
+export default function TenantProfile() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);

@@ -1,12 +1,12 @@
 import passport from 'passport';
 import { User, Tenant } from '@prisma/client';
-import { 
-  configureGoogleStrategyUser, 
-  configureGoogleStrategyTenant, 
-  serializeUser, 
-  deserializeUser, 
-  serializeTenant, 
-  deserializeTenant 
+import {
+  configureGoogleStrategyUser,
+  configureGoogleStrategyTenant,
+  serializeUser,
+  deserializeUser,
+  serializeTenant,
+  deserializeTenant,
 } from './services/auth.google.service';
 
 passport.use('google-user', configureGoogleStrategyUser());

@@ -51,7 +51,7 @@ export default function PropertySection() {
                   key={item.id}
                   city={item.city_name}
                   name={item.name}
-                  price={item.rooms[0].price}
+                  price={item.rooms.length > 0 ? item.rooms[0].price : 0}
                 />
               );
             })}

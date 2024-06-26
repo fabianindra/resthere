@@ -83,7 +83,7 @@ export default function ModalRoomDetail({
         price,
       });
       console.log("Booking response:", response);
-      // window.location.href = `/profile`;
+      window.location.href = `/profile`;
     } catch (error: any) {
       console.log(error);
     }

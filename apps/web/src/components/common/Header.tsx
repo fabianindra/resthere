@@ -16,19 +16,6 @@ const Header: React.FC<HeaderProps> = () => {
           Hostel
         </Heading>
       </Link>
-
-      <Flex gap={2}>
-        <Button
-          border="2px"
-          borderColor="gray.300"
-          borderRadius={50}
-          variant="outline"
-        >
-          <Link href="/transaction">
-          <Text fontWeight="light">Transaction</Text>
-          </Link>
-        </Button>
-      </Flex>
     </Flex>
   );
 };

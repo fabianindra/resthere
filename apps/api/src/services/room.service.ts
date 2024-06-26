@@ -29,7 +29,7 @@ export const serviceGetALLRoom = async (req: any) => {
 
 export const serviceGetRoomByProperty = async (req: any) => {
   const { property_id } = req.params;
-  const { search, page, sortBy, sortDirection } = req.query;
+  const { search, page, sortBy, sortDirection, startDate, endDate } = req.query;
   try {
     const data = await repoGetRoomByProperty({
       property_id,
@@ -37,13 +37,15 @@ export const serviceGetRoomByProperty = async (req: any) => {
       page,
       sortBy,
       sortDirection,
+      startDate,
+      endDate,
     });
     return {
       status: 200,
       success: true,
       message: 'get all rooms property successfully',
       data: data.data,
-      count: data.count._count._all,
+      count: data.count,
     };
   } catch (error) {
     console.log(error);

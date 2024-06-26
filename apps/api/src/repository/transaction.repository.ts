@@ -3,15 +3,15 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const repoAddTransaction = async (
-  roomId: number,
-  userId: number,
-  price: number,
+  roomId: string,
+  userId: string,
+  price: string,
 ) => {
   try {
     // Check if the user with the given userId exists
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: parseInt(userId),
       },
     });
 
@@ -22,7 +22,7 @@ export const repoAddTransaction = async (
     // Check if the room with the given roomId exists
     const room = await prisma.room.findUnique({
       where: {
-        id: roomId,
+        id: parseInt(roomId),
       },
     });
 
@@ -36,9 +36,9 @@ export const repoAddTransaction = async (
 
     await prisma.transaction.create({
       data: {
-        room_id: roomId,
-        user_id: userId,
-        total_price: price,
+        room_id: parseInt(roomId),
+        user_id: parseInt(userId),
+        total_price: parseInt(price),
         total_room: 1,
         check_in: now,
         check_out: checkOutDate,
@@ -55,26 +55,31 @@ export const repoAddTransaction = async (
   }
 };
 
-export const repoGetSalesReport = async (sortBy: string, sortDirection: string, startDate?: string, endDate?: string) => {
+export const repoGetSalesReport = async (
+  sortBy: string,
+  sortDirection: string,
+  startDate?: string,
+  endDate?: string,
+) => {
   try {
     const transactions = await prisma.transaction.findMany({
       where: {
         AND: [
           startDate ? { createdAt: { gte: new Date(startDate) } } : {},
-          endDate ? { createdAt: { lte: new Date(endDate) } } : {}
-        ]
+          endDate ? { createdAt: { lte: new Date(endDate) } } : {},
+        ],
       },
       include: {
         room: {
           include: {
-            property: true
-          }
+            property: true,
+          },
         },
-        user: true
+        user: true,
       },
       orderBy: {
-        [sortBy]: sortDirection
-      }
+        [sortBy]: sortDirection,
+      },
     });
 
     return transactions;
@@ -83,15 +88,25 @@ export const repoGetSalesReport = async (sortBy: string, sortDirection: string, 
   }
 };
 
-export const repoUpdateTransactionStatus = async (transactionId: any, status: string) => {
+export const repoUpdateTransactionStatus = async (
+  transactionId: any,
+  status: string,
+) => {
   try {
     await prisma.transaction.update({
       where: { id: transactionId },
       data: { status },
     });
-    return { success: true, message: "Transaction status updated successfully" };
+    return {
+      success: true,
+      message: 'Transaction status updated successfully',
+    };
   } catch (error: any) {
-    return { success: false, message: "Failed to update transaction status", error: error.message };
+    return {
+      success: false,
+      message: 'Failed to update transaction status',
+      error: error.message,
+    };
   }
 };
 
@@ -102,25 +117,32 @@ export const repoGetTransactionStatus = async (transactionId: any) => {
       select: { status: true },
     });
     if (!transaction) {
-      throw new Error("Transaction not found");
+      throw new Error('Transaction not found');
     }
     return { success: true, status: transaction.status };
   } catch (error: any) {
-    return { success: false, message: "Failed to get transaction status", error: error.message };
+    return {
+      success: false,
+      message: 'Failed to get transaction status',
+      error: error.message,
+    };
   }
 };
 
-export const repoUploadPaymentProof = async (transactionId: string, proofPath: string) => {
+export const repoUploadPaymentProof = async (
+  transactionId: string,
+  proofPath: string,
+) => {
   try {
     await prisma.transaction.update({
       where: { id: parseInt(transactionId) },
-      data: { 
+      data: {
         proof: proofPath,
         status: 'waiting payment confirmation',
       },
     });
     return { success: true };
   } catch (error: any) {
-    throw new Error("Failed to upload payment proof: " + error.message);
+    throw new Error('Failed to upload payment proof: ' + error.message);
   }
 };

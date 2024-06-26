@@ -65,12 +65,22 @@ const UserMenu: React.FC<UserMenuProps> = ({
             </MenuItem>
           </Link>
         )}
+        {loggedIn && roleCookies === 'user' && (
+          <Link href="/transaction">
+            <MenuItem color={'primary'}>
+              <Table size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Transaction
+              </Text>
+            </MenuItem>
+          </Link>
+        )}
         {loggedIn && roleCookies === 'tenant' && (
           <Link href="/dashboard">
             <MenuItem color={'primary'}>
               <Table size={32} />
               <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                Dashboard
+                Property Management
               </Text>
             </MenuItem>
           </Link>

@@ -17,6 +17,7 @@ import {
   Tr,
   Th,
   Td,
+  SimpleGrid,
 } from '@chakra-ui/react';
 import { MagnifyingGlass, SortAscending, SortDescending } from '@phosphor-icons/react/dist/ssr';
 import axios from 'axios';
@@ -87,6 +88,7 @@ const SalesReport = () => {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top' as const,
@@ -96,13 +98,20 @@ const SalesReport = () => {
         text: 'Sales Over Time',
       },
     },
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10,
+      },
+    },
   };
 
   return (
-    <Box mb={10}>
-      <HStack my={20} justifyContent={'space-between'}>
-        <Text>Sales Report</Text>
-        <InputGroup w={300}>
+    <Box mb={10} p={5}>
+      <HStack my={10} justifyContent="space-between" wrap="wrap">
+        <InputGroup w={300} mb={4}>
           <Input
             type="date"
             placeholder="Start Date"
@@ -112,7 +121,7 @@ const SalesReport = () => {
             <MagnifyingGlass size={20} />
           </InputRightElement>
         </InputGroup>
-        <InputGroup w={300}>
+        <InputGroup w={300} mb={4}>
           <Input
             type="date"
             placeholder="End Date"
@@ -122,7 +131,7 @@ const SalesReport = () => {
             <MagnifyingGlass size={20} />
           </InputRightElement>
         </InputGroup>
-        <HStack>
+        <HStack mb={4}>
           <Select onChange={(e) => setSortBy(e.target.value)} placeholder="Sort By">
             <option value="createdAt">Date</option>
             <option value="total_price">Total Sales</option>
@@ -132,35 +141,37 @@ const SalesReport = () => {
           </Button>
         </HStack>
       </HStack>
-      <Box mb={10}>
-        <Line data={chartData} options={chartOptions} />
-      </Box>
-      <Box overflowX="auto">
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>ID</Th>
-              <Th>Property Name</Th>
-              <Th>City</Th>
-              <Th>Total Price</Th>
-              <Th>User</Th>
-              <Th>Date</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {salesData.map((transaction) => (
-              <Tr key={transaction.id}>
-                <Td>{transaction.id}</Td>
-                <Td>{transaction.room.property.name}</Td>
-                <Td>{transaction.room.property.city_name}</Td>
-                <Td>{transaction.total_price}</Td>
-                <Td>{transaction.user.username}</Td>
-                <Td>{new Date(transaction.createdAt).toLocaleDateString()}</Td>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+        <Box height="400px">
+          <Line data={chartData} options={chartOptions} />
+        </Box>
+        <Box overflowX="auto">
+          <Table variant="simple" size="sm">
+            <Thead>
+              <Tr>
+                <Th>ID</Th>
+                <Th>Property Name</Th>
+                <Th>City</Th>
+                <Th>Total Price</Th>
+                <Th>User</Th>
+                <Th>Date</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+            </Thead>
+            <Tbody>
+              {salesData.map((transaction) => (
+                <Tr key={transaction.id}>
+                  <Td>{transaction.id}</Td>
+                  <Td>{transaction.room.property.name}</Td>
+                  <Td>{transaction.room.property.city_name}</Td>
+                  <Td>{transaction.total_price}</Td>
+                  <Td>{transaction.user.username}</Td>
+                  <Td>{new Date(transaction.createdAt).toLocaleDateString()}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
+      </SimpleGrid>
     </Box>
   );
 };

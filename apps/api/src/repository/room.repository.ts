@@ -18,30 +18,65 @@ export const repoGetRoomByProperty = async ({
   property_id,
   search,
   page,
-  sortBy,
-  sortDirection,
+  sortBy = 'name',
+  sortDirection = 'asc',
+  startDate,
+  endDate,
 }: {
   property_id: string;
-  search: string;
+  search?: string;
   page: string;
-  sortBy: 'name' | 'price';
-  sortDirection: 'asc' | 'desc';
+  sortBy?: 'name' | 'price';
+  sortDirection?: 'asc' | 'desc';
+  startDate?: string;
+  endDate?: string;
 }) => {
   const pageN = page ? parseInt(page) * 4 - 4 : 0;
 
-  const whereClause = {
+  // Parse the startDate and endDate to Date objects
+  const start = startDate ? new Date(startDate) : undefined;
+  const end = endDate ? new Date(endDate) : undefined;
+
+  // Build the whereClause
+  const whereClause: any = {
     property_id: parseInt(property_id),
     ...(search ? { OR: [{ name: { contains: search } }] } : {}),
+    ...(start &&
+      end && {
+        AND: [
+          {
+            room_availability: {
+              none: {
+                AND: [
+                  { start_date: { lte: end } },
+                  { end_date: { gte: start } },
+                ],
+              },
+            },
+          },
+          {
+            transaction: {
+              none: {
+                AND: [
+                  { check_out: { gte: start } },
+                  { check_in: { lte: end } },
+                ],
+              },
+            },
+          },
+        ],
+      }),
   };
-  const count = await prisma.room.aggregate({
+
+  // Count the total number of matching rooms
+  const countResult = await prisma.room.aggregate({
     where: whereClause,
     _count: {
       _all: true,
     },
   });
 
-  sortBy ? sortBy : (sortBy = 'name');
-
+  // Find the matching rooms
   const allRooms = await prisma.room.findMany({
     skip: pageN,
     take: 4,
@@ -54,7 +89,7 @@ export const repoGetRoomByProperty = async ({
   });
 
   return {
-    count,
+    count: countResult._count._all,
     data: allRooms,
   };
 };

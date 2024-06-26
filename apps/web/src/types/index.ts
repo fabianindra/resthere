@@ -28,7 +28,7 @@ export interface Tenant {
 };
 
 export interface Booking {
-  id: number,
+  id: string,
   room_name: string;
   property_name: string;
   date: string;
