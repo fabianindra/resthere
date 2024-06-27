@@ -5,11 +5,18 @@ import { HeaderProps } from '@/types';
 
 const Header: React.FC<HeaderProps> = () => {
   return (
-    <Link href="/">
-      <Heading textAlign={'start'} color="primary" as="h2" size="lg">
-        Hostel
-      </Heading>
-    </Link>
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      className="sticky px-20 py-8 bg-[#FFFFFF]"
+      width="100%"
+    >
+      <Link href="/">
+        <Heading ml={-4} color="primary" as="h2" size="lg">
+          Hostel
+        </Heading>
+      </Link>
+    </Flex>
   );
 };
 

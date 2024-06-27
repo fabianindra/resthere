@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import { Box, Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Table, Thead, Tbody, Tr, Th, Td, Heading } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Booking } from '@/types';
@@ -17,7 +17,7 @@ const BookingList: React.FC<any> = () => {
       console.error('User ID not found in cookies');
       return;
     }
-  
+
     const fetchBookings = async () => {
       try {
         const response = await axios.get(`http://localhost:6570/api/booking-list/all-booking/${userId}`);
@@ -28,7 +28,7 @@ const BookingList: React.FC<any> = () => {
         console.error('Error fetching bookings:', error);
       }
     };
-  
+
     fetchBookings();
   }, [userId]);
 
@@ -66,99 +66,54 @@ const BookingList: React.FC<any> = () => {
     }
   };
 
-  const pendingPaymentBookings = bookings.filter(booking => booking.status === 'waiting payment');
-  const pendingApprovalBookings = bookings.filter(booking => booking.status === 'waiting payment confirmation');
-  const approvedBookings = bookings.filter(booking => booking.status === 'approved');
+  const formatBookingDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   return (
     <>
-      <Box>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Bookings Needing Payment Proof
-        </Text>
-        {pendingPaymentBookings.length === 0 ? (
-          <Text>No bookings needing payment proof found.</Text>
+      <Box p={4} mb={8}>
+        <Heading as="h3" size="md" textAlign="center" mb={6}>
+          Your Bookings
+        </Heading>
+        {bookings.length === 0 ? (
+          <Text textAlign="center">No bookings found.</Text>
         ) : (
-          pendingPaymentBookings.map((booking, index) => (
-            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Booking Date:
-                </Text>{' '}
-                {booking.date}
-              </Text>
-              <Button colorScheme="blue" onClick={() => handleUploadPaymentProof(booking)}>
-                Upload Payment Proof
-              </Button>
-            </Box>
-          ))
-        )}
-      </Box>
-
-      <Box>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Bookings Waiting for Approval
-        </Text>
-        {pendingApprovalBookings.length === 0 ? (
-          <Text>No bookings waiting for approval found.</Text>
-        ) : (
-          pendingApprovalBookings.map((booking, index) => (
-            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Booking Date:
-                </Text>{' '}
-                {booking.date}
-              </Text>
-            </Box>
-          ))
-        )}
-      </Box>
-
-      <Box>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Approved Bookings
-        </Text>
-        {approvedBookings.length === 0 ? (
-          <Text>No approved bookings found.</Text>
-        ) : (
-          approvedBookings.map((booking, index) => (
-            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Booking Date:
-                </Text>{' '}
-                {booking.date}
-              </Text>
-            </Box>
-          ))
+          <Box overflowX="auto">
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th>Property Name</Th>
+                  <Th>Room</Th>
+                  <Th>Booking Date</Th>
+                  <Th>Status</Th>
+                  <Th>Action</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {bookings.map((booking, index) => (
+                  <Tr key={index}>
+                    <Td>{booking.property_name}</Td>
+                    <Td>{booking.room_name}</Td>
+                    <Td>{formatBookingDate(booking.date)}</Td>
+                    <Td>{booking.status}</Td>
+                    <Td>
+                      {booking.status === 'waiting payment' && (
+                        <Button size="sm" colorScheme="blue" onClick={() => handleUploadPaymentProof(booking)}>
+                          Upload Payment Proof
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
         )}
       </Box>
 
@@ -183,6 +138,8 @@ const BookingList: React.FC<any> = () => {
           </ModalContent>
         </Modal>
       )}
+
+      <Box mb={8} />
     </>
   );
 };

@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE `user` ADD COLUMN `brithday` VARCHAR(191) NULL,
-    ADD COLUMN `foto` VARCHAR(191) NULL,
-    ADD COLUMN `gender` VARCHAR(191) NULL;

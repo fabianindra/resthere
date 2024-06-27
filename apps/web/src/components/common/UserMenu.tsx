@@ -6,9 +6,6 @@ import {
   MenuList,
   HStack,
   Text,
-  Button,
-  Flex,
-  Box,
 } from '@chakra-ui/react';
 import { SignOut, UserCircle, SignIn, Table } from '@phosphor-icons/react';
 import Link from 'next/link';
@@ -25,75 +22,71 @@ const UserMenu: React.FC<UserMenuProps> = ({
   const roleCookies = Cookies.get('role');
 
   return (
-    <HStack>
-      <Flex gap={2}>
-        <Button
-          border="2px"
-          borderColor="gray.300"
-          borderRadius={50}
-          variant="outline"
-        >
-          <Link href="/transaction">
-            <Text fontWeight="light">Transaction</Text>
-          </Link>
-        </Button>
-      </Flex>
-      <Menu>
-        <MenuButton ml={10}>
-          <HStack>
-            <UserCircle className="text-primary" size={50} weight="duotone" />
-            {loggedIn && user && (
-              <Text fontWeight={'semibold'}>{user.username}</Text>
-            )}
-          </HStack>
-        </MenuButton>
-        <MenuList>
-          {!loggedIn ? (
-            <>
-              <MenuItem color={'primary'} onClick={onOpenUserModal}>
-                <SignIn size={32} />
-                <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                  Log In as User
-                </Text>
-              </MenuItem>
-              <MenuItem color={'primary'} onClick={onOpenTenantModal}>
-                <SignIn size={32} />
-                <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                  Log In as Tenant
-                </Text>
-              </MenuItem>
-            </>
-          ) : (
-            <MenuItem color={'primary'} onClick={handleLogout}>
-              <SignOut size={32} />
+    <Menu>
+      <MenuButton>
+        <HStack>
+          <UserCircle className="text-primary" size={50} weight="duotone" />
+          {loggedIn && user && (
+            <Text fontWeight={'semibold'}>{user.username}</Text>
+          )}
+        </HStack>
+      </MenuButton>
+      <MenuList>
+        {!loggedIn ? (
+          <>
+            <MenuItem color={'primary'} onClick={onOpenUserModal}>
+              <SignIn size={32} />
               <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                Log Out
+                Log In as User
               </Text>
             </MenuItem>
-          )}
-          {loggedIn && roleCookies === 'user' && (
-            <Link href="/profile">
-              <MenuItem color={'primary'}>
-                <Table size={32} />
-                <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                  Profile
-                </Text>
-              </MenuItem>
-            </Link>
-          )}
-          {loggedIn && roleCookies === 'tenant' && (
-            <Link href="/dashboard">
-              <MenuItem color={'primary'}>
-                <Table size={32} />
-                <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
-                  Dashboard
-                </Text>
-              </MenuItem>
-            </Link>
-          )}
-        </MenuList>
-      </Menu>
-    </HStack>
+            <MenuItem color={'primary'} onClick={onOpenTenantModal}>
+              <SignIn size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Log In as Tenant
+              </Text>
+            </MenuItem>
+          </>
+        ) : (
+          <MenuItem color={'primary'} onClick={handleLogout}>
+            <SignOut size={32} />
+            <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+              Log Out
+            </Text>
+          </MenuItem>
+        )}
+        {loggedIn && roleCookies === 'user' && (
+          <Link href="/profile">
+            <MenuItem color={'primary'}>
+              <Table size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Profile
+              </Text>
+            </MenuItem>
+          </Link>
+        )}
+        {loggedIn && roleCookies === 'user' && (
+          <Link href="/transaction">
+            <MenuItem color={'primary'}>
+              <Table size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Transaction
+              </Text>
+            </MenuItem>
+          </Link>
+        )}
+        {loggedIn && roleCookies === 'tenant' && (
+          <Link href="/dashboard">
+            <MenuItem color={'primary'}>
+              <Table size={32} />
+              <Text ml={3} fontSize="lg" fontWeight={'semibold'}>
+                Property Management
+              </Text>
+            </MenuItem>
+          </Link>
+        )}
+      </MenuList>
+    </Menu>
   );
 };
 

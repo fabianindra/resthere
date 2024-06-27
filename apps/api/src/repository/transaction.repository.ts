@@ -3,15 +3,15 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const repoAddTransaction = async (
-  roomId: number,
-  userId: number,
-  price: number,
+  roomId: string,
+  userId: string,
+  price: string,
 ) => {
   try {
     // Check if the user with the given userId exists
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: parseInt(userId),
       },
     });
 
@@ -22,7 +22,7 @@ export const repoAddTransaction = async (
     // Check if the room with the given roomId exists
     const room = await prisma.room.findUnique({
       where: {
-        id: roomId,
+        id: parseInt(roomId),
       },
     });
 
@@ -36,9 +36,9 @@ export const repoAddTransaction = async (
 
     await prisma.transaction.create({
       data: {
-        room_id: roomId,
-        user_id: userId,
-        total_price: price,
+        room_id: parseInt(roomId),
+        user_id: parseInt(userId),
+        total_price: parseInt(price),
         total_room: 1,
         check_in: now,
         check_out: checkOutDate,
