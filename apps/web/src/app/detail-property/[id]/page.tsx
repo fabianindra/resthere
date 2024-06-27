@@ -38,6 +38,8 @@ export default function Page() {
   const [sortBy, setSortBy] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<string>('asc');
   const [propertyId, setPropertyId] = useState<number>(0);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const params: { id: string } = useParams<{ id: string }>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -52,7 +54,16 @@ export default function Page() {
     loading: roomsLoading,
     error: roomsError,
     fetchRooms,
-  } = useRoomsData(propertyId, page, search, category, sortBy, sortDirection);
+  } = useRoomsData(
+    propertyId,
+    page,
+    search,
+    category,
+    sortBy,
+    sortDirection,
+    startDate,
+    endDate,
+  );
 
   const handleDirections = () => {
     setSortDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
@@ -105,16 +116,36 @@ export default function Page() {
       <MyMap position={position} zoom={zoom} />
 
       <HStack my={10} justifyContent={'space-between'}>
-        <InputGroup w={300}>
-          <Input
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search"
-            value={search}
-          />
-          <InputRightElement>
-            <MagnifyingGlass size={20} />
-          </InputRightElement>
-        </InputGroup>
+        <HStack>
+          <HStack>
+            <Input
+              onChange={(e) => setStartDate(e.target.value)}
+              value={startDate}
+              placeholder="Select Date and Time"
+              size="md"
+              type="date"
+            />
+            <Box w={10} className="border-b border-[#000000]" />
+            <Input
+              onChange={(e) => setEndDate(e.target.value)}
+              value={endDate}
+              placeholder="Select Date and Time"
+              size="md"
+              type="date"
+            />
+          </HStack>
+          <InputGroup w={300}>
+            <Input
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search"
+              value={search}
+            />
+            <InputRightElement>
+              <MagnifyingGlass size={20} />
+            </InputRightElement>
+          </InputGroup>
+        </HStack>
+
         <HStack>
           <HStack>
             <Select

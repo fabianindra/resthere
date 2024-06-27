@@ -6,6 +6,7 @@ export default function SearchButton({ onClick }: any) {
   return (
     <HStack
       className="py-11 flex-1 text-travertine hover:cursor-pointer"
+      minW={'fit-content'}
       justifyContent={'center'}
       alignItems={'center'}
       backgroundColor={'primary'}
