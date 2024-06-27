@@ -33,6 +33,25 @@ const BookingList: React.FC<any> = () => {
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const toast = useToast();
 
+  const handleCancel = async (id: string) => {
+    try {
+      const response = await cancelTransaction(id);
+      toast({
+        title: 'cancel transaction succesfuly',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Failed to cancel transaction',
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
+    }
+  };
+
   useEffect(() => {
     if (!userId) {
       console.error('User ID not found in cookies');
@@ -53,7 +72,7 @@ const BookingList: React.FC<any> = () => {
     };
 
     fetchBookings();
-  }, [userId, toast]);
+  }, [userId, handleCancel]);
 
   const handleUploadPaymentProof = (booking: Booking) => {
     setSelectedBooking(booking);
@@ -67,25 +86,6 @@ const BookingList: React.FC<any> = () => {
   const handlePaymentProofChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setPaymentProof(e.target.files[0]);
-    }
-  };
-
-  const handleCancel = async (id: string) => {
-    try {
-      const response = await cancelTransaction(id);
-      toast({
-        title: 'cancel transaction succesfuly',
-        status: 'success',
-        position: 'top',
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: 'Failed to cancel transaction',
-        status: 'error',
-        position: 'top',
-        isClosable: true,
-      });
     }
   };
 
