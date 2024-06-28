@@ -14,6 +14,7 @@ import roomAvailability from './routers/roomavailability.router';
 import profileRouter from './routers/profile.router';
 import transactionRouter from './routers/transaction.router';
 import bookingRouter from './routers/booking.router';
+import reviewRouter from './routers/review.router';
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use('/api/romm-availability', roomAvailability);
 app.use('/api/profile', profileRouter);
 app.use('/api/transaction', transactionRouter);
 app.use('/api/booking-list', bookingRouter);
+app.use('/api/review', reviewRouter);
 
 const PORT = 6570;
 
@@ -51,5 +53,5 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Application running on port:', PORT);
+  //console.log('Application running on port:', PORT);
 });

@@ -60,7 +60,7 @@ export const serviceAddSpecialPrice = async (req: any) => {
       data: data,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',
@@ -71,7 +71,7 @@ export const serviceAddSpecialPrice = async (req: any) => {
 
 export const serviceUpdateSpecialPrice = async (req: any) => {
   const { specialprice_id, start_date, end_date, special_price } = req.body;
-  console.log(req.body);
+  //console.log(req.body);
   try {
     const data = await editSpecialPrice({
       specialprice_id,
@@ -86,7 +86,7 @@ export const serviceUpdateSpecialPrice = async (req: any) => {
       data: data,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',

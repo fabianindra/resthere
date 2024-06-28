@@ -21,7 +21,7 @@ export const repoGetPropertyByRooms = async ({
   sortBy,
   sortDirection,
 }: GetPropertyParams) => {
-  console.log(startDate, endDate);
+  //console.log(startDate, endDate);
   const pageN = page ? (parseInt(page) - 1) * 4 : 0;
 
   const start = startDate ? new Date(startDate) : undefined;
