@@ -38,7 +38,7 @@ const getUserFromCookie = (): User | null => {
 const user = getUserFromCookie();
 const userId = user?.id;
 
-console.log("userID: ", userId)
+//console.log("userID: ", userId)
 
 export default function ModalRoomDetail({
   onClose,
@@ -46,6 +46,8 @@ export default function ModalRoomDetail({
   roomId,
   dashboard,
   title,
+  startDate,
+  endDate,
 }: any) {
   const [addSpecialPrice, setAddSpecialPrice] = useState(true);
   const [addAvailableRoom, setaddAvailableRoom] = useState(true);
@@ -55,6 +57,8 @@ export default function ModalRoomDetail({
   const [specialPrice, setSpecialPrice] = useState<any>();
   const [availableRoom, setAvailableRoom] = useState<any>();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [checkIn, setCheckIn] = useState<string>('');
+  const [checkOut, setCheckOut] = useState<string>('');
 
   const getDetailsRoom = async () => {
     try {
@@ -64,12 +68,12 @@ export default function ModalRoomDetail({
       setAvailableRoom(response.data.data.room_availability);
       
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 
   const handleBooking = async () => {
-    console.log("Booking button clicked");
+    //console.log("Booking button clicked");
     if (!userId) {
       setIsAlertOpen(true);
       return;
@@ -81,9 +85,12 @@ export default function ModalRoomDetail({
         roomId,
         userId,
         price,
+        startDate: checkIn,
+        endDate: checkOut,
       });
+      console.log(checkIn, checkOut)
       console.log("Booking response:", response);
-      window.location.href = `/profile`;
+      // window.location.href = `/`;
     } catch (error: any) {
       console.log(error);
     }
@@ -91,6 +98,9 @@ export default function ModalRoomDetail({
 
   useEffect(() => {
     getDetailsRoom();
+    setCheckIn(startDate);
+    setCheckOut(endDate)
+    console.log(checkIn, checkOut)
   }, [isOpen]);
 
   return (

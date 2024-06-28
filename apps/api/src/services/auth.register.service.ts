@@ -84,7 +84,7 @@ const registerUser = async (request: User | Tenant, isUser: boolean) => {
     const existingEntity = await repoFindUser(request.email);
 
     if (existingEntity) {
-      console.log(`${isUser ? 'User' : 'Tenant'} with email ${request.email} already exists.`);
+      //console.log(`${isUser ? 'User' : 'Tenant'} with email ${request.email} already exists.`);
       return {
         status: 401,
         success: false,
@@ -102,7 +102,7 @@ const registerUser = async (request: User | Tenant, isUser: boolean) => {
         from: process.env.EMAIL
       });
 
-    console.log(`${isUser ? 'User' : 'Tenant'} registered successfully. Verification email sent to ${request.email}.`);
+    //console.log(`${isUser ? 'User' : 'Tenant'} registered successfully. Verification email sent to ${request.email}.`);
     return {
       status: 201,
       success: true,
@@ -110,7 +110,7 @@ const registerUser = async (request: User | Tenant, isUser: boolean) => {
       data: request,
     };
   } catch (error) {
-    console.log(`Error during registration: ${(error as Error).message}`);
+    //console.log(`Error during registration: ${(error as Error).message}`);
     return {
       status: 500,
       message: "Server error",
@@ -124,7 +124,7 @@ const registerTenant = async (request: User | Tenant, isUser: boolean) => {
     const existingEntity = await repoFindTenant(request.email);
 
     if (existingEntity) {
-      console.log(`${isUser ? 'User' : 'Tenant'} with email ${request.email} already exists.`);
+      //console.log(`${isUser ? 'User' : 'Tenant'} with email ${request.email} already exists.`);
       return {
         status: 401,
         success: false,
@@ -142,7 +142,7 @@ const registerTenant = async (request: User | Tenant, isUser: boolean) => {
         from: process.env.EMAIL
       });
 
-    console.log(`${isUser ? 'User' : 'Tenant'} registered successfully. Verification email sent to ${request.email}.`);
+    //console.log(`${isUser ? 'User' : 'Tenant'} registered successfully. Verification email sent to ${request.email}.`);
     return {
       status: 201,
       success: true,
@@ -150,7 +150,7 @@ const registerTenant = async (request: User | Tenant, isUser: boolean) => {
       data: request,
     };
   } catch (error) {
-    console.log(`Error during registration: ${(error as Error).message}`);
+    //console.log(`Error during registration: ${(error as Error).message}`);
     return {
       status: 500,
       message: "Server error",
@@ -194,14 +194,14 @@ export const serviceChangeUserPassword = async (email: string, currentPassword: 
 
     const hashedPassword = await hashPassword(newPassword);
     await repoUserChangePassword(email, hashedPassword);
-    console.log("User password changed successfully.");
+    //console.log("User password changed successfully.");
     return {
       status: 200,
       success: true,
       message: "User password changed successfully.",
     };
   } catch (error) {
-    console.log(`Error changing user password: ${(error as Error).message}`);
+    //console.log(`Error changing user password: ${(error as Error).message}`);
     return {
       status: 500,
       success: false,
@@ -236,14 +236,14 @@ export const serviceChangeTenantPassword = async (email: string, currentPassword
 
     const hashedPassword = await hashPassword(newPassword);
     await repoTenantChangePassword(email, hashedPassword);
-    console.log("Tenant password changed successfully.");
+    //console.log("Tenant password changed successfully.");
     return {
       status: 200,
       success: true,
       message: "Tenant password changed successfully.",
     };
   } catch (error) {
-    console.log(`Error changing tenant password: ${(error as Error).message}`);
+    //console.log(`Error changing tenant password: ${(error as Error).message}`);
     return {
       status: 500,
       success: false,

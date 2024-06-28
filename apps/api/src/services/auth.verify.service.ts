@@ -52,7 +52,7 @@ export const serviceVerifyEmail = async (request: any) => {
       };
     }
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: "Server error",

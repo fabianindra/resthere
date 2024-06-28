@@ -107,7 +107,7 @@ export default function ModalEditProperty({ isOpen, onClose, id }: any) {
     if (isOpen) {
       fetchProperty(id);
     }
-    console.log(property);
+    //console.log(property);
   }, [isOpen]);
 
   useEffect(() => {

@@ -78,7 +78,7 @@ export const serviceUserLogin = async (request: any) => {
       message: "Invalid email or password",
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: "Server error",
@@ -140,7 +140,7 @@ export const serviceTenantLogin = async (request: any) => {
       message: "Invalid email or password",
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: "Server error",

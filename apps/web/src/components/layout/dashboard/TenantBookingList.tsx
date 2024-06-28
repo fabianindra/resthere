@@ -36,7 +36,7 @@ const TenantBookingList: React.FC = () => {
   } else if (userData) {
     try {
       const parsedUserData = JSON.parse(userData);
-      console.log('Parsed User Data:', parsedUserData);
+      //console.log('Parsed User Data:', parsedUserData);
       tenantId = parsedUserData.id;
     } catch (error) {
       console.error('Error parsing user data from cookies:', error);
@@ -78,7 +78,7 @@ const TenantBookingList: React.FC = () => {
   const handleApprove = async (bookingId: string) => {
     try {
       await approveTransaction(bookingId);
-      console.log('Booking approved successfully');
+      //console.log('Booking approved successfully');
       toast({
         title: 'approve transaction succesfuly',
         status: 'success',
@@ -140,8 +140,8 @@ const TenantBookingList: React.FC = () => {
     try {
       const response = await axios.get(`http://localhost:6570/api/transaction/payment-proof/${bookingId}`);
       const paymentProofUrl = response.data.data.proof;
-      console.log(response)
-      console.log(paymentProofUrl)
+      //console.log(response)
+      //console.log('Payment Proof URL:', paymentProofUrl); // Verify the URL
       setPaymentProofUrl(paymentProofUrl);
       setIsProofModalOpen(true);
     } catch (error) {

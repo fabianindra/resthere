@@ -6,7 +6,7 @@ interface PaymentProofRequestBody {
 }
 
 export const serviceAddTransaction = async (req: any) => {
-  const { roomId, userId, price } = req.body;
+  const { roomId, userId, price, startDate, endDate } = req.body;
 
   if (!roomId || !userId || !price) {
     return {
@@ -17,7 +17,7 @@ export const serviceAddTransaction = async (req: any) => {
   }
 
   try {
-    const data = await repoAddTransaction(roomId, userId, price);
+    const data = await repoAddTransaction(roomId, userId, price, startDate, endDate);
     return {
       status: 201,
       success: true,

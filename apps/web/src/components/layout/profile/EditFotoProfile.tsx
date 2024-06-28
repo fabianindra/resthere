@@ -11,7 +11,7 @@ export default function EditFotoProfile(foto: any) {
 
   const uploadFoto = async (file: any) => {
     const storedUserId: any = Cookies.get('userId');
-    console.log(file);
+    //console.log(file);
     try {
       const data = await updateFotoProfile(parseInt(storedUserId), file);
       toast({

@@ -6,6 +6,8 @@ export const repoAddTransaction = async (
   roomId: string,
   userId: string,
   price: string,
+  startDate: string,
+  endDate: string
 ) => {
   try {
     // Check if the user with the given userId exists
@@ -30,9 +32,8 @@ export const repoAddTransaction = async (
       throw new Error('Room with the given roomId does not exist.');
     }
 
-    const now: Date = new Date();
-    const checkOutDate: Date = new Date(now);
-    checkOutDate.setDate(checkOutDate.getDate() + 1);
+    const checkIn: Date = new Date(startDate);
+    const checkOut: Date = new Date(endDate);
 
     await prisma.transaction.create({
       data: {
@@ -40,8 +41,8 @@ export const repoAddTransaction = async (
         user_id: parseInt(userId),
         total_price: parseInt(price),
         total_room: 1,
-        check_in: now,
-        check_out: checkOutDate,
+        check_in: checkIn,
+        check_out: checkOut,
       },
     });
 

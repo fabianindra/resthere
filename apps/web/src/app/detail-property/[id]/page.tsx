@@ -38,8 +38,8 @@ export default function Page() {
   const [sortBy, setSortBy] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<string>('asc');
   const [propertyId, setPropertyId] = useState<number>(0);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState<Date | null>(null); // Updated to Date | null
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const params: { id: string } = useParams<{ id: string }>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -78,7 +78,7 @@ export default function Page() {
     if (propertyId) {
       fetchRooms();
     }
-    console.log(search);
+    //console.log(search);
   }, [propertyId, page, search, category, sortBy, sortDirection]);
 
   const MyMap = useMemo(
@@ -118,21 +118,20 @@ export default function Page() {
       <HStack my={10} justifyContent={'space-between'}>
         <HStack>
           <HStack>
-            <Input
-              onChange={(e) => setStartDate(e.target.value)}
-              value={startDate}
-              placeholder="Select Date and Time"
-              size="md"
-              type="date"
-            />
-            <Box w={10} className="border-b border-[#000000]" />
-            <Input
-              onChange={(e) => setEndDate(e.target.value)}
-              value={endDate}
-              placeholder="Select Date and Time"
-              size="md"
-              type="date"
-            />
+          <Input
+            onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : null)}
+            value={startDate ? startDate.toISOString().split('T')[0] : ''}
+            placeholder="Select Date and Time"
+            size="md"
+            type="date"
+          />
+          <Input
+            onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : null)}
+            value={endDate ? endDate.toISOString().split('T')[0] : ''}
+            placeholder="Select Date and Time"
+            size="md"
+            type="date"
+          />
           </HStack>
           <InputGroup w={300}>
             <Input
@@ -188,6 +187,8 @@ export default function Page() {
             capacity={item.capacity_person}
             name={item.name}
             price={item.price}
+            startDate={startDate}
+            endDate={endDate}
             dashboard
           />
         ))}
