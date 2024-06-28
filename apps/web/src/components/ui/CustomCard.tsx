@@ -23,16 +23,29 @@ export default function CustomCard({
   name,
   price,
   dashboard,
+  startDate,
+  endDate
 }: {
   id: number;
   city: string;
   name: string;
   price: number;
   dashboard: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
   date?: string;
   user?: string;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const formatDate = (date: Date | null): string => {
+    return date ? date.toISOString().split('T')[0] : '';
+  };
+
+  const formattedStartDate = formatDate(startDate);
+  const formattedEndDate = formatDate(endDate);
+
+
   return (
     <Card maxW="xs">
       <CardBody>
@@ -46,7 +59,11 @@ export default function CustomCard({
           <Text fontSize={'sm'}>{city}</Text>
         </HStack>
         <Link
-          href={dashboard ? `detail-property/${id}` : `list-property/${id}`}
+          href={{
+            pathname: dashboard ? `/detail-property/${id}` : `/list-property/${id}`,
+            query: { startDate: formattedStartDate, endDate: formattedEndDate},
+          }}
+          passHref
         >
           <Heading size="md" mt={4}>
             {name}

@@ -8,7 +8,7 @@ import { verifyTokenClient } from '@/app/verifyToken';
 import Link from 'next/link';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
-import EditProfile from '@/components/layout/profile/EditProfile';
+import EditProfileTenant from './EditProfileTenant';
 import EditFotoProfile from '@/components/layout/profile/EditFotoProfile';
 
 export default function TenantProfile() {
@@ -57,7 +57,7 @@ export default function TenantProfile() {
         {loggedIn && user ? (
           <VStack borderWidth="1px" borderRadius="lg" p={6}>
             <EditFotoProfile foto={user.username} />
-            <EditProfile onOpen={onOpen} />
+            <EditProfileTenant onOpen={onOpen} />
           </VStack>
         ) : (
           <Text

@@ -47,12 +47,12 @@ const LoginModal: React.FC<LoginModalProps> = ({
         const userData = response.data.data;
         const userToken = response.data.token;
         const userRole = response.data.role;
-        console.log(userData);
+        //console.log(userData);
         Cookies.set('user', JSON.stringify(userData));
         Cookies.set('userId', JSON.stringify(userData.id));
         Cookies.set('token', userToken, { expires: 1 });
         Cookies.set('role', userRole, { expires: 1 });
-        console.log('Login successful', response.data);
+        //console.log('Login successful', response.data);
         setLoggedIn(true);
         setUser(userData);
         setError('');

@@ -17,8 +17,8 @@ export default function Page() {
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
   const [city, setCity] = useState<any>();
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const cityParam = searchParams.get('city');
   const startDateParam = searchParams.get('startDate');
   const endDateParam = searchParams.get('endDate');
@@ -37,7 +37,7 @@ export default function Page() {
       setMaxPage(Math.ceil(response.data.count / 4));
       setDataRoom(response.data.data);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 
@@ -95,6 +95,8 @@ export default function Page() {
                   name={item.name}
                   price={item.rooms[0].price}
                   dashboard={false}
+                  startDate={startDate}
+                  endDate={endDate}
                 />
               );
             })}

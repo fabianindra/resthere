@@ -28,7 +28,7 @@ const validationSchema = Yup.object({
   brithday: Yup.date().required('Required'),
 });
 
-export default function EditProfile({ onOpen }: EditProfileProps) {
+export default function EditProfileTenant({ onOpen }: EditProfileProps) {
   const [isEdit, setIsEdit] = useState(false);
   const [user, setUser] = useState<any | null>(null);
   const [userId, setUserId] = useState<any | null>(null);
@@ -148,9 +148,6 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
       <HStack gap={8}>
         {!isEdit && (
           <HStack gap={8} mt={4}>
-            <Button w={200} colorScheme="gray" onClick={() => setIsEdit(true)}>
-              Edit Profile
-            </Button>
             <Button w={200} colorScheme="gray" onClick={onOpen}>
               Change Password
             </Button>

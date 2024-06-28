@@ -1,4 +1,4 @@
-import { addTransactionController, getSalesReportController, getTransactionStatusController, updateTransactionStatusController, uploadPaymentProofController } from "../controllers/transaction.controller";
+import { addTransactionController, getPaymentProofController, getSalesReportController, getTransactionStatusController, updateTransactionStatusController, uploadPaymentProofController } from "../controllers/transaction.controller";
 import { Router } from "express";
 import { uploader } from "../middlewares/uploder";
 
@@ -8,6 +8,7 @@ transactionRouter.post('/booking', addTransactionController);
 transactionRouter.get('/sales-report', getSalesReportController); 
 transactionRouter.post('/update-status', updateTransactionStatusController);
 transactionRouter.get('/status', getTransactionStatusController);
+transactionRouter.get('/payment-proof/:bookingId', getPaymentProofController);
 transactionRouter.post('/upload-payment-proof', uploader('IMG', '/images').single('paymentProof'), uploadPaymentProofController);
 
 export default transactionRouter;
