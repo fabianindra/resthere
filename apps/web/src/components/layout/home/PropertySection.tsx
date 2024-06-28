@@ -45,7 +45,7 @@ export default function PropertySection() {
       <HStack my={10} justifyContent={'space-between'}>
         {dataRoom.length == 0
           ? null
-          : dataRoom.map((item: any) => {
+          : dataRoom.map((item: any) => {npm run dev
               return (
                 <CustomCard
                   key={item.id}
