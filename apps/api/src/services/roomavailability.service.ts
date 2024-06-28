@@ -59,7 +59,7 @@ export const serviceAddRoomAvailability = async (req: any) => {
       data: data,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',
@@ -70,7 +70,7 @@ export const serviceAddRoomAvailability = async (req: any) => {
 
 export const serviceUpdateRoomAvailability = async (req: any) => {
   const { roomavailability_id, start_date, end_date } = req.body;
-  console.log(roomavailability_id);
+  //console.log(roomavailability_id);
   try {
     const data = await editRoomAvailability({
       roomavailability_id,
@@ -84,7 +84,7 @@ export const serviceUpdateRoomAvailability = async (req: any) => {
       data: data,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',
@@ -104,7 +104,7 @@ export const serviceDeleteRoomAvailability = async (req: any) => {
       data: data,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',

@@ -61,7 +61,7 @@ export const serviceGetPropertyByTenant = async (req: any) => {
       count: data.count,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',
@@ -81,7 +81,7 @@ export const serviceGetPropertyById = async (req: any) => {
       data: data,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',
@@ -206,7 +206,7 @@ export const serviceCheckProperty = async (req: any, next: any) => {
     }
 
     const data = await repoCheckProperty(id);
-    console.log(id, 'INI ID');
+    //console.log(id, 'INI ID');
 
     if (!data) {
       return {

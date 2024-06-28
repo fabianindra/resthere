@@ -19,7 +19,7 @@ export const serviceGetBookings = async (req: any) => {
       date: booking.check_in,
     }));
 
-    console.log(enhancedBookings, user_id);
+    //console.log(enhancedBookings, user_id);
     return {
       status: 200,
       success: true,
@@ -54,7 +54,7 @@ export const serviceGetBookingsTenant = async (req: any) => {
       check_out: booking.check_out,
     }));
 
-    console.log(enhancedBookings, tenant_id);
+    //console.log(enhancedBookings, tenant_id);
     return {
       status: 200,
       success: true,

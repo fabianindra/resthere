@@ -1,10 +1,10 @@
-import { verify } from "jsonwebtoken";
+import { verify } from 'jsonwebtoken';
 import {
   repoFindTenant,
   repoFindUser,
   repoVerifyUser,
-  repoVerifyTenant
-} from "../repository/auth.repository";
+  repoVerifyTenant,
+} from '../repository/auth.repository';
 
 // Token verification function
 const verifyToken = (token: string, secret: string): any => {
@@ -18,7 +18,7 @@ export const serviceVerifyEmail = async (request: any) => {
   if (!token) {
     return {
       status: 400,
-      message: "Verification token is missing",
+      message: 'Verification token is missing',
     };
   }
 
@@ -33,29 +33,29 @@ export const serviceVerifyEmail = async (request: any) => {
       await repoVerifyUser(email);
       return {
         status: 200,
-        message: "Email verified successfully",
+        message: 'Email verified successfully',
         email: email,
-        type: 'user'
+        type: 'user',
       };
     } else if (tenant) {
       await repoVerifyTenant(email);
       return {
         status: 200,
-        message: "Email verified successfully",
+        message: 'Email verified successfully',
         email: email,
-        type: 'tenant'
+        type: 'tenant',
       };
     } else {
       return {
         status: 400,
-        message: "Invalid verification token",
+        message: 'Invalid verification token',
       };
     }
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
-      message: "Server error",
+      message: 'Server error',
       error: (error as Error).message,
     };
   }

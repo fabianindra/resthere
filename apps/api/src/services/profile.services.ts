@@ -36,7 +36,7 @@ export const serviceUpdateFotoProfile = async (req: any) => {
   }
 
   const foto: string = file.filename;
-  console.log(foto);
+  //console.log(foto);
   try {
     const data = repoUpdateFotoProfile({
       profile_id: parseInt(profile_id),
@@ -61,7 +61,7 @@ export const serviceUpdateProfile = async (req: any) => {
   const { email, username, birthday, gender } = req.body;
 
   if (!email && !username && !birthday && !gender) {
-    console.log(email, username, birthday, gender);
+    //console.log(email, username, birthday, gender);
     return {
       status: 401,
       success: true,
@@ -84,7 +84,7 @@ export const serviceUpdateProfile = async (req: any) => {
       data: data,
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
       message: 'server error',
