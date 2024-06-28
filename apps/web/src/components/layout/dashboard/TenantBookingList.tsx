@@ -1,14 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, Button, Grid, Card, CardHeader, CardBody, CardFooter, Badge, Table, Thead, Tbody, Tr, Th, Td, IconButton, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Text,
+  Button,
+  Grid,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Badge,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  IconButton,
+  HStack,
+  useToast,
+} from '@chakra-ui/react';
 import { CheckCircleIcon, TimeIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BookingTenant } from '@/types';
+import {
+  approveTransaction,
+  cancelTransaction,
+  rejectTransaction,
+} from '@/api/transaction';
 
 const TenantBookingList: React.FC = () => {
   const [pendingBookings, setPendingBookings] = useState<BookingTenant[]>([]);
   const [approvedBookings, setApprovedBookings] = useState<BookingTenant[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const toast = useToast();
   const bookingsPerPage = 5;
 
   const userData = Cookies.get('user');
@@ -30,12 +55,19 @@ const TenantBookingList: React.FC = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(`http://localhost:6570/api/booking-list/all-booking-tenant/${tenantId}`);
+      const response = await axios.get(
+        `http://localhost:6570/api/booking-list/all-booking-tenant/${tenantId}`,
+      );
       const responseData = response.data;
       const allBookings = responseData.data;
 
-      const pending = allBookings.filter((booking: BookingTenant) => booking.status === 'waiting payment confirmation');
-      const approved = allBookings.filter((booking: BookingTenant) => booking.status === 'approved');
+      const pending = allBookings.filter(
+        (booking: BookingTenant) =>
+          booking.status === 'waiting payment confirmation',
+      );
+      const approved = allBookings.filter(
+        (booking: BookingTenant) => booking.status === 'approved',
+      );
 
       setPendingBookings(pending);
       setApprovedBookings(approved);
@@ -55,48 +87,115 @@ const TenantBookingList: React.FC = () => {
 
   const handleApprove = async (bookingId: string) => {
     try {
-      await axios.post('http://localhost:6570/api/transaction/update-status', { transactionId: bookingId, status: 'approved' });
+      await approveTransaction(bookingId);
       console.log('Booking approved successfully');
+      toast({
+        title: 'approve transaction succesfuly',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
       fetchBookings();
     } catch (error) {
-      console.error('Failed to approve booking:', error);
+      toast({
+        title: 'Failed to approve transaction',
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
     }
-  }
+  };
 
   const handleReject = async (bookingId: string) => {
     try {
-      await axios.post('http://localhost:6570/api/transaction/update-status', { transactionId: bookingId, status: 'waiting payment' });
-      console.log('Booking rejected successfully');
+      const response = await rejectTransaction(bookingId);
       fetchBookings();
+      toast({
+        title: 'reject transaction succesfuly',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
     } catch (error) {
-      console.error('Failed to reject booking:', error);
+      toast({
+        title: 'Failed to reject transaction',
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
     }
-  }
+  };
+
+  const handleCancel = async (bookingId: string) => {
+    try {
+      const response = await cancelTransaction(bookingId);
+      fetchBookings();
+      toast({
+        title: 'cacel transaction succesfuly',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Failed to cacel transaction',
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
+    }
+  };
 
   const renderBookingCard = (booking: BookingTenant, isPending: boolean) => (
     <Card key={booking.id} borderRadius="lg" boxShadow="md" mb={4} p={4}>
       <CardHeader>
-        <Text fontSize="xl" fontWeight="bold">{booking.property_name}</Text>
-        <Badge colorScheme={isPending ? "yellow" : "green"} ml={2}>
+        <Text fontSize="xl" fontWeight="bold">
+          {booking.property_name}
+        </Text>
+        <Badge colorScheme={isPending ? 'yellow' : 'green'} ml={2}>
           {isPending ? <TimeIcon mr={1} /> : <CheckCircleIcon mr={1} />}
-          {isPending ? "Pending" : "Approved"}
+          {isPending ? 'Pending' : 'Approved'}
         </Badge>
       </CardHeader>
       <CardBody>
-        <Text><strong>Username:</strong> {booking.username}</Text>
-        <Text><strong>Email:</strong> {booking.email}</Text>
-        <Text><strong>Room:</strong> {booking.room_name}</Text>
-        <Text><strong>Check-in Date:</strong> {new Date(booking.check_in).toLocaleDateString()}</Text>
-        <Text><strong>Check-out Date:</strong> {new Date(booking.check_out).toLocaleDateString()}</Text>
+        <Text>
+          <strong>Username:</strong> {booking.username}
+        </Text>
+        <Text>
+          <strong>Email:</strong> {booking.email}
+        </Text>
+        <Text>
+          <strong>Room:</strong> {booking.room_name}
+        </Text>
+        <Text>
+          <strong>Check-in Date:</strong>{' '}
+          {new Date(booking.check_in).toLocaleDateString()}
+        </Text>
+        <Text>
+          <strong>Check-out Date:</strong>{' '}
+          {new Date(booking.check_out).toLocaleDateString()}
+        </Text>
       </CardBody>
       {isPending && (
         <CardFooter>
-          <Button colorScheme="blue" onClick={() => handleApprove(booking.id)}>
-            Approve
-          </Button>
-          <Button ml={20} colorScheme="red" onClick={() => handleReject(booking.id)}>
-            Reject
-          </Button>
+          <HStack>
+            <Button
+              colorScheme="blue"
+              onClick={() => handleApprove(booking.id)}
+            >
+              Approve
+            </Button>
+            <Button
+              colorScheme="yellow"
+              w={'fit-content'}
+              onClick={() => handleReject(booking.id)}
+            >
+              Reject
+            </Button>
+            <Button colorScheme="red" onClick={() => handleCancel(booking.id)}>
+              Cancel
+            </Button>
+          </HStack>
         </CardFooter>
       )}
     </Card>
@@ -105,31 +204,51 @@ const TenantBookingList: React.FC = () => {
   const renderPendingBookings = () => {
     const indexOfLastBooking = currentPage * bookingsPerPage;
     const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
-    const currentBookings = pendingBookings.slice(indexOfFirstBooking, indexOfLastBooking);
+    const currentBookings = pendingBookings.slice(
+      indexOfFirstBooking,
+      indexOfLastBooking,
+    );
     const totalPages = Math.ceil(pendingBookings.length / bookingsPerPage);
 
     return (
       <Box borderWidth="1px" borderRadius="lg" p={6} mb={6} boxShadow="lg">
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>Pending Bookings</Text>
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          Pending Bookings
+        </Text>
         {pendingBookings.length === 0 ? (
           <Text>No pending bookings found.</Text>
         ) : (
           <>
-            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-              {currentBookings.map(booking => renderBookingCard(booking, true))}
+            <Grid
+              templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+              gap={6}
+            >
+              {currentBookings.map((booking) =>
+                renderBookingCard(booking, true),
+              )}
             </Grid>
             <Box mt={4} textAlign="center">
               <HStack justify="center">
                 <Button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1}
                 >
                   Previous
                 </Button>
                 <Text>{`Page ${currentPage} of ${totalPages}`}</Text>
                 <Button
-                  onClick={() => setCurrentPage(prev => (prev * bookingsPerPage < pendingBookings.length ? prev + 1 : prev))}
-                  disabled={currentPage * bookingsPerPage >= pendingBookings.length}
+                  onClick={() =>
+                    setCurrentPage((prev) =>
+                      prev * bookingsPerPage < pendingBookings.length
+                        ? prev + 1
+                        : prev,
+                    )
+                  }
+                  disabled={
+                    currentPage * bookingsPerPage >= pendingBookings.length
+                  }
                 >
                   Next
                 </Button>
@@ -142,7 +261,14 @@ const TenantBookingList: React.FC = () => {
   };
 
   const renderApprovedBookingsTable = () => (
-    <Table variant="striped" colorScheme="gray" borderWidth="1px" borderRadius="lg" p={6} boxShadow="lg">
+    <Table
+      variant="striped"
+      colorScheme="gray"
+      borderWidth="1px"
+      borderRadius="lg"
+      p={6}
+      boxShadow="lg"
+    >
       <Thead>
         <Tr>
           <Th>Property Name</Th>
@@ -155,7 +281,7 @@ const TenantBookingList: React.FC = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {approvedBookings.map(booking => (
+        {approvedBookings.map((booking) => (
           <Tr key={booking.id}>
             <Td>{booking.property_name}</Td>
             <Td>{booking.username}</Td>
