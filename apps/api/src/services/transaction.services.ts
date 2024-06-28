@@ -1,4 +1,4 @@
-import { repoAddTransaction, repoGetSalesReport, repoGetTransactionStatus, repoUpdateTransactionStatus, repoUploadPaymentProof } from "../repository/transaction.repository";
+import { repoAddTransaction, repoGetPaymentProof, repoGetSalesReport, repoGetTransactionStatus, repoUpdateTransactionStatus, repoUploadPaymentProof } from "../repository/transaction.repository";
 import path from 'path';
 
 interface PaymentProofRequestBody {
@@ -130,7 +130,7 @@ export const serviceUploadPaymentProof = async (req: Request) => {
   }
 
   try {
-    const filePath = path.join('IMG', '/images', file.filename);
+    const filePath = path.join('/images', file.filename);
     const data = await repoUploadPaymentProof(transactionId, filePath);
 
     await repoUpdateTransactionStatus(transactionId, 'waiting payment confirmation');
@@ -145,6 +145,33 @@ export const serviceUploadPaymentProof = async (req: Request) => {
     return {
       status: 500,
       success: false,
+      message: 'Server error',
+      error: error.message,
+    };
+  }
+};
+
+export const serviceGetPaymentProof = async (req: any) => {
+  const transactionId = req.params.bookingId;
+
+  if (!transactionId) {
+    return {
+      status: 401,
+      success: false,
+      message: 'Invalid input',
+    };
+  }
+
+  try {
+    const data = await repoGetPaymentProof(transactionId);
+    return {
+      status: 200,
+      success: true,
+      data: data
+    };
+  } catch (error: any) {
+    return {
+      status: 500,
       message: 'Server error',
       error: error.message,
     };

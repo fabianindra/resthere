@@ -146,3 +146,21 @@ export const repoUploadPaymentProof = async (
     throw new Error('Failed to upload payment proof: ' + error.message);
   }
 };
+
+export const repoGetPaymentProof = async (transactionId: any) => {
+  try {
+    const transaction = await prisma.transaction.findUnique({
+      where: { id: parseInt(transactionId) },
+    });
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+    return { success: true, proof: transaction.proof };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: 'Failed to get transaction status',
+      error: error.message,
+    };
+  }
+};
