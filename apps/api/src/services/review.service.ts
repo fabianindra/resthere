@@ -25,11 +25,12 @@ export const serviceAddReview = async (req: any) => {
 };
 
 export const serviceGetReviewByRoomId = async (req: any) => {
-  const { property_id } = req.body;
+  const { property_id } = req.params;
+  console.log(property_id);
   try {
-    const data = await repoGetReviewByRoomId(property_id);
+    const data = await repoGetReviewByRoomId(parseInt(property_id));
     return {
-      status: 201,
+      status: 200,
       success: true,
       message: 'get review successfully',
       data,

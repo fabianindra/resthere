@@ -49,9 +49,11 @@ export default function PropertySection() {
               return (
                 <CustomCard
                   key={item.id}
+                  id={item.id}
                   city={item.city_name}
                   name={item.name}
                   price={item.rooms.length > 0 ? item.rooms[0].price : 0}
+                  dashboard={false}
                 />
               );
             })}

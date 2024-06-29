@@ -1,9 +1,7 @@
 'use client';
 import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
-import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
-import usePropertyAll from '@/hooks/property/usePropertyAll';
-import usePropertyData from '@/hooks/property/usePropertyData';
+import useGetReviews from '@/hooks/list-property/getReviewProperty';
 import usePropertyDetails from '@/hooks/property/usePropertyDetail';
 import useRoomsData from '@/hooks/room/useRoomsData';
 import {
@@ -18,13 +16,15 @@ import {
   Box,
   Link,
   Heading,
+  Avatar,
+  Text,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
   SortAscending,
   SortDescending,
 } from '@phosphor-icons/react';
-import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
+import { ArrowLeft, Star } from '@phosphor-icons/react/dist/ssr';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
@@ -43,12 +43,22 @@ export default function Page() {
     error: propertyError,
     fetchProperty,
   } = usePropertyDetails();
+  const { fetchReviews, reviews, loading, error } = useGetReviews();
   const {
     rooms,
     loading: roomsLoading,
     error: roomsError,
     fetchRooms,
-  } = useRoomsData(propertyId, page, search, category, sortBy, sortDirection);
+  } = useRoomsData(
+    propertyId,
+    page,
+    search,
+    category,
+    sortBy,
+    sortDirection,
+    '',
+    '',
+  );
 
   const handleDirections = () => {
     setSortDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
@@ -63,6 +73,7 @@ export default function Page() {
   useEffect(() => {
     fetchProperty(parseInt(params.id));
     setPropertyId(parseInt(params.id));
+    fetchReviews(parseInt(params.id));
   }, []);
   return (
     <Box className="px-16">
@@ -124,6 +135,45 @@ export default function Page() {
         ))}
       </HStack>
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
+      <Box className="border-solid border-2 border-[#94a3b8] rounded-md  p-8">
+        <Heading>Coment</Heading>
+        <HStack flexWrap={'wrap'}>
+          {reviews.map((item: any) => (
+            <Box
+              key={item.id}
+              my={10}
+              w={440}
+              h={220}
+              className="shadow-xl p-8 rounded-lg"
+            >
+              <HStack>
+                <Avatar bg="teal.500" />
+                <Heading ml={1} size={'md'}>
+                  username
+                </Heading>
+              </HStack>
+              <Box>
+                <HStack my={4} w={'100%'}>
+                  {[...Array(5)].map((_, index) => (
+                    <Star
+                      key={index}
+                      weight="fill"
+                      className={`h-6 w-6 transition-colors ${
+                        index < item.star
+                          ? 'text-[#facc15] hover:text-[#facc15]'
+                          : 'text-[#9ca3af] hover:text-[#facc15]'
+                      }`}
+                    />
+                  ))}
+                </HStack>
+                <Text className="line-clamp-3" fontSize="md">
+                  {item.feed_back}
+                </Text>
+              </Box>
+            </Box>
+          ))}
+        </HStack>
+      </Box>
     </Box>
   );
 }
