@@ -18,6 +18,7 @@ import {
   IconButton,
   HStack,
   useToast,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { CheckCircleIcon, TimeIcon } from '@chakra-ui/icons';
 import axios from 'axios';
@@ -28,11 +29,13 @@ import {
   cancelTransaction,
   rejectTransaction,
 } from '@/api/transaction';
+import ModalApproveTransaction from './ModalApproveTransaction';
 
 const TenantBookingList: React.FC = () => {
   const [pendingBookings, setPendingBookings] = useState<BookingTenant[]>([]);
   const [approvedBookings, setApprovedBookings] = useState<BookingTenant[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const bookingsPerPage = 5;
 
@@ -85,25 +88,8 @@ const TenantBookingList: React.FC = () => {
     fetchBookings();
   }, [tenantId]);
 
-  const handleApprove = async (bookingId: string) => {
-    try {
-      await approveTransaction(bookingId);
-      console.log('Booking approved successfully');
-      toast({
-        title: 'approve transaction succesfuly',
-        status: 'success',
-        position: 'top',
-        isClosable: true,
-      });
-      fetchBookings();
-    } catch (error) {
-      toast({
-        title: 'Failed to approve transaction',
-        status: 'error',
-        position: 'top',
-        isClosable: true,
-      });
-    }
+  const handleApprove = () => {
+    onOpen();
   };
 
   const handleReject = async (bookingId: string) => {
@@ -146,7 +132,7 @@ const TenantBookingList: React.FC = () => {
     }
   };
 
-  const renderBookingCard = (booking: BookingTenant, isPending: boolean) => (
+  const renderBookingCard = (booking: any, isPending: boolean) => (
     <Card key={booking.id} borderRadius="lg" boxShadow="md" mb={4} p={4}>
       <CardHeader>
         <Text fontSize="xl" fontWeight="bold">
@@ -179,10 +165,7 @@ const TenantBookingList: React.FC = () => {
       {isPending && (
         <CardFooter>
           <HStack>
-            <Button
-              colorScheme="blue"
-              onClick={() => handleApprove(booking.id)}
-            >
+            <Button colorScheme="blue" onClick={handleApprove}>
               Approve
             </Button>
             <Button
@@ -196,6 +179,13 @@ const TenantBookingList: React.FC = () => {
               Cancel
             </Button>
           </HStack>
+          <ModalApproveTransaction
+            isOpen={isOpen}
+            onClose={onClose}
+            email={booking.user.email}
+            bookingId={booking.id}
+            fetchBookings={fetchBookings}
+          />
         </CardFooter>
       )}
     </Card>
