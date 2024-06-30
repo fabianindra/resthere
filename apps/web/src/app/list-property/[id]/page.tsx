@@ -1,4 +1,6 @@
-'use client'
+'use client';
+import CommentSection from '@/components/layout/CommentSection';
+import useGetReviews from '@/hooks/list-property/getReviewProperty';
 
 import {
   HStack,
@@ -12,6 +14,8 @@ import {
   Box,
   Link as ChakraLink,
   Heading,
+  Avatar,
+  Text,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -50,12 +54,22 @@ export default function Page() {
     error: propertyError,
     fetchProperty,
   } = usePropertyDetails();
+  const { fetchReviews, reviews, loading, error } = useGetReviews();
   const {
     rooms: fetchedRooms,
     loading: roomsLoading,
     error: roomsError,
     fetchRooms,
-  } = useRoomsData(propertyId, page, search, category, sortBy, sortDirection, startDate, endDate);
+  } = useRoomsData(
+    propertyId,
+    page,
+    search,
+    category,
+    sortBy,
+    sortDirection,
+    startDate,
+    endDate,
+  );
 
   const handleDirections = () => {
     setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
@@ -65,7 +79,16 @@ export default function Page() {
     if (propertyId) {
       fetchRooms();
     }
-  }, [propertyId, page, search, category, sortBy, sortDirection, startDate, endDate]);
+  }, [
+    propertyId,
+    page,
+    search,
+    category,
+    sortBy,
+    sortDirection,
+    startDate,
+    endDate,
+  ]);
 
   useEffect(() => {
     if (id) {
@@ -137,11 +160,13 @@ export default function Page() {
             price={item.price}
             dashboard={false}
             startDate={startDate} // Ensure startDate is passed correctly as Date | null
-            endDate={endDate}     // Ensure endDate is passed correctly as Date | null
+            endDate={endDate} // Ensure endDate is passed correctly as Date | null
+            fetchRooms={fetchRooms}
           />
         ))}
       </HStack>
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
+      <CommentSection reviews={reviews} />
     </Box>
   );
 }

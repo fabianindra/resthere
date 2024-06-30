@@ -35,7 +35,7 @@ const propertySchema = Yup.object().shape({
   tenant_id: Yup.number().required('tenant_id is required'),
 });
 
-export default function ModalAddProperty({ isOpen, onClose }: any) {
+export default function ModalAddProperty({ isOpen, onClose, fetchData }: any) {
   const {
     provinces,
     loading: provincesLoading,
@@ -77,6 +77,7 @@ export default function ModalAddProperty({ isOpen, onClose }: any) {
         position: 'top',
         isClosable: true,
       });
+      fetchData();
     } catch (error) {
       toast({
         title: 'Failed to add property',

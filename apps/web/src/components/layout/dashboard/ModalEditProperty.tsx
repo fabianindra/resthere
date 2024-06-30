@@ -34,7 +34,12 @@ const propertySchema = Yup.object().shape({
   property_id: Yup.number().required('property_id is required'),
 });
 
-export default function ModalEditProperty({ isOpen, onClose, id }: any) {
+export default function ModalEditProperty({
+  isOpen,
+  onClose,
+  id,
+  fetchData,
+}: any) {
   const {
     provinces,
     loading: provincesLoading,
@@ -70,6 +75,7 @@ export default function ModalEditProperty({ isOpen, onClose, id }: any) {
         property_id,
         file,
       );
+      fetchData();
       toast({
         title: 'Edit property successfully',
         status: 'success',

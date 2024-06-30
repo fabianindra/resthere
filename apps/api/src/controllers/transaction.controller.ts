@@ -4,6 +4,7 @@ import {
   serviceGetPaymentProof,
   serviceGetSalesReport,
   serviceGetTransactionStatus,
+  serviceTransactionApprove,
   serviceUpdateTransactionStatus,
   serviceUploadPaymentProof,
 } from '../services/transaction.services';
@@ -28,6 +29,14 @@ export const updateTransactionStatusController = async (
   res: Response,
 ) => {
   const response = await serviceUpdateTransactionStatus(req);
+  return res.status(Number(response?.status)).send(response);
+};
+
+export const updateTransactionApproveController = async (
+  req: Request,
+  res: Response,
+) => {
+  const response = await serviceTransactionApprove(req);
   return res.status(Number(response?.status)).send(response);
 };
 

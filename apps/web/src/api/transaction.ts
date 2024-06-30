@@ -14,9 +14,14 @@ export function rejectTransaction(bookingId: string) {
   });
 }
 
-export function approveTransaction(bookingId: string) {
-  return axios.post('http://localhost:6570/api/transaction/update-status', {
+export function approveTransaction(
+  bookingId: string,
+  email: string,
+  text: string,
+) {
+  return axios.post('http://localhost:6570/api/transaction/approve', {
     transactionId: bookingId,
-    status: 'approved',
+    email: email,
+    text: text,
   });
 }

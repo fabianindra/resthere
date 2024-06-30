@@ -56,6 +56,7 @@ export default function PropertySection() {
                   dashboard={false}
                   startDate={null}
                   endDate={null}
+                  fetchData={fetchData}
                 />
               );
             })}

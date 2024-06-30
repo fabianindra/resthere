@@ -30,6 +30,8 @@ import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
 import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import useGetReviews from '@/hooks/list-property/getReviewProperty';
+import CommentSection from '@/components/layout/CommentSection';
 
 export default function Page() {
   const [page, setPage] = useState<number>(1);
@@ -64,6 +66,7 @@ export default function Page() {
     startDate,
     endDate,
   );
+  const { fetchReviews, reviews, loading, error } = useGetReviews();
 
   const handleDirections = () => {
     setSortDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
@@ -72,6 +75,7 @@ export default function Page() {
   useEffect(() => {
     fetchProperty(parseInt(params.id));
     setPropertyId(parseInt(params.id));
+    fetchReviews(parseInt(params.id));
   }, []);
 
   useEffect(() => {
@@ -190,12 +194,19 @@ export default function Page() {
             startDate={startDate}
             endDate={endDate}
             dashboard
+            fetchRooms={fetchRooms}
           />
         ))}
       </HStack>
 
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
-      <ModalAddRoom id={params.id} isOpen={isOpen} onClose={onClose} />
+      <CommentSection reviews={reviews} />
+      <ModalAddRoom
+        id={params.id}
+        isOpen={isOpen}
+        onClose={onClose}
+        fetchRooms={fetchRooms}
+      />
     </Box>
   );
 }

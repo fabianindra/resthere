@@ -23,8 +23,9 @@ export default function CustomCard({
   name,
   price,
   dashboard,
+  fetchData,
   startDate,
-  endDate
+  endDate,
 }: {
   id: number;
   city: string;
@@ -35,6 +36,7 @@ export default function CustomCard({
   endDate: Date | null;
   date?: string;
   user?: string;
+  fetchData: any;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -44,7 +46,6 @@ export default function CustomCard({
 
   const formattedStartDate = formatDate(startDate);
   const formattedEndDate = formatDate(endDate);
-
 
   return (
     <Card maxW="xs">
@@ -60,8 +61,10 @@ export default function CustomCard({
         </HStack>
         <Link
           href={{
-            pathname: dashboard ? `/detail-property/${id}` : `/list-property/${id}`,
-            query: { startDate: formattedStartDate, endDate: formattedEndDate},
+            pathname: dashboard
+              ? `/detail-property/${id}`
+              : `/list-property/${id}`,
+            query: { startDate: formattedStartDate, endDate: formattedEndDate },
           }}
           passHref
         >
@@ -91,11 +94,16 @@ export default function CustomCard({
             >
               Edit
             </Button>
-            <ModalDeleteProperty id={id} />
+            <ModalDeleteProperty id={id} fetchData={fetchData} />
           </HStack>
         ) : null}
       </CardFooter>
-      <ModalEditProperty id={id} isOpen={isOpen} onClose={onClose} />
+      <ModalEditProperty
+        id={id}
+        isOpen={isOpen}
+        onClose={onClose}
+        fetchData={fetchData}
+      />
     </Card>
   );
 }

@@ -6,7 +6,7 @@ import { Router } from 'express';
 
 const reviewRouter = Router();
 
-reviewRouter.get('/', getReviewController);
+reviewRouter.get('/:property_id', getReviewController);
 reviewRouter.post('/', addReviewController);
 
 export default reviewRouter;

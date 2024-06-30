@@ -14,7 +14,13 @@ import { TrashSimple } from '@phosphor-icons/react/dist/ssr';
 import Cookies from 'js-cookie';
 import React from 'react';
 
-export default function ModalDeleteProperty({ id }: { id: number }) {
+export default function ModalDeleteProperty({
+  id,
+  fetchData,
+}: {
+  id: number;
+  fetchData: any;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef: any = React.useRef();
   const toast = useToast();
@@ -28,6 +34,7 @@ export default function ModalDeleteProperty({ id }: { id: number }) {
         position: 'top',
         isClosable: true,
       });
+      fetchData();
       onClose();
     } catch (error) {
       toast({

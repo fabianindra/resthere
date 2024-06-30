@@ -3,7 +3,12 @@ import React, { useState, useEffect } from 'react';
 import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
 import {
-  Box, Tab, TabPanel, Tabs, TabList, TabPanels,
+  Box,
+  Tab,
+  TabPanel,
+  Tabs,
+  TabList,
+  TabPanels,
   Button,
   Center,
   Divider,
@@ -46,7 +51,7 @@ export default function DashboardPage() {
   } = useDisclosure();
 
   const [verified, setVerified] = useState<any>(false);
-  const [role, setRole] = useState('')
+  const [role, setRole] = useState('');
   const [user, setUser] = useState<User | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
@@ -61,6 +66,7 @@ export default function DashboardPage() {
     setCategory,
     sortDirection,
     handleDirections,
+    fetchData,
   } = usePropertyData();
 
   useEffect(() => {
@@ -74,10 +80,10 @@ export default function DashboardPage() {
       setLoggedIn(false);
     }
     if (storedRole) {
-        setRole(storedRole);
-      } else {
-        setRole('');
-      }
+      setRole(storedRole);
+    } else {
+      setRole('');
+    }
   }, []);
 
   useEffect(() => {
@@ -111,77 +117,77 @@ export default function DashboardPage() {
     );
   }
 
-
-return (
-  <Box className="px-16">
-    <Tabs isFitted variant="enclosed">
-      <TabList mb="1em">
-        <Tab>Properties</Tab>
-        <Tab>Transaction</Tab>
-        <Tab>Sales Report</Tab>
-        <Tab>Tenant Profile</Tab>
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-        <HStack my={10} justifyContent={'space-between'}>
-        <InputGroup w={300}>
-          <Input
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Enter amount"
-            value={search}
-          />
-          <InputRightElement>
-            <MagnifyingGlass size={20} />
-          </InputRightElement>
-        </InputGroup>
-            <HStack>
-              <HStack>
-                <Select
-                  onChange={(e) => setSortBy(e.target.value)}
-                  placeholder="Sort By"
-                >
-                  <option value="name">name</option>
-                  <option value="price">price</option>
-                </Select>
-              </HStack>
-              <HStack>
-                <Select
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder="Category"
-                >
-                  <option value="Hotel">Hotel</option>
-                  <option value="Vila">Vila</option>
-                  <option value="Home Stay">Home Stay</option>
-                </Select>
-              </HStack>
-              <Button onClick={handleDirections} colorScheme="gray">
-                {sortDirection == 'asc' ? (
-                  <SortAscending size={30} />
-                ) : (
-                  <SortDescending size={30} />
-                )}
-              </Button>
-              <Center height="35px" mx={4}>
-                <Divider
-                  border={'1px'}
-                  borderColor={'black'}
-                  orientation="vertical"
+  return (
+    <Box className="px-16">
+      <Tabs isFitted variant="enclosed">
+        <TabList mb="1em">
+          <Tab>Properties</Tab>
+          <Tab>Transaction</Tab>
+          <Tab>Sales Report</Tab>
+          <Tab>Tenant Profile</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <HStack my={10} justifyContent={'space-between'}>
+              <InputGroup w={300}>
+                <Input
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Enter amount"
+                  value={search}
                 />
-              </Center>
-              <Button
-                onClick={onAddPropertyModalOpen}
-                rightIcon={<Plus size={20} />}
-                variant="outline"
-              >
-                Add Property
-              </Button>
+                <InputRightElement>
+                  <MagnifyingGlass size={20} />
+                </InputRightElement>
+              </InputGroup>
+              <HStack>
+                <HStack>
+                  <Select
+                    onChange={(e) => setSortBy(e.target.value)}
+                    placeholder="Sort By"
+                  >
+                    <option value="name">name</option>
+                    <option value="price">price</option>
+                  </Select>
+                </HStack>
+                <HStack>
+                  <Select
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder="Category"
+                  >
+                    <option value="Hotel">Hotel</option>
+                    <option value="Vila">Vila</option>
+                    <option value="Home Stay">Home Stay</option>
+                  </Select>
+                </HStack>
+                <Button onClick={handleDirections} colorScheme="gray">
+                  {sortDirection == 'asc' ? (
+                    <SortAscending size={30} />
+                  ) : (
+                    <SortDescending size={30} />
+                  )}
+                </Button>
+                <Center height="35px" mx={4}>
+                  <Divider
+                    border={'1px'}
+                    borderColor={'black'}
+                    orientation="vertical"
+                  />
+                </Center>
+                <Button
+                  onClick={onAddPropertyModalOpen}
+                  rightIcon={<Plus size={20} />}
+                  variant="outline"
+                >
+                  Add Property
+                </Button>
+              </HStack>
             </HStack>
-          </HStack>
-      
-          <HStack justifyContent="start" gap={8} my={10}>
-            {dataRoom.length === 0
-              ? <Text>No properties found</Text>
-              : dataRoom.map((item: any) => (
+
+            <HStack justifyContent="start" gap={8} my={10}>
+              {dataRoom.length === 0 ? (
+                <Text>No properties found</Text>
+              ) : (
+                dataRoom.map((item: any) => (
                   <CustomCard
                     key={item.id}
                     id={item.id}
@@ -189,24 +195,33 @@ return (
                     name={item.name}
                     price={item.rooms[0] ? item.rooms[0].price : 0}
                     dashboard={true}
+                    fetchData={fetchData}
                   />
-                ))}
-          </HStack>
-          <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
-        </TabPanel>
-        <TabPanel>
-          <TenantBookingList />
-        </TabPanel>
-        <TabPanel>
-          <SalesReport />
-        </TabPanel>
-        <TabPanel>
-          <TenantProfile />
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
-    <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={onChangePasswordModalClose} />
-    <ModalAddProperty isOpen={isAddPropertyModalOpen} onClose={onAddPropertyModalClose} />
-  </Box>
+                ))
+              )}
+            </HStack>
+            <SimplePagination page={page} setPage={setPage} maxPage={maxPage} />
+          </TabPanel>
+          <TabPanel>
+            <TenantBookingList />
+          </TabPanel>
+          <TabPanel>
+            <SalesReport />
+          </TabPanel>
+          <TabPanel>
+            <TenantProfile />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={onChangePasswordModalClose}
+      />
+      <ModalAddProperty
+        isOpen={isAddPropertyModalOpen}
+        onClose={onAddPropertyModalClose}
+        fetchData={fetchData}
+      />
+    </Box>
   );
 }

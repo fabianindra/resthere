@@ -18,11 +18,13 @@ import {
   Td,
   Heading,
   useToast,
+  useDisclosure,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Booking } from '@/types';
 import { cancelTransaction } from '@/api/transaction';
+import ModalReview from '../transaction/ModalReview';
 
 const BookingList: React.FC<any> = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -31,6 +33,9 @@ const BookingList: React.FC<any> = () => {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
+  const OverlayOne = () => <ModalOverlay bg="rgba(0, 34, 77, 0.66)" />;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [overlay, setOverlay] = React.useState(<OverlayOne />);
   const toast = useToast();
 
   const handleCancel = async (id: string) => {
@@ -64,7 +69,6 @@ const BookingList: React.FC<any> = () => {
           `http://localhost:6570/api/booking-list/all-booking/${userId}`,
         );
         const responseData = response.data;
-        //console.log('Response data:', responseData);
         setBookings(responseData.data);
       } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -72,7 +76,7 @@ const BookingList: React.FC<any> = () => {
     };
 
     fetchBookings();
-  }, [userId, handleCancel]);
+  }, [handleCancel]);
 
   const handleUploadPaymentProof = (booking: Booking) => {
     setSelectedBooking(booking);
@@ -142,14 +146,14 @@ const BookingList: React.FC<any> = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {bookings.map((booking, index) => (
+                {bookings.map((booking: any, index) => (
                   <Tr key={index}>
                     <Td>{booking.property_name}</Td>
                     <Td>{booking.room_name}</Td>
                     <Td>{formatBookingDate(booking.date)}</Td>
                     <Td>{booking.status}</Td>
                     <Td textAlign="end">
-                      {booking.status === 'waiting payment' && (
+                      {booking.status === 'waiting payment' ? (
                         <>
                           <Button
                             size="sm"
@@ -167,7 +171,26 @@ const BookingList: React.FC<any> = () => {
                             Cancel Booking
                           </Button>
                         </>
-                      )}
+                      ) : booking.status === 'approved' ? (
+                        <>
+                          <Button
+                            size="sm"
+                            colorScheme="orange"
+                            onClick={() => {
+                              setOverlay(<OverlayOne />);
+                              onOpen();
+                            }}
+                          >
+                            Review
+                          </Button>
+                          <ModalReview
+                            isOpen={isOpen}
+                            onClose={onClose}
+                            overlay={overlay}
+                            property_id={booking.room.property_id}
+                          />
+                        </>
+                      ) : null}
                     </Td>
                   </Tr>
                 ))}
