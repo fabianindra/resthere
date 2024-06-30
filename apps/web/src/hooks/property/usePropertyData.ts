@@ -29,7 +29,7 @@ const usePropertyData = () => {
       setMaxPage(Math.ceil(response.data.count / 4));
       setDataRoom(response.data.data);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 

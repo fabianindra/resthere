@@ -14,7 +14,7 @@ export default function PropertySection() {
       const response = await getDataPropertyByRoom(1);
       setDataRoom(response.data.data);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 
@@ -54,6 +54,9 @@ export default function PropertySection() {
                   name={item.name}
                   price={item.rooms.length > 0 ? item.rooms[0].price : 0}
                   dashboard={false}
+                  startDate={null}
+                  endDate={null}
+                  fetchData={fetchData}
                 />
               );
             })}

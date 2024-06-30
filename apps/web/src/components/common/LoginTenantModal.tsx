@@ -44,7 +44,7 @@ const LoginTenantModal: React.FC<LoginModalProps> = ({ isOpen, onClose, setLogge
         Cookies.set('user', JSON.stringify(userData));
         Cookies.set('token', userToken, { expires: 1 });
         Cookies.set('role', userRole, { expires: 1 });
-        console.log('Login successful', response.data);
+        //console.log('Login successful', response.data);
         setLoggedIn(true);
         setUser(userData)
         setError('');

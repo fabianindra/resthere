@@ -8,8 +8,8 @@ const useRoomsData = (
   category: string,
   sortBy: string,
   sortDirection: string,
-  startDate: string,
-  endDate: string,
+  startDate: Date | null,
+  endDate: Date | null,
 ) => {
   const [rooms, setRooms] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -26,11 +26,11 @@ const useRoomsData = (
         category,
         sortBy,
         sortDirection,
-        startDate,
-        endDate,
+        startDate?.toISOString() ?? '', // Default to empty string if startDate is undefined
+        endDate?.toISOString() ?? '', 
       );
       setRooms(response.data.data);
-      console.log(response);
+      //console.log(response);
     } catch (err) {
       setError('Failed to fetch rooms data');
     } finally {

@@ -69,7 +69,6 @@ const BookingList: React.FC<any> = () => {
           `http://localhost:6570/api/booking-list/all-booking/${userId}`,
         );
         const responseData = response.data;
-        // console.log('Response data:', responseData);
         setBookings(responseData.data);
       } catch (error) {
         console.error('Error fetching bookings:', error);

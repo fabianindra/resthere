@@ -25,6 +25,8 @@ export default function CustomCardRoom({
   price,
   dashboard,
   fetchRooms,
+  startDate,
+  endDate,
 }: {
   id: number;
   capacity: string;
@@ -32,6 +34,8 @@ export default function CustomCardRoom({
   price: number;
   dashboard: boolean;
   fetchRooms: any;
+  startDate: Date | null;
+  endDate: Date | null;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -39,6 +43,14 @@ export default function CustomCardRoom({
     onOpen: onOpenDetail,
     onClose: onCloseDetail,
   } = useDisclosure();
+
+  const formatDate = (date: Date | null): string => {
+    return date ? date.toISOString().split('T')[0] : '';
+  };
+
+  const formattedStartDate = formatDate(startDate);
+  const formattedEndDate = formatDate(endDate);
+
   return (
     <Card maxW="xs">
       <CardBody>
@@ -47,9 +59,17 @@ export default function CustomCardRoom({
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
-        <Heading size="md" mt={4}>
-          {name}
-        </Heading>
+        <Link
+          href={{
+            pathname: `/list-property/${id}`,
+            query: { formattedStartDate, formattedEndDate },
+          }}
+          passHref
+        >
+          <Heading size="md" mt={4}>
+            {name}
+          </Heading>
+        </Link>
       </CardBody>
       <CardFooter flexDirection={'column'}>
         <HStack justifyContent={'space-between'}>
@@ -89,6 +109,8 @@ export default function CustomCardRoom({
           roomId={id}
           dashboard={dashboard}
           title={name}
+          startDate={startDate}
+          endDate={endDate}
         />
         <ModalEditRoom
           isOpen={isOpen}

@@ -113,7 +113,7 @@ export default function ModalEditProperty({
     if (isOpen) {
       fetchProperty(id);
     }
-    console.log(property);
+    //console.log(property);
   }, [isOpen]);
 
   useEffect(() => {

@@ -19,11 +19,19 @@ import {
   HStack,
   useToast,
   useDisclosure,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalHeader,
+  ModalFooter,
+  ModalOverlay,
+  ModalContent,
 } from '@chakra-ui/react';
 import { CheckCircleIcon, TimeIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BookingTenant } from '@/types';
+import Image from 'next/image';
 import {
   approveTransaction,
   cancelTransaction,
@@ -36,6 +44,8 @@ const TenantBookingList: React.FC = () => {
   const [approvedBookings, setApprovedBookings] = useState<BookingTenant[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [paymentProofUrl, setPaymentProofUrl] = useState<string | null>(null); // State for payment proof URL
+  const [isProofModalOpen, setIsProofModalOpen] = useState(false); // State for modal visibility
   const toast = useToast();
   const bookingsPerPage = 5;
 
@@ -49,7 +59,7 @@ const TenantBookingList: React.FC = () => {
   } else if (userData) {
     try {
       const parsedUserData = JSON.parse(userData);
-      console.log('Parsed User Data:', parsedUserData);
+      //console.log('Parsed User Data:', parsedUserData);
       tenantId = parsedUserData.id;
     } catch (error) {
       console.error('Error parsing user data from cookies:', error);
@@ -129,6 +139,21 @@ const TenantBookingList: React.FC = () => {
         position: 'top',
         isClosable: true,
       });
+    }
+  };
+
+  const handleViewPaymentProof = async (bookingId: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:6570/api/transaction/payment-proof/${bookingId}`,
+      );
+      const paymentProofUrl = response.data.data.proof;
+      //console.log(response)
+      //console.log('Payment Proof URL:', paymentProofUrl); // Verify the URL
+      setPaymentProofUrl(paymentProofUrl);
+      setIsProofModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching payment proof:', error);
     }
   };
 
@@ -271,7 +296,7 @@ const TenantBookingList: React.FC = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {approvedBookings.map((booking) => (
+        {approvedBookings.map((booking: any) => (
           <Tr key={booking.id}>
             <Td>{booking.property_name}</Td>
             <Td>{booking.username}</Td>
@@ -294,6 +319,36 @@ const TenantBookingList: React.FC = () => {
     <Box p={6}>
       {renderPendingBookings()}
       {renderApprovedBookingsTable()}
+
+      {/* Payment Proof Modal */}
+      <Modal
+        isOpen={isProofModalOpen}
+        onClose={() => setIsProofModalOpen(false)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Payment Proof</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {paymentProofUrl && (
+              <Image
+                src={paymentProofUrl}
+                alt="Payment Proof"
+                width={500}
+                height={300}
+              />
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              onClick={() => setIsProofModalOpen(false)}
+            >
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

@@ -1,6 +1,7 @@
 import { transporter } from './../helpers/nodemailer';
 import {
   repoAddTransaction,
+  repoGetPaymentProof,
   repoGetSalesReport,
   repoGetTransactionStatus,
   repoUpdateTransactionStatus,
@@ -15,7 +16,7 @@ interface PaymentProofRequestBody {
 }
 
 export const serviceAddTransaction = async (req: any) => {
-  const { roomId, userId, price } = req.body;
+  const { roomId, userId, price, startDate, endDate } = req.body;
 
   if (!roomId || !userId || !price) {
     return {
@@ -26,7 +27,13 @@ export const serviceAddTransaction = async (req: any) => {
   }
 
   try {
-    const data = await repoAddTransaction(roomId, userId, price);
+    const data = await repoAddTransaction(
+      roomId,
+      userId,
+      price,
+      startDate,
+      endDate,
+    );
     return {
       status: 201,
       success: true,
@@ -178,7 +185,7 @@ export const serviceUploadPaymentProof = async (req: Request) => {
   }
 
   try {
-    const filePath = path.join('IMG', '/images', file.filename);
+    const filePath = path.join('/images', file.filename);
     const data = await repoUploadPaymentProof(transactionId, filePath);
 
     await repoUpdateTransactionStatus(
@@ -196,6 +203,33 @@ export const serviceUploadPaymentProof = async (req: Request) => {
     return {
       status: 500,
       success: false,
+      message: 'Server error',
+      error: error.message,
+    };
+  }
+};
+
+export const serviceGetPaymentProof = async (req: any) => {
+  const transactionId = req.params.bookingId;
+
+  if (!transactionId) {
+    return {
+      status: 401,
+      success: false,
+      message: 'Invalid input',
+    };
+  }
+
+  try {
+    const data = await repoGetPaymentProof(transactionId);
+    return {
+      status: 200,
+      success: true,
+      data: data,
+    };
+  } catch (error: any) {
+    return {
+      status: 500,
       message: 'Server error',
       error: error.message,
     };

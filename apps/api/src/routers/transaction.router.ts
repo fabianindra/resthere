@@ -1,5 +1,6 @@
 import {
   addTransactionController,
+  getPaymentProofController,
   getSalesReportController,
   getTransactionStatusController,
   updateTransactionApproveController,
@@ -16,6 +17,7 @@ transactionRouter.get('/sales-report', getSalesReportController);
 transactionRouter.post('/update-status', updateTransactionStatusController);
 transactionRouter.post('/approve', updateTransactionApproveController);
 transactionRouter.get('/status', getTransactionStatusController);
+transactionRouter.get('/payment-proof/:bookingId', getPaymentProofController);
 transactionRouter.post(
   '/upload-payment-proof',
   uploader('IMG', '/images').single('paymentProof'),
