@@ -193,13 +193,19 @@ export default function Page() {
             name={item.name}
             price={item.price}
             dashboard
+            fetchRooms={fetchRooms}
           />
         ))}
       </HStack>
 
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
       <CommentSection reviews={reviews} />
-      <ModalAddRoom id={params.id} isOpen={isOpen} onClose={onClose} />
+      <ModalAddRoom
+        id={params.id}
+        isOpen={isOpen}
+        onClose={onClose}
+        fetchRooms={fetchRooms}
+      />
     </Box>
   );
 }

@@ -13,7 +13,13 @@ import {
 import { TrashSimple } from '@phosphor-icons/react/dist/ssr';
 import React from 'react';
 
-export default function ModalDeleteRoom({ id }: { id: number }) {
+export default function ModalDeleteRoom({
+  id,
+  fetchRooms,
+}: {
+  id: number;
+  fetchRooms: any;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef: any = React.useRef();
   const toast = useToast();
@@ -27,6 +33,7 @@ export default function ModalDeleteRoom({ id }: { id: number }) {
         position: 'top',
         isClosable: true,
       });
+      fetchRooms();
       onClose();
     } catch (error) {
       toast({

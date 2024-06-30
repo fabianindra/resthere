@@ -24,12 +24,14 @@ export default function CustomCardRoom({
   name,
   price,
   dashboard,
+  fetchRooms,
 }: {
   id: number;
   capacity: string;
   name: string;
   price: number;
   dashboard: boolean;
+  fetchRooms: any;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -78,7 +80,7 @@ export default function CustomCardRoom({
             >
               Edit
             </Button>
-            <ModalDeleteRoom id={id} />
+            <ModalDeleteRoom id={id} fetchRooms={fetchRooms} />
           </HStack>
         ) : null}
         <ModalRoomDetail
@@ -88,7 +90,12 @@ export default function CustomCardRoom({
           dashboard={dashboard}
           title={name}
         />
-        <ModalEditRoom isOpen={isOpen} onClose={onClose} roomId={id} />
+        <ModalEditRoom
+          isOpen={isOpen}
+          onClose={onClose}
+          roomId={id}
+          fetchRooms={fetchRooms}
+        />
       </CardFooter>
     </Card>
   );
