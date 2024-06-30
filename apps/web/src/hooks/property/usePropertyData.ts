@@ -58,6 +58,7 @@ const usePropertyData = () => {
     setStartDate,
     endDate,
     setEndDate,
+    fetchData,
   };
 };
 

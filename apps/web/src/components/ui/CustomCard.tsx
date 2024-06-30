@@ -23,6 +23,7 @@ export default function CustomCard({
   name,
   price,
   dashboard,
+  fetchData,
 }: {
   id: number;
   city: string;
@@ -31,6 +32,7 @@ export default function CustomCard({
   dashboard: boolean;
   date?: string;
   user?: string;
+  fetchData: any;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -74,11 +76,16 @@ export default function CustomCard({
             >
               Edit
             </Button>
-            <ModalDeleteProperty id={id} />
+            <ModalDeleteProperty id={id} fetchData={fetchData} />
           </HStack>
         ) : null}
       </CardFooter>
-      <ModalEditProperty id={id} isOpen={isOpen} onClose={onClose} />
+      <ModalEditProperty
+        id={id}
+        isOpen={isOpen}
+        onClose={onClose}
+        fetchData={fetchData}
+      />
     </Card>
   );
 }
