@@ -82,7 +82,6 @@ export default function Page() {
     if (propertyId) {
       fetchRooms();
     }
-    //console.log(search);
   }, [propertyId, page, search, category, sortBy, sortDirection]);
 
   const MyMap = useMemo(
@@ -122,20 +121,24 @@ export default function Page() {
       <HStack my={10} justifyContent={'space-between'}>
         <HStack>
           <HStack>
-          <Input
-            onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : null)}
-            value={startDate ? startDate.toISOString().split('T')[0] : ''}
-            placeholder="Select Date and Time"
-            size="md"
-            type="date"
-          />
-          <Input
-            onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : null)}
-            value={endDate ? endDate.toISOString().split('T')[0] : ''}
-            placeholder="Select Date and Time"
-            size="md"
-            type="date"
-          />
+            <Input
+              onChange={(e) =>
+                setStartDate(e.target.value ? new Date(e.target.value) : null)
+              }
+              value={startDate ? startDate.toISOString().split('T')[0] : ''}
+              placeholder="Select Date and Time"
+              size="md"
+              type="date"
+            />
+            <Input
+              onChange={(e) =>
+                setEndDate(e.target.value ? new Date(e.target.value) : null)
+              }
+              value={endDate ? endDate.toISOString().split('T')[0] : ''}
+              placeholder="Select Date and Time"
+              size="md"
+              type="date"
+            />
           </HStack>
           <InputGroup w={300}>
             <Input

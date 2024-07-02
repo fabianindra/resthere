@@ -41,7 +41,9 @@ export default function CustomCard({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const formatDate = (date: Date | null): string => {
-    return date ? date.toISOString().split('T')[0] : '';
+    return date instanceof Date && !isNaN(date.getTime())
+      ? date.toISOString().split('T')[0]
+      : '';
   };
 
   const formattedStartDate = formatDate(startDate);

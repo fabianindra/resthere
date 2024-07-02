@@ -44,6 +44,7 @@ export default function Page() {
   useEffect(() => {
     if (cityParam) {
       setCity(cityParam);
+      console.log(cityParam);
     }
     if (startDateParam) {
       setStartDate(new Date(startDateParam));
@@ -97,6 +98,7 @@ export default function Page() {
                   dashboard={false}
                   startDate={startDate}
                   endDate={endDate}
+                  fetchData={fetchData}
                 />
               );
             })}

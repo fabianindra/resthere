@@ -12,12 +12,23 @@ const usePropertyData = () => {
   const [sortDirection, setDirection] = useState('asc');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const tenant_id: any = JSON.parse(Cookies.get('user') as string).id;
+  const [tenantId, setTenantId] = useState<any>();
+
+  useEffect(() => {
+    const storedUser = Cookies.get('user');
+    const dataUser = JSON.parse(Cookies.get('user') as string);
+
+    console.log(dataUser.id);
+
+    if (dataUser) {
+      setTenantId(dataUser.id);
+    }
+  }, []);
 
   const fetchData = async () => {
     try {
       const response = await getDataPropertyByTenant(
-        tenant_id,
+        tenantId,
         page,
         search,
         category,
@@ -35,7 +46,16 @@ const usePropertyData = () => {
 
   useEffect(() => {
     fetchData();
-  }, [page, sortDirection, sortBy, search, category, startDate, endDate]);
+  }, [
+    page,
+    sortDirection,
+    sortBy,
+    search,
+    category,
+    startDate,
+    endDate,
+    tenantId,
+  ]);
 
   const handleDirections = () => {
     setDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));

@@ -20,6 +20,7 @@ import {
   useDisclosure,
   VStack,
   Text,
+  Heading,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -64,6 +65,10 @@ export default function DashboardPage() {
     setSearch,
     setSortBy,
     setCategory,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
     sortDirection,
     handleDirections,
     fetchData,
@@ -99,7 +104,6 @@ export default function DashboardPage() {
     verifyAndSet();
   }, []);
 
-  // Render a loading state while verification is in progress
   if (verified == null) {
     return (
       <Center mt={100} mb={200}>
@@ -129,16 +133,35 @@ export default function DashboardPage() {
         <TabPanels>
           <TabPanel>
             <HStack my={10} justifyContent={'space-between'}>
-              <InputGroup w={300}>
-                <Input
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Enter amount"
-                  value={search}
-                />
-                <InputRightElement>
-                  <MagnifyingGlass size={20} />
-                </InputRightElement>
-              </InputGroup>
+              <Heading size={'lg'}>Property List</Heading>
+              <Button
+                onClick={onAddPropertyModalOpen}
+                rightIcon={<Plus size={20} />}
+                variant="outline"
+              >
+                Add Property
+              </Button>
+            </HStack>
+            <HStack my={10} justifyContent={'space-between'}>
+              <HStack>
+                <HStack>
+                  <Input
+                    onChange={(e) => setStartDate(e.target.value)}
+                    value={startDate}
+                    placeholder="Select Date and Time"
+                    size="md"
+                    type="date"
+                  />
+                  <Box w={10} className="border-b border-[#000000]" />
+                  <Input
+                    onChange={(e) => setEndDate(e.target.value)}
+                    value={endDate}
+                    placeholder="Select Date and Time"
+                    size="md"
+                    type="date"
+                  />
+                </HStack>
+              </HStack>
               <HStack>
                 <HStack>
                   <Select
@@ -166,20 +189,6 @@ export default function DashboardPage() {
                     <SortDescending size={30} />
                   )}
                 </Button>
-                <Center height="35px" mx={4}>
-                  <Divider
-                    border={'1px'}
-                    borderColor={'black'}
-                    orientation="vertical"
-                  />
-                </Center>
-                <Button
-                  onClick={onAddPropertyModalOpen}
-                  rightIcon={<Plus size={20} />}
-                  variant="outline"
-                >
-                  Add Property
-                </Button>
               </HStack>
             </HStack>
 
@@ -196,6 +205,8 @@ export default function DashboardPage() {
                     price={item.rooms[0] ? item.rooms[0].price : 0}
                     dashboard={true}
                     fetchData={fetchData}
+                    startDate={new Date(startDate)}
+                    endDate={new Date(endDate)}
                   />
                 ))
               )}
