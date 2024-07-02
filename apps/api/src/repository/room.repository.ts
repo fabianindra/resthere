@@ -45,35 +45,46 @@ export const repoGetRoomByProperty = async ({
       end && {
         AND: [
           {
-            room_availability: {
-              none: {
-                AND: [
-                  { start_date: { lte: end } },
-                  { end_date: { gte: start } },
-                ],
+            OR: [
+              {
+                room_availability: {
+                  none: {
+                    AND: [
+                      { start_date: { lte: end } },
+                      { end_date: { gte: start } },
+                    ],
+                  },
+                },
               },
-            },
+              {
+                room_availability: {},
+              },
+            ],
           },
           {
-            transaction: {
-              none: {
-                AND: [
-                  { check_out: { gte: start } },
-                  { check_in: { lte: end } },
-                ],
+            OR: [
+              {
+                transaction: {
+                  none: {
+                    AND: [
+                      { check_out: { gte: start } },
+                      { check_in: { lte: end } },
+                    ],
+                  },
+                },
               },
-            },
+              {
+                transaction: {},
+              },
+            ],
           },
         ],
       }),
   };
 
   // Count the total number of matching rooms
-  const countResult = await prisma.room.aggregate({
+  const countResult = await prisma.room.count({
     where: whereClause,
-    _count: {
-      _all: true,
-    },
   });
 
   // Find the matching rooms
@@ -81,15 +92,13 @@ export const repoGetRoomByProperty = async ({
     skip: pageN,
     take: 4,
     where: whereClause,
-    orderBy: [
-      {
-        [sortBy]: sortDirection,
-      },
-    ],
+    orderBy: {
+      [sortBy]: sortDirection,
+    },
   });
 
   return {
-    count: countResult._count._all,
+    count: countResult,
     data: allRooms,
   };
 };

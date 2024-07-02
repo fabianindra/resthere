@@ -47,7 +47,7 @@ export const serviceGetRoomByProperty = async (req: any) => {
       count: data.count,
     };
   } catch (error) {
-    //console.log(error);
+    console.log(error);
     return {
       status: 500,
       message: 'server error',

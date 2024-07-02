@@ -45,9 +45,10 @@ export default function CustomCardRoom({
   } = useDisclosure();
 
   const formatDate = (date: Date | null): string => {
-    return date ? date.toISOString().split('T')[0] : '';
+    return date instanceof Date && !isNaN(date.getTime())
+      ? date.toISOString().split('T')[0]
+      : '';
   };
-
   const formattedStartDate = formatDate(startDate);
   const formattedEndDate = formatDate(endDate);
 
