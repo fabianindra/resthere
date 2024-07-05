@@ -38,6 +38,10 @@ export default function ProfilePage() {
     verifyAndSet();
   }, []);
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   if (!verified) {
     return (
       <Box>
@@ -56,7 +60,7 @@ export default function ProfilePage() {
       <VStack className="w-full" mx={16} align="stretch" spacing={8}>
         {loggedIn && user ? (
           <VStack borderWidth="1px" borderRadius="lg" p={6}>
-            <EditFotoProfile foto={user.username} />
+            <EditFotoProfile foto={user.foto} />
             <EditProfile onOpen={onOpen} />
           </VStack>
         ) : (

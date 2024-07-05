@@ -92,6 +92,10 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    console.log(dataRoom);
+  }, [dataRoom]);
+
+  useEffect(() => {
     const verifyAndSet = async () => {
       try {
         const isValidToken: boolean = await verifyTokenClient();
@@ -207,6 +211,7 @@ export default function DashboardPage() {
                     fetchData={fetchData}
                     startDate={new Date(startDate)}
                     endDate={new Date(endDate)}
+                    image={item.image}
                   />
                 ))
               )}

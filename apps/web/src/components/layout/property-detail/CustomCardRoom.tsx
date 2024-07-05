@@ -27,6 +27,7 @@ export default function CustomCardRoom({
   fetchRooms,
   startDate,
   endDate,
+  image,
 }: {
   id: number;
   capacity: string;
@@ -36,6 +37,7 @@ export default function CustomCardRoom({
   fetchRooms: any;
   startDate: Date | null;
   endDate: Date | null;
+  image: string;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -56,7 +58,14 @@ export default function CustomCardRoom({
     <Card maxW="xs">
       <CardBody>
         <Image
-          src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+          src={
+            image
+              ? `http://localhost:6570/images/${image}`
+              : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
+          }
+          objectFit="cover"
+          height={200}
+          width={400}
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />

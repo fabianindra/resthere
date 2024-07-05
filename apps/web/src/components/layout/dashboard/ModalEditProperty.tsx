@@ -51,7 +51,7 @@ export default function ModalEditProperty({
     loading: citiesLoading,
     error: citiesError,
   } = useCities();
-  const { property, fetchProperty, loading, error } = usePropertyDetail();
+  const { property, loading, error } = usePropertyDetail(id);
   const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
   const [file, setFile] = useState<any>(null);
   const toast = useToast();
@@ -108,13 +108,6 @@ export default function ModalEditProperty({
     },
     enableReinitialize: true,
   });
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchProperty(id);
-    }
-    //console.log(property);
-  }, [isOpen]);
 
   useEffect(() => {
     if (property) {

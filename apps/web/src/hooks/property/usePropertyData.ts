@@ -27,20 +27,22 @@ const usePropertyData = () => {
 
   const fetchData = async () => {
     try {
-      const response = await getDataPropertyByTenant(
-        tenantId,
-        page,
-        search,
-        category,
-        sortBy,
-        sortDirection,
-        startDate,
-        endDate,
-      );
-      setMaxPage(Math.ceil(response.data.count / 4));
-      setDataRoom(response.data.data);
+      if (tenantId) {
+        const response = await getDataPropertyByTenant(
+          tenantId,
+          page,
+          search,
+          category,
+          sortBy,
+          sortDirection,
+          startDate,
+          endDate,
+        );
+        setMaxPage(Math.ceil(response.data.count / 4));
+        setDataRoom(response.data.data);
+      }
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   };
 

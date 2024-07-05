@@ -36,7 +36,7 @@ export const serviceUpdateFotoProfile = async (req: any) => {
   }
 
   const foto: string = file.filename;
-  //console.log(foto);
+  console.log(foto);
   try {
     const data = repoUpdateFotoProfile({
       profile_id: parseInt(profile_id),

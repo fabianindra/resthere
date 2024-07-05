@@ -40,8 +40,6 @@ export default function Page() {
   const [sortBy, setSortBy] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<string>('asc');
   const [propertyId, setPropertyId] = useState<number>(0);
-  const [startDate, setStartDate] = useState<Date | null>(null); // Updated to Date | null
-  const [endDate, setEndDate] = useState<Date | null>(null);
   const params: { id: string } = useParams<{ id: string }>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -49,23 +47,17 @@ export default function Page() {
     property,
     loading: propertyLoading,
     error: propertyError,
-    fetchProperty,
-  } = usePropertyDetails();
+  } = usePropertyDetails(params.id);
   const {
     rooms,
     loading: roomsLoading,
     error: roomsError,
     fetchRooms,
-  } = useRoomsData(
-    propertyId,
-    page,
-    search,
-    category,
-    sortBy,
-    sortDirection,
     startDate,
     endDate,
-  );
+    setStartDate,
+    setEndDate,
+  } = useRoomsData(propertyId, page, search, category, sortBy, sortDirection);
   const { fetchReviews, reviews, loading, error } = useGetReviews();
 
   const handleDirections = () => {
@@ -73,7 +65,6 @@ export default function Page() {
   };
 
   useEffect(() => {
-    fetchProperty(parseInt(params.id));
     setPropertyId(parseInt(params.id));
     fetchReviews(parseInt(params.id));
   }, []);
@@ -83,6 +74,10 @@ export default function Page() {
       fetchRooms();
     }
   }, [propertyId, page, search, category, sortBy, sortDirection]);
+
+  useEffect(() => {
+    console.log(rooms);
+  }, [rooms]);
 
   const MyMap = useMemo(
     () =>
@@ -108,7 +103,11 @@ export default function Page() {
       </Link>
 
       <Image
-        src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+        src={
+          property?.image
+            ? `http://localhost:6570/images/${property?.image}`
+            : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
+        }
         alt="Green double couch with wooden legs"
         h={400}
         mx={'auto'}
@@ -198,6 +197,7 @@ export default function Page() {
             endDate={endDate}
             dashboard
             fetchRooms={fetchRooms}
+            image={item.image}
           />
         ))}
       </HStack>

@@ -57,7 +57,10 @@ export default function EditFotoProfile(foto: any) {
         onChange={handleFileChange}
       />
       <>
-        <Avatar size="xl" src={preview ? preview : foto} />
+        <Avatar
+          size="xl"
+          src={preview ? preview : `http://localhost:6570/images/${foto.foto}`}
+        />
       </>
       <Button w={200} colorScheme="gray" onClick={handleUploadClick}>
         Ubah Foto

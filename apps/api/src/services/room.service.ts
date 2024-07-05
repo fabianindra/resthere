@@ -145,7 +145,7 @@ export const serviceUpdateRoom = async (req: any) => {
       capacity_room: parseInt(capacity_room),
       room_size,
       id: parseInt(req.params.id),
-      image: file?.path,
+      image: file?.filename,
     });
     return {
       status: 201,

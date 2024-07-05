@@ -44,8 +44,7 @@ export default function Page() {
     property,
     loading: propertyLoading,
     error: propertyError,
-    fetchProperty,
-  } = usePropertyDetails();
+  } = usePropertyDetails(id);
   const { fetchReviews, reviews, loading, error } = useGetReviews();
   const {
     rooms: fetchedRooms,
@@ -63,11 +62,14 @@ export default function Page() {
   };
 
   useEffect(() => {
+    console.log(fetchedRooms);
+  }, [fetchedRooms]);
+
+  useEffect(() => {
     if (id) {
       const propertyIdString = Array.isArray(id) ? id[0] : id;
       const propertyIdNumber = parseInt(propertyIdString, 10);
       if (!isNaN(propertyIdNumber)) {
-        fetchProperty(propertyIdNumber);
         setPropertyId(propertyIdNumber);
       }
     }
@@ -78,7 +80,7 @@ export default function Page() {
     if (endDateParam) {
       setEndDate(new Date(endDateParam));
     }
-  }, [id, startDateParam, endDateParam, fetchProperty]);
+  }, [id, startDateParam, endDateParam]);
 
   useEffect(() => {
     if (propertyId) {
@@ -160,9 +162,10 @@ export default function Page() {
             name={item.name}
             price={item.price}
             dashboard={false}
-            startDate={startDate} // Ensure startDate is passed correctly as Date | null
-            endDate={endDate} // Ensure endDate is passed correctly as Date | null
+            startDate={startDate}
+            endDate={endDate}
             fetchRooms={fetchRooms}
+            image={item.image}
           />
         ))}
       </HStack>
