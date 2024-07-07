@@ -132,8 +132,13 @@ export default function Page() {
             <MagnifyingGlass size={20} />
           </InputRightElement>
         </InputGroup>
-        <Stack spacing={4} direction={isMobile ? 'column' : 'row'} w="100%">
-          <Stack direction={isMobile ? 'column' : 'row'}>
+        <Stack
+          spacing={4}
+          justifyContent={'space-between'}
+          direction={isMobile ? 'column' : 'row'}
+          w="100%"
+        >
+          <Stack alignItems={'center'} direction={isMobile ? 'column' : 'row'}>
             <Input
               onChange={(e: any) => setStartDate(new Date(e.target.value))}
               value={startDate ? startDate.toISOString().split('T')[0] : ''}
@@ -163,9 +168,9 @@ export default function Page() {
             <Button onClick={handleDirections} colorScheme="gray">
               <Hide below="sm">
                 {sortDirection === 'asc' ? (
-                  <SortAscending size={100} />
+                  <SortAscending size={40} />
                 ) : (
-                  <SortDescending size={100} />
+                  <SortDescending size={40} />
                 )}
               </Hide>
               <Show below="sm">
@@ -193,7 +198,7 @@ export default function Page() {
             id={item.id}
             capacity={item.capacity_person}
             name={item.name}
-            price={item.price}
+            price={item.finalPrice}
             dashboard={false}
             startDate={startDate}
             endDate={endDate}

@@ -92,14 +92,44 @@ export const repoGetRoomByProperty = async ({
     skip: pageN,
     take: 4,
     where: whereClause,
+    include: {
+      special_price: true,
+    },
     orderBy: {
       [sortBy]: sortDirection,
     },
   });
 
+  // Calculate the final price based on special price and weekend price
+  const roomsWithPrice = allRooms.map((room) => {
+    let finalPrice = room.price;
+
+    // Get today's date
+    const today = new Date();
+
+    // Check for special price
+    const specialPrice = room.special_price.find((sp) => {
+      const spStart = new Date(sp.start_date);
+      const spEnd = new Date(sp.end_date);
+      return today >= spStart && today <= spEnd;
+    });
+
+    if (specialPrice) {
+      finalPrice = specialPrice.special_price;
+    } else {
+      // Check for weekend price (0 for Sunday, 6 for Saturday)
+      if (today.getDay() === 0 || today.getDay() === 6) {
+        finalPrice = room.weekend_price;
+      }
+      // Else use normal price
+    }
+
+    return { ...room, finalPrice };
+  });
+
   return {
     count: countResult,
-    data: allRooms,
+    data: roomsWithPrice,
   };
 };
 

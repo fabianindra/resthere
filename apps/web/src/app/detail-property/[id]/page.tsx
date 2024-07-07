@@ -18,6 +18,7 @@ import {
   Stack,
   useBreakpointValue,
   Hide,
+  Show,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -142,7 +143,7 @@ export default function Page() {
             <Hide above="sm">
               <Button
                 onClick={onOpen}
-                rightIcon={<Plus size={10} />}
+                rightIcon={<Plus size={0} />}
                 variant="outline"
                 fontSize="small"
               >
@@ -151,25 +152,19 @@ export default function Page() {
             </Hide>
           </HStack>
 
-          <Stack
-            w={{ base: '100%', sm: 'auto' }}
-            direction={isMobile ? 'column' : 'row'}
-            spacing={4}
-          >
+          <Stack alignItems={'center'} direction={isMobile ? 'column' : 'row'}>
             <Input
-              w={{ base: '100%', sm: 'auto' }}
-              onChange={(e) =>
-                setStartDate(e.target.value ? new Date(e.target.value) : null)
-              }
+              onChange={(e: any) => setStartDate(new Date(e.target.value))}
               value={startDate ? startDate.toISOString().split('T')[0] : ''}
               placeholder="Select Date and Time"
               size="md"
               type="date"
             />
+            <Hide below="sm">
+              <Box w={10} className="border-b border-[#000000]" />
+            </Hide>
             <Input
-              onChange={(e) =>
-                setEndDate(e.target.value ? new Date(e.target.value) : null)
-              }
+              onChange={(e: any) => setEndDate(new Date(e.target.value))}
               value={endDate ? endDate.toISOString().split('T')[0] : ''}
               placeholder="Select Date and Time"
               size="md"
@@ -188,11 +183,20 @@ export default function Page() {
             <option value="price">Price</option>
           </Select>
           <Button onClick={handleDirections} colorScheme="gray">
-            {sortDirection === 'asc' ? (
-              <SortAscending size={30} />
-            ) : (
-              <SortDescending size={30} />
-            )}
+            <Hide below="sm">
+              {sortDirection === 'asc' ? (
+                <SortAscending size={60} />
+              ) : (
+                <SortDescending size={60} />
+              )}
+            </Hide>
+            <Show below="sm">
+              {sortDirection === 'asc' ? (
+                <SortAscending size={30} />
+              ) : (
+                <SortDescending size={30} />
+              )}
+            </Show>
           </Button>
 
           <Hide below="sm">
@@ -207,6 +211,7 @@ export default function Page() {
               onClick={onOpen}
               rightIcon={<Plus size={20} />}
               variant="outline"
+              px={10}
             >
               Add Room
             </Button>
@@ -227,7 +232,7 @@ export default function Page() {
             id={item.id}
             capacity={item.capacity_person}
             name={item.name}
-            price={item.price}
+            price={item.finalPrice}
             startDate={startDate}
             endDate={endDate}
             dashboard
