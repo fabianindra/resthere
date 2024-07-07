@@ -4,6 +4,7 @@ import useGetReviews from '@/hooks/list-property/getReviewProperty';
 
 import {
   HStack,
+  VStack,
   InputGroup,
   Input,
   InputRightElement,
@@ -12,6 +13,10 @@ import {
   Box,
   Link as ChakraLink,
   Heading,
+  useBreakpointValue,
+  Stack,
+  Hide,
+  Show,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -98,8 +103,11 @@ export default function Page() {
     fetchRooms,
   ]);
 
+  const inputWidth = useBreakpointValue({ base: '100%', md: '300px' });
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
-    <Box className="px-16">
+    <Box className="px-4 md:px-16">
       <ChakraLink href="/list-property">
         <HStack my={10}>
           <ArrowLeft size={32} />
@@ -108,8 +116,13 @@ export default function Page() {
           </Heading>
         </HStack>
       </ChakraLink>
-      <HStack my={20} justifyContent="space-between">
-        <InputGroup w={300}>
+      <Stack
+        my={20}
+        justifyContent="space-between"
+        direction={isMobile ? 'column' : 'row'}
+        w="100%"
+      >
+        <InputGroup w={inputWidth}>
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Enter amount"
@@ -119,8 +132,8 @@ export default function Page() {
             <MagnifyingGlass size={20} />
           </InputRightElement>
         </InputGroup>
-        <HStack>
-          <HStack>
+        <Stack spacing={4} direction={isMobile ? 'column' : 'row'} w="100%">
+          <Stack direction={isMobile ? 'column' : 'row'}>
             <Input
               onChange={(e: any) => setStartDate(new Date(e.target.value))}
               value={startDate ? startDate.toISOString().split('T')[0] : ''}
@@ -128,7 +141,9 @@ export default function Page() {
               size="md"
               type="date"
             />
-            <Box w={10} className="border-b border-[#000000]" />
+            <Hide below="sm">
+              <Box w={10} className="border-b border-[#000000]" />
+            </Hide>
             <Input
               onChange={(e: any) => setEndDate(new Date(e.target.value))}
               value={endDate ? endDate.toISOString().split('T')[0] : ''}
@@ -136,24 +151,42 @@ export default function Page() {
               size="md"
               type="date"
             />
+          </Stack>
+          <HStack>
+            <Select
+              onChange={(e) => setSortBy(e.target.value)}
+              placeholder="Sort By"
+            >
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+            </Select>
+            <Button onClick={handleDirections} colorScheme="gray">
+              <Hide below="sm">
+                {sortDirection === 'asc' ? (
+                  <SortAscending size={100} />
+                ) : (
+                  <SortDescending size={100} />
+                )}
+              </Hide>
+              <Show below="sm">
+                {sortDirection === 'asc' ? (
+                  <SortAscending size={30} />
+                ) : (
+                  <SortDescending size={30} />
+                )}
+              </Show>
+            </Button>
           </HStack>
-          <Select
-            onChange={(e) => setSortBy(e.target.value)}
-            placeholder="Sort By"
-          >
-            <option value="name">Name</option>
-            <option value="price">Price</option>
-          </Select>
-          <Button onClick={handleDirections} colorScheme="gray">
-            {sortDirection === 'asc' ? (
-              <SortAscending size={100} />
-            ) : (
-              <SortDescending size={100} />
-            )}
-          </Button>
-        </HStack>
-      </HStack>
-      <HStack justifyContent="start" gap={8} my={8}>
+        </Stack>
+      </Stack>
+      <Stack
+        justifyContent="start"
+        gap={8}
+        my={8}
+        w="100%"
+        flexWrap="wrap"
+        direction={isMobile ? 'column' : 'row'}
+      >
         {fetchedRooms.map((item: any) => (
           <CustomCardRoom
             key={item.id}
@@ -168,7 +201,7 @@ export default function Page() {
             image={item.image}
           />
         ))}
-      </HStack>
+      </Stack>
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
       <CommentSection reviews={reviews} />
     </Box>

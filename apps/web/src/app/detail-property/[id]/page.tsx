@@ -15,6 +15,9 @@ import {
   useDisclosure,
   Heading,
   Image,
+  Stack,
+  useBreakpointValue,
+  Hide,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -26,12 +29,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import ModalAddRoom from '@/components/layout/property-detail/ModalAddRoom';
 import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
-// import MyMap from '@/components/layout/property-detail/Map';
-import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import useGetReviews from '@/hooks/list-property/getReviewProperty';
 import CommentSection from '@/components/layout/CommentSection';
+import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
+import Link from 'next/link';
 
 export default function Page() {
   const [page, setPage] = useState<number>(1);
@@ -61,7 +63,7 @@ export default function Page() {
   const { fetchReviews, reviews, loading, error } = useGetReviews();
 
   const handleDirections = () => {
-    setSortDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
+    setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
   };
 
   useEffect(() => {
@@ -90,9 +92,11 @@ export default function Page() {
 
   const position = [51.505, -0.09];
   const zoom = 13;
+  const inputWidth = useBreakpointValue({ base: '100%', md: '300px' });
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
-    <Box className="px-16">
+    <Box className="px-4 md:px-16">
       <Link href={'/dashboard'}>
         <HStack my={10}>
           <ArrowLeft size={32} />
@@ -117,10 +121,43 @@ export default function Page() {
 
       <MyMap position={position} zoom={zoom} />
 
-      <HStack my={10} justifyContent={'space-between'}>
-        <HStack>
+      <Stack
+        my={10}
+        justifyContent={'space-between'}
+        direction={isMobile ? 'column' : 'row'}
+        w="100%"
+      >
+        <HStack flexWrap={'wrap'}>
           <HStack>
+            <InputGroup w={inputWidth}>
+              <Input
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search"
+                value={search}
+              />
+              <InputRightElement>
+                <MagnifyingGlass size={20} />
+              </InputRightElement>
+            </InputGroup>
+            <Hide above="sm">
+              <Button
+                onClick={onOpen}
+                rightIcon={<Plus size={10} />}
+                variant="outline"
+                fontSize="small"
+              >
+                Add Room
+              </Button>
+            </Hide>
+          </HStack>
+
+          <Stack
+            w={{ base: '100%', sm: 'auto' }}
+            direction={isMobile ? 'column' : 'row'}
+            spacing={4}
+          >
             <Input
+              w={{ base: '100%', sm: 'auto' }}
               onChange={(e) =>
                 setStartDate(e.target.value ? new Date(e.target.value) : null)
               }
@@ -138,54 +175,52 @@ export default function Page() {
               size="md"
               type="date"
             />
-          </HStack>
-          <InputGroup w={300}>
-            <Input
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search"
-              value={search}
-            />
-            <InputRightElement>
-              <MagnifyingGlass size={20} />
-            </InputRightElement>
-          </InputGroup>
+          </Stack>
         </HStack>
 
         <HStack>
-          <HStack>
-            <Select
-              onChange={(e) => setSortBy(e.target.value)}
-              placeholder="Sort By"
-              value={sortBy}
-            >
-              <option value="name">Name</option>
-              <option value="price">Price</option>
-            </Select>
-          </HStack>
+          <Select
+            onChange={(e) => setSortBy(e.target.value)}
+            placeholder="Sort By"
+            value={sortBy}
+          >
+            <option value="name">Name</option>
+            <option value="price">Price</option>
+          </Select>
           <Button onClick={handleDirections} colorScheme="gray">
-            {sortDirection == 'asc' ? (
+            {sortDirection === 'asc' ? (
               <SortAscending size={30} />
             ) : (
               <SortDescending size={30} />
             )}
           </Button>
-          <Center height="35px" mx={4}>
-            <Divider
-              border={'1px'}
-              borderColor={'black'}
-              orientation="vertical"
-            />
-          </Center>
-          <Button
-            onClick={onOpen}
-            rightIcon={<Plus size={20} />}
-            variant="outline"
-          >
-            Add Room
-          </Button>
+
+          <Hide below="sm">
+            <Center height="35px" mx={4}>
+              <Divider
+                border={'1px'}
+                borderColor={'black'}
+                orientation="vertical"
+              />
+            </Center>
+            <Button
+              onClick={onOpen}
+              rightIcon={<Plus size={20} />}
+              variant="outline"
+            >
+              Add Room
+            </Button>
+          </Hide>
         </HStack>
-      </HStack>
-      <HStack justifyContent={'start'} gap={8} my={8}>
+      </Stack>
+      <Stack
+        justifyContent={'start'}
+        gap={8}
+        my={8}
+        w="100%"
+        flexWrap="wrap"
+        direction={isMobile ? 'column' : 'row'}
+      >
         {rooms.map((item: any) => (
           <CustomCardRoom
             key={item.id}
@@ -200,7 +235,7 @@ export default function Page() {
             image={item.image}
           />
         ))}
-      </HStack>
+      </Stack>
 
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
       <CommentSection reviews={reviews} />
