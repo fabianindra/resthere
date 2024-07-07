@@ -13,6 +13,8 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Show,
+  Hide,
 } from '@chakra-ui/react';
 import { MapPinArea } from '@phosphor-icons/react';
 import useProvinces from '@/hooks/property/useProvinces';
@@ -42,23 +44,40 @@ const LocationBox: React.FC<LocationBoxProps> = ({ location, setLocation }) => {
 
   return (
     <Menu>
-      <MenuButton>
+      <MenuButton w={{ base: '100%', md: 'auto' }}>
         <Box
           minW={'fit-content'}
-          className="flex-1 py-4 px-8 border-2 border-solid border-gray text-start"
+          className=" flex-1 py-4 px-8 border-2 border-solid border-gray text-start"
         >
-          <Text fontWeight={'medium'} fontSize={'sm'}>
-            Location
-          </Text>
-          <HStack>
-            <Heading my={1} mr={4} as={'h3'} size={'lg'}>
+          <Show above="sm">
+            <Text fontWeight={'medium'} fontSize={'sm'}>
+              Location
+            </Text>
+          </Show>
+
+          <HStack justifyContent={{ base: 'space-between', sm: 'start' }}>
+            <Heading
+              my={1}
+              as={'h3'}
+              size={{
+                base: 'md',
+                sm: 'lg',
+              }}
+            >
               Select Location
             </Heading>
-            <MapPinArea size={32} weight="fill" />
+            <Show above="sm">
+              <MapPinArea size={32} weight="fill" />
+            </Show>
+            <Hide above="sm">
+              <MapPinArea size={26} weight="fill" />
+            </Hide>
           </HStack>
-          <Text mt={2} fontWeight={'medium'} fontSize={'sm'}>
-            {location}
-          </Text>
+          <Show above="sm">
+            <Text mt={2} fontWeight={'medium'} fontSize={'sm'}>
+              {location}
+            </Text>
+          </Show>
         </Box>
       </MenuButton>
       <MenuList height={500} overflow={'auto'}>

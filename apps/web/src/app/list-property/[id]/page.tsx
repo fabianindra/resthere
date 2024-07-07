@@ -36,7 +36,7 @@ export default function Page() {
 
   const params = useParams();
   const searchParams = useSearchParams();
-  const { id } = params;
+  const { id }: any = params;
   const startDateParam = searchParams.get('startDate');
   const endDateParam = searchParams.get('endDate');
 
@@ -62,8 +62,8 @@ export default function Page() {
   };
 
   useEffect(() => {
-    console.log(fetchedRooms);
-  }, [fetchedRooms]);
+    fetchReviews(parseInt(id));
+  }, []);
 
   useEffect(() => {
     if (id) {

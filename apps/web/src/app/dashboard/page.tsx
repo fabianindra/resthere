@@ -21,6 +21,7 @@ import {
   VStack,
   Text,
   Heading,
+  Hide,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -126,9 +127,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <Box className="px-16">
+    <Box px={{ base: '10px', sm: '64px' }}>
       <Tabs isFitted variant="enclosed">
-        <TabList mb="1em">
+        <TabList display={'flex'} flexWrap={'wrap'} mb="1em">
           <Tab>Properties</Tab>
           <Tab>Transaction</Tab>
           <Tab>Sales Report</Tab>
@@ -137,7 +138,7 @@ export default function DashboardPage() {
         <TabPanels>
           <TabPanel>
             <HStack my={10} justifyContent={'space-between'}>
-              <Heading size={'lg'}>Property List</Heading>
+              <Heading size={{ base: 'md', sm: 'lg' }}>Property List</Heading>
               <Button
                 onClick={onAddPropertyModalOpen}
                 rightIcon={<Plus size={20} />}
@@ -146,21 +147,23 @@ export default function DashboardPage() {
                 Add Property
               </Button>
             </HStack>
-            <HStack my={10} justifyContent={'space-between'}>
+            <HStack my={10} flexWrap={'wrap'} justifyContent={'space-between'}>
               <HStack>
-                <HStack>
+                <HStack flexWrap={{ base: 'wrap', sm: 'nowrap' }}>
                   <Input
                     onChange={(e) => setStartDate(e.target.value)}
                     value={startDate}
-                    placeholder="Select Date and Time"
+                    placeholder="start date"
                     size="md"
                     type="date"
                   />
-                  <Box w={10} className="border-b border-[#000000]" />
+                  <Hide below="sm">
+                    <Box w={10} className="border-b border-[#000000]" />
+                  </Hide>
                   <Input
                     onChange={(e) => setEndDate(e.target.value)}
                     value={endDate}
-                    placeholder="Select Date and Time"
+                    placeholder="end date"
                     size="md"
                     type="date"
                   />
@@ -196,7 +199,13 @@ export default function DashboardPage() {
               </HStack>
             </HStack>
 
-            <HStack justifyContent="start" gap={8} my={10}>
+            <HStack
+              w={'100vw'}
+              flexWrap={'wrap'}
+              justifyContent={'start'}
+              gap={4}
+              my={10}
+            >
               {dataRoom.length === 0 ? (
                 <Text>No properties found</Text>
               ) : (

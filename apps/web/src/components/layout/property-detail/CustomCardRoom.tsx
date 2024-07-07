@@ -55,80 +55,74 @@ export default function CustomCardRoom({
   const formattedEndDate = formatDate(endDate);
 
   return (
-    <Card maxW="xs">
-      <CardBody>
-        <Image
-          src={
-            image
-              ? `http://localhost:6570/images/${image}`
-              : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
-          }
-          objectFit="cover"
-          height={200}
-          width={400}
-          alt="Green double couch with wooden legs"
-          borderRadius="lg"
-        />
-        <Link
-          href={{
-            pathname: `/list-property/${id}`,
-            query: { formattedStartDate, formattedEndDate },
-          }}
-          passHref
-        >
-          <Heading size="md" mt={4}>
-            {name}
-          </Heading>
-        </Link>
-      </CardBody>
-      <CardFooter flexDirection={'column'}>
-        <HStack justifyContent={'space-between'}>
-          <HStack>
-            <User size={20} weight="fill" />
-            <Text fontSize={'sm'}>{capacity}</Text>
+    <>
+      <Card maxW="xs" className=" cursor-pointer" onClick={onOpenDetail} pb={4}>
+        <CardBody>
+          <Image
+            src={
+              image
+                ? `http://localhost:6570/images/${image}`
+                : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
+            }
+            objectFit="cover"
+            height={200}
+            width={400}
+            alt="Green double couch with wooden legs"
+            borderRadius="lg"
+          />
+          <Link
+            href={{
+              pathname: `/list-property/${id}`,
+              query: { formattedStartDate, formattedEndDate },
+            }}
+            passHref
+          >
+            <Heading size="md" mt={4}>
+              {name}
+            </Heading>
+          </Link>
+        </CardBody>
+        <CardFooter flexDirection={'column'}>
+          <HStack justifyContent={'space-between'}>
+            <HStack>
+              <User size={20} weight="fill" />
+              <Text fontSize={'sm'}>{capacity}</Text>
+            </HStack>
+            <Box>
+              <Text fontSize={'md'} fontWeight={'bold'}>
+                Rp. {price}
+              </Text>
+            </Box>
           </HStack>
-          <Box>
-            <Text fontSize={'md'} fontWeight={'bold'}>
-              Rp. {price}
-            </Text>
-          </Box>
-        </HStack>
-        <Text
-          mt={8}
-          fontSize={'sm'}
-          className=" text-primary underline cursor-pointer"
-          onClick={onOpenDetail}
-        >
-          See Details
-        </Text>
-        {dashboard ? (
-          <HStack justifyContent={'end'} mb={4} mt={6}>
-            <Button
-              onClick={onOpen}
-              rightIcon={<PencilSimple size={20} />}
-              colorScheme="blue"
-            >
-              Edit
-            </Button>
-            <ModalDeleteRoom id={id} fetchRooms={fetchRooms} />
-          </HStack>
-        ) : null}
-        <ModalRoomDetail
-          isOpen={isOpenDetail}
-          onClose={onCloseDetail}
-          roomId={id}
-          dashboard={dashboard}
-          title={name}
-          startDate={startDate}
-          endDate={endDate}
-        />
-        <ModalEditRoom
-          isOpen={isOpen}
-          onClose={onClose}
-          roomId={id}
-          fetchRooms={fetchRooms}
-        />
-      </CardFooter>
-    </Card>
+          {dashboard ? (
+            <HStack justifyContent={'end'} mb={4} mt={6}>
+              <Button
+                onClick={onOpen}
+                rightIcon={<PencilSimple size={20} />}
+                colorScheme="blue"
+              >
+                Edit
+              </Button>
+              <ModalDeleteRoom id={id} fetchRooms={fetchRooms} />
+            </HStack>
+          ) : null}
+        </CardFooter>
+      </Card>
+      <ModalRoomDetail
+        isOpen={isOpenDetail}
+        onClose={onCloseDetail}
+        roomId={id}
+        dashboard={dashboard}
+        title={name}
+        startDate={startDate}
+        endDate={endDate}
+      />
+      <ModalEditRoom
+        isOpen={isOpen}
+        onClose={onClose}
+        roomId={id}
+        fetchRooms={fetchRooms}
+      />
+    </>
   );
 }

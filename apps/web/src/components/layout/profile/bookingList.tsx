@@ -134,7 +134,7 @@ const BookingList: React.FC<any> = () => {
         {bookings.length === 0 ? (
           <Text textAlign="center">No bookings found.</Text>
         ) : (
-          <Box mx={10} overflowX="auto">
+          <Box mx={{ base: 4, sm: 10 }} overflowX="auto">
             <Table overflowX="auto" whiteSpace={'nowrap'} variant="simple">
               <Thead>
                 <Tr>

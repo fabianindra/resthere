@@ -7,12 +7,12 @@ const Header: React.FC<HeaderProps> = () => {
   return (
     <Flex
       justifyContent="space-between"
-      alignItems="center"
-      className="sticky px-20 py-8 bg-[#FFFFFF]"
+      alignItems="start"
+      className="sticky py-8 bg-[#FFFFFF]"
       width="100%"
     >
       <Link href="/">
-        <Heading ml={-4} color="primary" as="h2" size="lg">
+        <Heading textAlign={'start'} color="primary" as="h2" size="lg">
           Hostel
         </Heading>
       </Link>

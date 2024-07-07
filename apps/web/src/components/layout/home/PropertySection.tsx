@@ -42,7 +42,7 @@ export default function PropertySection() {
           </HStack>
         </HStack>
       </VStack>
-      <HStack my={10} justifyContent={'space-between'}>
+      <HStack my={10} flexWrap={'wrap'} justifyContent={'start'}>
         {dataRoom.length == 0
           ? null
           : dataRoom.map((item: any) => {
@@ -57,6 +57,7 @@ export default function PropertySection() {
                   startDate={null}
                   endDate={null}
                   fetchData={fetchData}
+                  image={item.image}
                 />
               );
             })}
