@@ -61,7 +61,7 @@ export default function Nav() {
       <HStack
         className=" w-full shadow-sm bg-white"
         justifyContent="space-between"
-        px={'64px'}
+        px={{ base: '32px', md: '32px', lg: '64px' }}
         py={8}
       >
         <Header

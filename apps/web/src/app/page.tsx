@@ -36,9 +36,13 @@ export default function Home() {
           />
           <GuestBox set={setGuest} guestCount={guest} />
           <HStack
-            gap={20}
+            gap={{ base: 2, sm: 20 }}
             flexWrap={'wrap'}
-            className="py-4 px-8 border-2 border-solid border-gray text-start flex-2"
+            py={{ sm: '0.8rem', base: '4px' }}
+            px={{ sm: '2rem', base: '4px' }}
+            className="border-2 border-solid border-gray text-start flex-2"
+            justifyContent={'space-around'}
+            w={{ base: '100%', sm: 'auto' }}
           >
             <DateRangePicker
               setValue={setStartDate}

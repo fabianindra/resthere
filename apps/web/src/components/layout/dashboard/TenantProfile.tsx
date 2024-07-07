@@ -56,7 +56,7 @@ export default function TenantProfile() {
       <VStack className="w-full" mx={16} align="stretch" spacing={8}>
         {loggedIn && user ? (
           <VStack borderWidth="1px" borderRadius="lg" p={6}>
-            <EditFotoProfile foto={user.username} />
+            <EditFotoProfile foto={user.foto} />
             <EditProfileTenant onOpen={onOpen} />
           </VStack>
         ) : (

@@ -66,7 +66,6 @@ export default function ModalRoomDetail({
       setRoomDetail(response.data.data);
       setSpecialPrice(response.data.data.special_price);
       setAvailableRoom(response.data.data.room_availability);
-      
     } catch (error) {
       //console.log(error);
     }
@@ -81,15 +80,18 @@ export default function ModalRoomDetail({
 
     try {
       const price = roomDetail?.price;
-      const response = await axios.post('http://localhost:6570/api/transaction/booking', {
-        roomId,
-        userId,
-        price,
-        startDate: checkIn,
-        endDate: checkOut,
-      });
-      console.log(checkIn, checkOut)
-      console.log("Booking response:", response);
+      const response = await axios.post(
+        'http://localhost:6570/api/transaction/booking',
+        {
+          roomId,
+          userId,
+          price,
+          startDate: checkIn,
+          endDate: checkOut,
+        },
+      );
+      console.log(checkIn, checkOut);
+      console.log('Booking response:', response);
       // window.location.href = `/`;
     } catch (error: any) {
       console.log(error);
@@ -99,8 +101,8 @@ export default function ModalRoomDetail({
   useEffect(() => {
     getDetailsRoom();
     setCheckIn(startDate);
-    setCheckOut(endDate)
-    console.log(checkIn, checkOut)
+    setCheckOut(endDate);
+    console.log(checkIn, checkOut);
   }, [isOpen]);
 
   return (
@@ -136,7 +138,9 @@ export default function ModalRoomDetail({
           </ModalBody>
           <ModalFooter justifyContent={'space-between'}>
             <Heading size={'md'}>Rp. {roomDetail?.price}</Heading>
-            <Button onClick={handleBooking} colorScheme="blue">Booking</Button>
+            <Button px={10} onClick={handleBooking} colorScheme="blue">
+              Booking
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -153,7 +157,9 @@ export default function ModalRoomDetail({
             </Alert>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={() => setIsAlertOpen(false)} colorScheme="blue">Close</Button>
+            <Button onClick={() => setIsAlertOpen(false)} colorScheme="blue">
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

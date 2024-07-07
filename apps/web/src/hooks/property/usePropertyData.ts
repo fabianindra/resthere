@@ -12,30 +12,52 @@ const usePropertyData = () => {
   const [sortDirection, setDirection] = useState('asc');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const tenant_id: any = JSON.parse(Cookies.get('user') as string).id;
+  const [tenantId, setTenantId] = useState<any>();
+
+  useEffect(() => {
+    const storedUser = Cookies.get('user');
+    const dataUser = JSON.parse(Cookies.get('user') as string);
+
+    console.log(dataUser.id);
+
+    if (dataUser) {
+      setTenantId(dataUser.id);
+    }
+  }, []);
 
   const fetchData = async () => {
     try {
-      const response = await getDataPropertyByTenant(
-        tenant_id,
-        page,
-        search,
-        category,
-        sortBy,
-        sortDirection,
-        startDate,
-        endDate,
-      );
-      setMaxPage(Math.ceil(response.data.count / 4));
-      setDataRoom(response.data.data);
+      if (tenantId) {
+        const response = await getDataPropertyByTenant(
+          tenantId,
+          page,
+          search,
+          category,
+          sortBy,
+          sortDirection,
+          startDate,
+          endDate,
+        );
+        setMaxPage(Math.ceil(response.data.count / 4));
+        setDataRoom(response.data.data);
+      }
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [page, sortDirection, sortBy, search, category, startDate, endDate]);
+  }, [
+    page,
+    sortDirection,
+    sortBy,
+    search,
+    category,
+    startDate,
+    endDate,
+    tenantId,
+  ]);
 
   const handleDirections = () => {
     setDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));

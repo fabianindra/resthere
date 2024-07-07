@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getDetailProperty } from '@/api/property';
 
-const usePropertyDetails = () => {
-  const [property, setProperty] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+const usePropertyDetails = (propertyId: any) => {
+  const [property, setProperty] = useState<any>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
 
-  const fetchProperty = async (id: number) => {
+  const fetchProperty = useCallback(async (id: any) => {
     setLoading(true);
     setError(null);
     try {
@@ -17,9 +17,15 @@ const usePropertyDetails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  return { property, loading, error, fetchProperty };
+  useEffect(() => {
+    if (propertyId) {
+      fetchProperty(propertyId);
+    }
+  }, [propertyId, fetchProperty]);
+
+  return { property, loading, error };
 };
 
 export default usePropertyDetails;
