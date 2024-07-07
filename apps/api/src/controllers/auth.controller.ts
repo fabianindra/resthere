@@ -2,11 +2,15 @@ import { Request, Response } from 'express';
 import {
   serviceRegisterUser,
   serviceRegisterTenant,
-  serviceChangeUserPassword,
-  serviceChangeTenantPassword,
   serviceCompleteRegistrationUser,
   serviceCompleteRegistrationTenant,
 } from '../services/auth.register.service';
+import { 
+  serviceSendResetPasswordEmail, 
+  serviceResetPassword,  
+  serviceChangeUserPassword, 
+  serviceChangeTenantPassword
+} from '@/services/auth.password.service';
 import { serviceTenantLogin, serviceUserLogin } from '../services/auth.login.service';
 import { serviceVerifyEmail } from '../services/auth.verify.service';
 
@@ -74,3 +78,16 @@ export const changeTenantPassword = async (req: Request, res: Response) => {
   const result = await serviceChangeTenantPassword(email, currentPassword, newPassword);
   return res.status(Number(result?.status)).send(result);
 };
+
+export const sendResetPasswordEmail = async (req: Request, res: Response) => {
+  const { email, role } = req.body;
+  const result = await serviceSendResetPasswordEmail(email, role);
+  res.status(result.status).json(result);
+};
+
+export const handleResetPassword = async (req: Request, res: Response) => {
+  const { newPassword, role, email, token } = req.body;
+  const result = await serviceResetPassword(String(newPassword), String(role), String(email), String(token));
+  res.status(result.status).json(result);
+};
+

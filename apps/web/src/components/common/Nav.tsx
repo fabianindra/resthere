@@ -45,12 +45,17 @@ export default function Nav() {
       Cookies.set('id', String(idGoogle));
       window.location.href = '/';
     }
+
+    if (idGoogle) {
+      Cookies.set('login method', "google")
+    }
   }, []);
 
   const handleLogout = () => {
     Cookies.remove('token');
     Cookies.remove('user');
     Cookies.remove('role');
+    Cookies.remove('login method');
     setLoggedIn(false);
     setUser(null);
     window.location.href = '/';

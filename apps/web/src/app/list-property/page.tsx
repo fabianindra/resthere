@@ -97,6 +97,7 @@ export default function Page() {
                   dashboard={false}
                   startDate={startDate}
                   endDate={endDate}
+                  fetchData={fetchData}
                 />
               );
             })}
