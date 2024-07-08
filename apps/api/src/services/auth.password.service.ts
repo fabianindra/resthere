@@ -4,23 +4,14 @@ import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import { verify } from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
-import {
-  repoFindTenant,
-  repoFindUser,
-  repoTenantChangePassword,
-  repoUserChangePassword,
-} from '../repository/auth.repository';
+import { repoFindTenant, repoFindUser, repoTenantChangePassword, repoUserChangePassword } from '../repository/auth.repository';
 
 const hashPassword = async (password: string): Promise<string> => {
   const salt = await genSalt(10);
   return await hash(password, salt);
 };
 
-const createToken = (
-  payload: object,
-  secret: string,
-  expiresIn: string,
-): string => {
+const createToken = (payload: object, secret: string, expiresIn: string): string => {
   return sign(payload, secret, { expiresIn });
 };
 
@@ -64,14 +55,9 @@ const sendEmail = async (emailOptions: any) => {
   await emailTransporter.sendMail(emailOptions);
 };
 
-export const serviceChangeUserPassword = async (
-  email: string,
-  currentPassword: string,
-  newPassword: string,
-) => {
+export const serviceChangeUserPassword = async (email: string, currentPassword: string, newPassword: string) => {
   try {
     const user = await repoFindUser(email);
-
     if (!user) {
       return {
         status: 404,
@@ -79,9 +65,7 @@ export const serviceChangeUserPassword = async (
         message: 'User not found',
       };
     }
-
     const isMatch = await compare(currentPassword, user.password);
-
     if (!isMatch) {
       return {
         status: 400,
@@ -89,10 +73,8 @@ export const serviceChangeUserPassword = async (
         message: 'Current password is incorrect',
       };
     }
-
     const hashedPassword = await hashPassword(newPassword);
     await repoUserChangePassword(email, hashedPassword);
-
     return {
       status: 200,
       success: true,
@@ -108,14 +90,9 @@ export const serviceChangeUserPassword = async (
   }
 };
 
-export const serviceChangeTenantPassword = async (
-  email: string,
-  currentPassword: string,
-  newPassword: string,
-) => {
+export const serviceChangeTenantPassword = async (email: string, currentPassword: string, newPassword: string) => {
   try {
     const tenant = await repoFindTenant(email);
-
     if (!tenant) {
       return {
         status: 404,
@@ -123,9 +100,7 @@ export const serviceChangeTenantPassword = async (
         message: 'Tenant not found',
       };
     }
-
     const isMatch = await compare(currentPassword, tenant.password);
-
     if (!isMatch) {
       return {
         status: 400,
@@ -133,10 +108,8 @@ export const serviceChangeTenantPassword = async (
         message: 'Current password is incorrect',
       };
     }
-
     const hashedPassword = await hashPassword(newPassword);
     await repoTenantChangePassword(email, hashedPassword);
-
     return {
       status: 200,
       success: true,
@@ -155,7 +128,6 @@ export const serviceChangeTenantPassword = async (
 export const serviceSendResetPasswordEmail = async (email: string, role: string) => {
   try {
     const user = role === 'user' ? await repoFindUser(email) : await repoFindTenant(email);
-
     if (!user) {
       return {
         status: 404,
@@ -163,22 +135,18 @@ export const serviceSendResetPasswordEmail = async (email: string, role: string)
         message: `${role.charAt(0).toUpperCase() + role.slice(1)} not found`,
       };
     }
-
     const resetToken = createToken(
       { email: email, role },
       'verificationKey',
       '1d',
     );
-
     const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
-
     await sendEmail({
       to: email,
       from: process.env.EMAIL,
       subject: 'Reset Your Password',
       text: `Please use the following link to reset your password: ${resetLink}`,
     });
-
     return {
       status: 200,
       success: true,
@@ -200,7 +168,6 @@ export const serviceResetPassword = async (newPassword: string, role: string, em
       if (decoded.email !== email) {
         throw new Error('Invalid token');
       }
-  
       const hashedPassword = await hashPassword(newPassword);
       if (role === 'user') {
         await repoUserChangePassword(email, hashedPassword);
@@ -209,7 +176,6 @@ export const serviceResetPassword = async (newPassword: string, role: string, em
       } else {
         throw new Error('Invalid role');
       }
-  
       return {
         status: 200,
         success: true,

@@ -39,15 +39,15 @@ export default function Nav() {
     }
 
     if (token) {
-      Cookies.set('token', token);
-      Cookies.set('user', JSON.stringify({ id, username, email }));
-      Cookies.set('role', String(roleGoogle).toLowerCase());
-      Cookies.set('id', String(idGoogle));
+      Cookies.set('token', token, { expires: 1 });
+      Cookies.set('user', JSON.stringify({ id, username, email }), { expires: 1 });
+      Cookies.set('role', String(roleGoogle).toLowerCase(), { expires: 1 });
+      Cookies.set('id', String(idGoogle), { expires: 1 });
       window.location.href = '/';
     }
 
     if (idGoogle) {
-      Cookies.set('login method', "google")
+      Cookies.set('login method', "google", { expires: 1 })
     }
   }, []);
 

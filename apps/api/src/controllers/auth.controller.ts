@@ -66,7 +66,6 @@ export const verifyEmail = async (req: Request, res: Response) => {
   }
 };
 
-
 export const changeUserPassword = async (req: Request, res: Response) => {
   const { email, currentPassword, newPassword } = req.body;
   const result = await serviceChangeUserPassword(email, currentPassword, newPassword);
