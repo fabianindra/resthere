@@ -6,7 +6,7 @@ import LocationBox from '@/components/layout/home/LocationBox';
 import SearchButton from '@/components/layout/home/SearchButton';
 import CustomCard from '@/components/ui/CustomCard';
 import SimplePagination from '@/components/ui/Pagination';
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, HStack, Hide } from '@chakra-ui/react';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
@@ -37,13 +37,14 @@ export default function Page() {
       setMaxPage(Math.ceil(response.data.count / 4));
       setDataRoom(response.data.data);
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
     if (cityParam) {
       setCity(cityParam);
+      console.log(cityParam);
     }
     if (startDateParam) {
       setStartDate(new Date(startDateParam));
@@ -66,15 +67,20 @@ export default function Page() {
         />
         <GuestBox set={setGuest} guestCount={guest} />
         <HStack
-          gap={20}
+          gap={{ base: 2, sm: 20 }}
           flexWrap={'wrap'}
-          className="py-4 px-8 border-2 border-solid border-gray text-start flex-2"
+          py={{ sm: '0.8rem', base: '4px' }}
+          px={{ sm: '2rem', base: '4px' }}
+          className="border-2 border-solid border-gray text-start flex-2"
+          justifyContent={'space-around'}
+          w={{ base: '100%', sm: 'auto' }}
         >
           <DateRangePicker
             setValue={setStartDate}
             label="from"
             value={startDateParam}
           />
+          <Hide above="sm">-</Hide>
           <DateRangePicker
             setValue={setEndDate}
             label="until"
@@ -83,7 +89,7 @@ export default function Page() {
         </HStack>
         <SearchButton />
       </HStack>
-      <HStack justifyContent={'start'} gap={8} mt={10}>
+      <HStack flexWrap={'wrap'} justifyContent={'start'} gap={8} mt={10}>
         {dataRoom.length === 0
           ? null
           : dataRoom.map((item: any) => {
@@ -98,6 +104,7 @@ export default function Page() {
                   startDate={startDate}
                   endDate={endDate}
                   fetchData={fetchData}
+                  image={item.image}
                 />
               );
             })}

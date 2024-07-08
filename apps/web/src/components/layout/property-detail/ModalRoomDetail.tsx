@@ -151,7 +151,9 @@ export default function ModalRoomDetail({ onClose, isOpen, roomId, dashboard, ti
           </ModalBody>
           <ModalFooter justifyContent={'space-between'}>
             <Heading size={'md'}>Rp. {roomDetail?.price} per day</Heading>
-            <Button onClick={handleBooking} colorScheme="blue">Booking</Button>
+            <Button px={10} onClick={handleBooking} colorScheme="blue">
+              Booking
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -168,7 +170,9 @@ export default function ModalRoomDetail({ onClose, isOpen, roomId, dashboard, ti
             </Alert>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={() => setIsAlertOpen(false)} colorScheme="blue">Close</Button>
+            <Button onClick={() => setIsAlertOpen(false)} colorScheme="blue">
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

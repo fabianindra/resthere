@@ -2,21 +2,59 @@ import React, { useState } from 'react';
 import { Box, HStack, Heading, Text, VStack } from '@chakra-ui/react';
 import { CaretLeft, CaretRight } from '@phosphor-icons/react/dist/ssr';
 import CityBoxItem from './CityBoxItem';
+import { useRouter } from 'next/navigation';
 
 export default function ClouserDestination() {
   const cities = [
-    { url: '/BALI.png', title: 'Denpasar, Bali' },
-    { url: '/BANDUNG.png', title: 'Bandung' },
-    { url: '/JAKARTA.png', title: 'Jakarta' },
-    { url: '/LOMBOK.png', title: 'Lombok' },
-    { url: '/MAKASAR.png', title: 'Makasar' },
-    { url: '/MALANG.png', title: 'Malang' },
-    { url: '/MEDAN.png', title: 'Medan' },
-    { url: '/SEMARANG.png', title: 'Semarang' },
-    { url: '/SURABAYA.png', title: 'Surabaya' },
+    {
+      url: '/BALI.png',
+      title: 'Denpasar, Bali',
+      link: '/list-property?city=KOTA%20DENPASAR',
+    },
+    {
+      url: '/BANDUNG.png',
+      title: 'Bandung',
+      link: '/list-property?city=KABUPATEN%20BANDUNG',
+    },
+    {
+      url: '/JAKARTA.png',
+      title: 'Jakarta',
+      link: '/list-property?city=KOTA%20JAKARTA%20PUSAT',
+    },
+    {
+      url: '/LOMBOK.png',
+      title: 'Lombok',
+      link: '/list-property?city=KABUPATEN%20LOMBOK%20UTARA',
+    },
+    {
+      url: '/MAKASAR.png',
+      title: 'Makasar',
+      link: '/list-property?city=KOTA%20MAKASSAR',
+    },
+    {
+      url: '/MALANG.png',
+      title: 'Malang',
+      link: '/list-property?city=KOTA%20MALANG',
+    },
+    {
+      url: '/MEDAN.png',
+      title: 'Medan',
+      link: '/list-property?city=KOTA%20MEDAN',
+    },
+    {
+      url: '/SEMARANG.png',
+      title: 'Semarang',
+      link: '/list-property?city=KOTA%20SEMARANG',
+    },
+    {
+      url: '/SURABAYA.png',
+      title: 'Surabaya',
+      link: '/list-property?city=KOTA%20SURABAYA',
+    },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
@@ -61,7 +99,8 @@ export default function ClouserDestination() {
         {cities.map((city, index) => (
           <Box
             key={index}
-            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-2 box-border"
+            onClick={() => router.push(city.link)}
+            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-2 box-border cursor-pointer"
           >
             <CityBoxItem url={city.url} title={city.title} />
           </Box>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getDataRoomsByProperty } from '@/api/rooms';
 
 const useRoomsData = (
@@ -8,14 +8,14 @@ const useRoomsData = (
   category: string,
   sortBy: string,
   sortDirection: string,
-  startDate: Date | null,
-  endDate: Date | null,
 ) => {
-  const [rooms, setRooms] = useState<any>([]);
+  const [rooms, setRooms] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
-  const fetchRooms = async () => {
+  const fetchRooms = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -26,21 +26,14 @@ const useRoomsData = (
         category,
         sortBy,
         sortDirection,
-        startDate?.toISOString() ?? '', // Default to empty string if startDate is undefined
-        endDate?.toISOString() ?? '', 
+        startDate?.toISOString() ?? '',
+        endDate?.toISOString() ?? '',
       );
       setRooms(response.data.data);
-      //console.log(response);
     } catch (err) {
       setError('Failed to fetch rooms data');
     } finally {
       setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (propertyId) {
-      fetchRooms();
     }
   }, [
     propertyId,
@@ -53,7 +46,22 @@ const useRoomsData = (
     endDate,
   ]);
 
-  return { rooms, loading, error, fetchRooms };
+  useEffect(() => {
+    if (propertyId) {
+      fetchRooms();
+    }
+  }, [propertyId, fetchRooms]);
+
+  return {
+    rooms,
+    loading,
+    error,
+    fetchRooms,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+  };
 };
 
 export default useRoomsData;

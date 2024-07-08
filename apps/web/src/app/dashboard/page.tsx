@@ -20,6 +20,8 @@ import {
   useDisclosure,
   VStack,
   Text,
+  Heading,
+  Hide,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
@@ -64,6 +66,10 @@ export default function DashboardPage() {
     setSearch,
     setSortBy,
     setCategory,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
     sortDirection,
     handleDirections,
     fetchData,
@@ -87,6 +93,10 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    console.log(dataRoom);
+  }, [dataRoom]);
+
+  useEffect(() => {
     const verifyAndSet = async () => {
       try {
         const isValidToken: boolean = await verifyTokenClient();
@@ -99,7 +109,6 @@ export default function DashboardPage() {
     verifyAndSet();
   }, []);
 
-  // Render a loading state while verification is in progress
   if (verified == null) {
     return (
       <Center mt={100} mb={200}>
@@ -118,9 +127,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <Box className="px-16">
+    <Box px={{ base: '10px', sm: '64px' }}>
       <Tabs isFitted variant="enclosed">
-        <TabList mb="1em">
+        <TabList display={'flex'} flexWrap={'wrap'} mb="1em">
           <Tab>Properties</Tab>
           <Tab>Transaction</Tab>
           <Tab>Sales Report</Tab>
@@ -129,16 +138,37 @@ export default function DashboardPage() {
         <TabPanels>
           <TabPanel>
             <HStack my={10} justifyContent={'space-between'}>
-              <InputGroup w={300}>
-                <Input
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Enter amount"
-                  value={search}
-                />
-                <InputRightElement>
-                  <MagnifyingGlass size={20} />
-                </InputRightElement>
-              </InputGroup>
+              <Heading size={{ base: 'md', sm: 'lg' }}>Property List</Heading>
+              <Button
+                onClick={onAddPropertyModalOpen}
+                rightIcon={<Plus size={20} />}
+                variant="outline"
+              >
+                Add Property
+              </Button>
+            </HStack>
+            <HStack my={10} flexWrap={'wrap'} justifyContent={'space-between'}>
+              <HStack>
+                <HStack flexWrap={{ base: 'wrap', sm: 'nowrap' }}>
+                  <Input
+                    onChange={(e) => setStartDate(e.target.value)}
+                    value={startDate}
+                    placeholder="start date"
+                    size="md"
+                    type="date"
+                  />
+                  <Hide below="sm">
+                    <Box w={10} className="border-b border-[#000000]" />
+                  </Hide>
+                  <Input
+                    onChange={(e) => setEndDate(e.target.value)}
+                    value={endDate}
+                    placeholder="end date"
+                    size="md"
+                    type="date"
+                  />
+                </HStack>
+              </HStack>
               <HStack>
                 <HStack>
                   <Select
@@ -166,24 +196,16 @@ export default function DashboardPage() {
                     <SortDescending size={30} />
                   )}
                 </Button>
-                <Center height="35px" mx={4}>
-                  <Divider
-                    border={'1px'}
-                    borderColor={'black'}
-                    orientation="vertical"
-                  />
-                </Center>
-                <Button
-                  onClick={onAddPropertyModalOpen}
-                  rightIcon={<Plus size={20} />}
-                  variant="outline"
-                >
-                  Add Property
-                </Button>
               </HStack>
             </HStack>
 
-            <HStack justifyContent="start" gap={8} my={10}>
+            <HStack
+              w={'100vw'}
+              flexWrap={'wrap'}
+              justifyContent={'start'}
+              gap={4}
+              my={10}
+            >
               {dataRoom.length === 0 ? (
                 <Text>No properties found</Text>
               ) : (
@@ -196,6 +218,9 @@ export default function DashboardPage() {
                     price={item.rooms[0] ? item.rooms[0].price : 0}
                     dashboard={true}
                     fetchData={fetchData}
+                    startDate={new Date(startDate)}
+                    endDate={new Date(endDate)}
+                    image={item.image}
                   />
                 ))
               )}

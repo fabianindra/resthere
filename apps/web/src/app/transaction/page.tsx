@@ -28,10 +28,10 @@ export default function TransactionPage() {
       setLoggedIn(false);
     }
     if (storedRole) {
-        setRole(storedRole);
-      } else {
-        setRole('');
-      }
+      setRole(storedRole);
+    } else {
+      setRole('');
+    }
   }, []);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function TransactionPage() {
           <Text>Loading...</Text>
         </VStack>
       </Box>
-    ); 
+    );
   }
 
   if (!loggedIn || verified === false || role !== 'user') {
@@ -99,15 +99,13 @@ export default function TransactionPage() {
           <Text>You need to log in as user to view transaction.</Text>
         </VStack>
       </Box>
-    ); 
+    );
   }
 
   return (
     <Box className="z-50">
-      <VStack align="stretch" pr={20} pt={8} spacing={8}>
-        
+      <VStack align="stretch" pr={{ base: 0, sm: 20 }} pt={8} spacing={8}>
         <BookingList />
-        
       </VStack>
     </Box>
   );

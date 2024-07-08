@@ -17,18 +17,19 @@ export interface User {
   id: number;
   email: string;
   username: string;
-  password: string; 
-};
+  password: string;
+  foto: string;
+}
 
 export interface Tenant {
   id: number;
   email: string;
   username: string;
-  password: string; 
-};
+  password: string;
+}
 
 export interface Booking {
-  id: string,
+  id: string;
   room_name: string;
   property_name: string;
   date: string;
@@ -36,7 +37,7 @@ export interface Booking {
 }
 
 export type BookingTenant = {
-  id: string,
+  id: string;
   username: string;
   email: string;
   room_name: string;
@@ -45,7 +46,6 @@ export type BookingTenant = {
   check_out: Date;
   status: string;
 };
-
 
 export interface HeaderProps {
   loggedIn: boolean;

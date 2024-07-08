@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getDataPropertyByRoom, getDataPropertyByTenant } from '@/api/property';
+import { getDataPropertyByRoom } from '@/api/property';
 import { City } from '@phosphor-icons/react';
 
 const usePropertyAll = () => {
@@ -27,7 +27,7 @@ const usePropertyAll = () => {
       setMaxPage(Math.ceil(response.data.count / 4));
       setDataRoom(response.data.data);
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   };
 

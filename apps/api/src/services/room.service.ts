@@ -47,7 +47,7 @@ export const serviceGetRoomByProperty = async (req: any) => {
       count: data.count,
     };
   } catch (error) {
-    //console.log(error);
+    console.log(error);
     return {
       status: 500,
       message: 'server error',
@@ -145,7 +145,7 @@ export const serviceUpdateRoom = async (req: any) => {
       capacity_room: parseInt(capacity_room),
       room_size,
       id: parseInt(req.params.id),
-      image: file?.path,
+      image: file?.filename,
     });
     return {
       status: 201,

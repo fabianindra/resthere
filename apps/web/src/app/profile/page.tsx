@@ -38,6 +38,10 @@ export default function ProfilePage() {
     verifyAndSet();
   }, []);
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   if (!verified) {
     return (
       <Box>
@@ -52,11 +56,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <HStack className="w-full">
-      <VStack className="w-full" mx={16} align="stretch" spacing={8}>
+    <HStack mx={'auto'} my={20}>
+      <VStack className="w-full" mx={'auto'} align="stretch" spacing={8}>
         {loggedIn && user ? (
-          <VStack borderWidth="1px" borderRadius="lg" p={6}>
-            <EditFotoProfile foto={user.username} />
+          <VStack p={6}>
+            <EditFotoProfile foto={user.foto} />
             <EditProfile onOpen={onOpen} />
           </VStack>
         ) : (
