@@ -83,6 +83,8 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
     setIsEdit(false);
   };
 
+  const isEmailLogin = Cookies.get("login method") !== 'google';
+
   return (
     <div>
       {!isEdit ? (
@@ -151,9 +153,11 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
             <Button w={200} colorScheme="gray" onClick={() => setIsEdit(true)}>
               Edit Profile
             </Button>
-            <Button w={200} colorScheme="gray" onClick={onOpen}>
-              Change Password
-            </Button>
+            {isEmailLogin && (
+              <Button w={200} colorScheme="gray" onClick={onOpen}>
+                Change Password
+              </Button>
+            )}
           </HStack>
         )}
       </HStack>

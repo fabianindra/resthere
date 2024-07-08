@@ -19,30 +19,27 @@ export const Footer = () => {
           About
         </Heading>
         <Text textAlign={'justify'} mt={2} color={'gray.400'}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
-          veniam alias, sint, reprehenderit eos beatae cum facilis iste earum
-          tempore accusamus? Libero hic quaerat aut, nisi asperiores perferendis
-          facilis vel?
+        All material herein ©2024 Hostel Indonesia Company Pte. Ltd. All Rights Reserved.
+        Hostel is part of Hostel International Inc., online travel & related services.
         </Text>
       </VStack>
       <VStack alignItems={'start'}>
         <Heading as={'h3'} size={'md'}>
-          Use Link
+          External Link
         </Heading>
         <Link color={'gray.400'}>Careers</Link>
-        <Link color={'gray.400'}>Blogs</Link>
         <Link color={'gray.400'}>Instagram</Link>
         <Link color={'gray.400'}>Facebook</Link>
         <Link color={'gray.400'}>Service</Link>
       </VStack>
       <VStack alignItems={'start'}>
         <Heading as={'h3'} size={'md'}>
-          Everything
+          Property & Promotion
         </Heading>
-        <Link color={'gray.400'}>Suite Room</Link>
+        <Link color={'gray.400'}>Luxury Stays</Link>
         <Link color={'gray.400'}>Promo</Link>
-        <Link color={'gray.400'}>Mountain</Link>
-        <Link color={'gray.400'}>Beach</Link>
+        <Link color={'gray.400'}>Property in the Mountains</Link>
+        <Link color={'gray.400'}>Propoerty near the Beach</Link>
       </VStack>
       <VStack alignItems={'start'}>
         <Heading as={'h3'} size={'md'}>

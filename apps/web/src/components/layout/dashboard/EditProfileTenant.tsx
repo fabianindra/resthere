@@ -40,10 +40,8 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      //console.log(parsedUser.id);
       setUserId(storedUserId);
     }
-    //console.log(storedUserId);
   }, []);
 
   const initialValues = {
@@ -54,7 +52,6 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
   };
 
   const handleSave = async (values: typeof initialValues) => {
-    //console.log(user, userId);
     try {
       const { username, gender, email, brithday } = values;
       const response = await updateDataProfile(
@@ -82,6 +79,8 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
     Cookies.set('user', JSON.stringify(values));
     setIsEdit(false);
   };
+
+  const isEmailLogin = Cookies.get("login method") !== 'google';
 
   return (
     <div>
@@ -148,9 +147,11 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
       <HStack gap={8}>
         {!isEdit && (
           <HStack gap={8} mt={4}>
-            <Button w={200} colorScheme="gray" onClick={onOpen}>
-              Change Password
-            </Button>
+            {isEmailLogin && (
+              <Button w={200} colorScheme="gray" onClick={onOpen}>
+                Change Password
+              </Button>
+            )}
           </HStack>
         )}
       </HStack>
