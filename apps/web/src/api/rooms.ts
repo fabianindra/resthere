@@ -1,7 +1,13 @@
 import axios from 'axios';
 
-export function getDetailRoom(room_id: number) {
-  return axios.get(`http://localhost:6570/api/room/detail/${room_id}`);
+export function getDetailRoom(
+  room_id: number,
+  startDate: string,
+  endDate: string,
+) {
+  return axios.get(
+    `http://localhost:6570/api/room/detail/${room_id}?startDate=${startDate}&endDate=${endDate}`,
+  );
 }
 
 export function getDataRoomsByProperty(

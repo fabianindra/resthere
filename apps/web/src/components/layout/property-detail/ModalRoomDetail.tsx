@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  VStack,
   Heading,
   Alert,
   AlertIcon,
@@ -16,11 +15,11 @@ import React, { useEffect, useState } from 'react';
 import { RoomImage } from './RoomImage';
 import { RoomInfo } from './RoomInfo';
 import { SpecialPriceTable } from './TabelSpecialPrice';
-import { getDetailRoom } from '@/api/rooms';
 import { AvailableRoomTable } from './TabelAvailableRoom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { User } from '@/types';
+import useDetailRoom from '@/hooks/room/useDetailRoom';
 
 const getUserFromCookie = (): User | null => {
   const userCookie = Cookies.get('user');
@@ -38,48 +37,33 @@ const getUserFromCookie = (): User | null => {
 const user = getUserFromCookie();
 const userId = user?.id;
 
-//console.log("userID: ", userId)
-
 export default function ModalRoomDetail({
   onClose,
   isOpen,
   roomId,
   dashboard,
   title,
-  startDate,
-  endDate,
+  startDate: initialStartDate,
+  endDate: initialEndDate,
 }: any) {
   const [addSpecialPrice, setAddSpecialPrice] = useState(true);
   const [addAvailableRoom, setaddAvailableRoom] = useState(true);
   const toggleSpecialPrice = () => setAddSpecialPrice(!addSpecialPrice);
   const toggleAvailableRoom = () => setaddAvailableRoom(!addAvailableRoom);
-  const [roomDetail, setRoomDetail] = useState<any>();
-  const [specialPrice, setSpecialPrice] = useState<any>();
-  const [availableRoom, setAvailableRoom] = useState<any>();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [checkIn, setCheckIn] = useState<string>('');
   const [checkOut, setCheckOut] = useState<string>('');
-
-  const getDetailsRoom = async () => {
-    try {
-      const response = await getDetailRoom(parseInt(roomId));
-      setRoomDetail(response.data.data);
-      setSpecialPrice(response.data.data.special_price);
-      setAvailableRoom(response.data.data.room_availability);
-    } catch (error) {
-      //console.log(error);
-    }
-  };
+  const { room, loading, error, setStartDate, setEndDate, fetchRoom } =
+    useDetailRoom();
 
   const handleBooking = async () => {
-    //console.log("Booking button clicked");
     if (!userId) {
       setIsAlertOpen(true);
       return;
     }
 
     try {
-      const price = roomDetail?.price;
+      const price = room?.finalPrice;
       const response = await axios.post(
         'http://localhost:6570/api/transaction/booking',
         {
@@ -92,18 +76,24 @@ export default function ModalRoomDetail({
       );
       console.log(checkIn, checkOut);
       console.log('Booking response:', response);
-      // window.location.href = `/`;
     } catch (error: any) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getDetailsRoom();
-    setCheckIn(startDate);
-    setCheckOut(endDate);
-    console.log(checkIn, checkOut);
-  }, [isOpen]);
+    if (isOpen) {
+      setStartDate(new Date(initialStartDate));
+      setEndDate(new Date(initialEndDate));
+      fetchRoom(parseInt(roomId));
+      setCheckIn(initialStartDate);
+      setCheckOut(initialEndDate);
+    }
+  }, [isOpen, initialStartDate, initialEndDate, roomId]);
+
+  useEffect(() => {
+    console.log(room);
+  }, [room]);
 
   return (
     <>
@@ -115,9 +105,9 @@ export default function ModalRoomDetail({
           <ModalBody>
             <RoomImage />
             <RoomInfo
-              user={roomDetail?.capacity_person}
-              bed={roomDetail?.capacity_room}
-              size={roomDetail?.room_size}
+              user={room?.capacity_person}
+              bed={room?.capacity_room}
+              size={room?.room_size}
             />
             {dashboard ? (
               <>
@@ -125,19 +115,19 @@ export default function ModalRoomDetail({
                   room_id={roomId}
                   addSpecialPrice={addSpecialPrice}
                   toggleSpecialPrice={toggleSpecialPrice}
-                  dataSpecialPrice={specialPrice}
+                  dataSpecialPrice={room?.special_price}
                 />
                 <AvailableRoomTable
                   room_id={roomId}
                   addAvailableRoom={addAvailableRoom}
                   toggleAvailableRoom={toggleAvailableRoom}
-                  dataAvailableRoom={availableRoom}
+                  dataAvailableRoom={room?.room_availability}
                 />
               </>
             ) : null}
           </ModalBody>
           <ModalFooter justifyContent={'space-between'}>
-            <Heading size={'md'}>Rp. {roomDetail?.price}</Heading>
+            <Heading size={'md'}>Rp. {room?.finalPrice}</Heading>
             <Button px={10} onClick={handleBooking} colorScheme="blue">
               Booking
             </Button>
