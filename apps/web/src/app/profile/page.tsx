@@ -38,10 +38,6 @@ export default function ProfilePage() {
     verifyAndSet();
   }, []);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   if (!verified) {
     return (
       <Box>

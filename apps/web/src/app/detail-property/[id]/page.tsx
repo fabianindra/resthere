@@ -78,10 +78,6 @@ export default function Page() {
     }
   }, [propertyId, page, search, category, sortBy, sortDirection]);
 
-  useEffect(() => {
-    console.log(rooms);
-  }, [rooms]);
-
   const MyMap = useMemo(
     () =>
       dynamic(() => import('@/components/layout/property-detail/Map'), {

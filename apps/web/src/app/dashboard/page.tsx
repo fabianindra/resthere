@@ -93,10 +93,6 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    console.log(dataRoom);
-  }, [dataRoom]);
-
-  useEffect(() => {
     const verifyAndSet = async () => {
       try {
         const isValidToken: boolean = await verifyTokenClient();
