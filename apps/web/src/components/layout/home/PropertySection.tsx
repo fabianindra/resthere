@@ -1,26 +1,31 @@
 'use client';
 import { getDataPropertyByRoom } from '@/api/property';
 import CustomCard from '@/components/ui/CustomCard';
+import usePropertyAll from '@/hooks/property/usePropertyAll';
 import { VStack, HStack, Heading, Box, Text } from '@chakra-ui/react';
 import { ArrowRight } from '@phosphor-icons/react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 export default function PropertySection() {
-  const [dataRoom, setDataRoom] = useState<any>([]);
-
-  const fetchData = async () => {
-    try {
-      const response = await getDataPropertyByRoom(1);
-      setDataRoom(response.data.data);
-    } catch (error) {
-      //console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const {
+    dataProperty,
+    page,
+    setPage,
+    maxPage,
+    search,
+    setSearch,
+    city,
+    setCity,
+    sortBy,
+    setSortBy,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    sortDirection,
+    handleDirections,
+  } = usePropertyAll();
 
   return (
     <Box mt={20} className="w-full">
@@ -43,9 +48,9 @@ export default function PropertySection() {
         </HStack>
       </VStack>
       <HStack my={10} flexWrap={'wrap'} justifyContent={'start'}>
-        {dataRoom.length == 0
+        {dataProperty.length == 0
           ? null
-          : dataRoom.map((item: any) => {
+          : dataProperty.map((item: any) => {
               return (
                 <CustomCard
                   key={item.id}
@@ -56,7 +61,7 @@ export default function PropertySection() {
                   dashboard={false}
                   startDate={null}
                   endDate={null}
-                  fetchData={fetchData}
+                  fetchData={() => {}}
                   image={item.image}
                 />
               );

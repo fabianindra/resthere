@@ -144,7 +144,7 @@ export function SpecialPriceTable({
               </form>
             </Td>
           </Tr>
-          {dataSpecialPrice.map((value: any, index: number) => (
+          {dataSpecialPrice?.map((value: any, index: number) => (
             <Tr key={index}>
               <Td>
                 <EditTableDate

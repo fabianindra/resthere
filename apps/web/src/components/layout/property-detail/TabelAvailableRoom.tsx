@@ -142,7 +142,7 @@ export function AvailableRoomTable({
               </form>
             </Td>
           </Tr>
-          {dataAvailableRoom.map((value: any, index: number) => (
+          {dataAvailableRoom?.map((value: any, index: number) => (
             <Tr key={index}>
               <Td>
                 <Input

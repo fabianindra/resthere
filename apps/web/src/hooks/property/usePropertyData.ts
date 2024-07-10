@@ -18,8 +18,6 @@ const usePropertyData = () => {
     const storedUser = Cookies.get('user');
     const dataUser = JSON.parse(Cookies.get('user') as string);
 
-    console.log(dataUser.id);
-
     if (dataUser) {
       setTenantId(dataUser.id);
     }

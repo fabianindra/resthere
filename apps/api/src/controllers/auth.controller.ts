@@ -5,13 +5,16 @@ import {
   serviceCompleteRegistrationUser,
   serviceCompleteRegistrationTenant,
 } from '../services/auth.register.service';
-import { 
-  serviceSendResetPasswordEmail, 
-  serviceResetPassword,  
-  serviceChangeUserPassword, 
-  serviceChangeTenantPassword
-} from '@/services/auth.password.service';
-import { serviceTenantLogin, serviceUserLogin } from '../services/auth.login.service';
+import {
+  serviceSendResetPasswordEmail,
+  serviceResetPassword,
+  serviceChangeUserPassword,
+  serviceChangeTenantPassword,
+} from '../services/auth.password.service';
+import {
+  serviceTenantLogin,
+  serviceUserLogin,
+} from '../services/auth.login.service';
 import { serviceVerifyEmail } from '../services/auth.verify.service';
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -52,13 +55,17 @@ export const verifyEmail = async (req: Request, res: Response) => {
     const type = result.type;
 
     if (type === 'user') {
-      return res.redirect(`http://localhost:3000/register-user/complete-register-user?email=${email}`);
+      return res.redirect(
+        `http://localhost:3000/register-user/complete-register-user?email=${email}`,
+      );
     } else if (type === 'tenant') {
-      return res.redirect(`http://localhost:3000/register-tenant/complete-register-tenant?email=${email}`);
+      return res.redirect(
+        `http://localhost:3000/register-tenant/complete-register-tenant?email=${email}`,
+      );
     } else {
       return res.status(400).send({
         status: 400,
-        message: "Unknown verification type"
+        message: 'Unknown verification type',
       });
     }
   } else {
@@ -68,13 +75,21 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
 export const changeUserPassword = async (req: Request, res: Response) => {
   const { email, currentPassword, newPassword } = req.body;
-  const result = await serviceChangeUserPassword(email, currentPassword, newPassword);
+  const result = await serviceChangeUserPassword(
+    email,
+    currentPassword,
+    newPassword,
+  );
   return res.status(Number(result?.status)).send(result);
 };
 
 export const changeTenantPassword = async (req: Request, res: Response) => {
   const { email, currentPassword, newPassword } = req.body;
-  const result = await serviceChangeTenantPassword(email, currentPassword, newPassword);
+  const result = await serviceChangeTenantPassword(
+    email,
+    currentPassword,
+    newPassword,
+  );
   return res.status(Number(result?.status)).send(result);
 };
 
@@ -86,7 +101,11 @@ export const sendResetPasswordEmail = async (req: Request, res: Response) => {
 
 export const handleResetPassword = async (req: Request, res: Response) => {
   const { newPassword, role, email, token } = req.body;
-  const result = await serviceResetPassword(String(newPassword), String(role), String(email), String(token));
+  const result = await serviceResetPassword(
+    String(newPassword),
+    String(role),
+    String(email),
+    String(token),
+  );
   res.status(result.status).json(result);
 };
-
