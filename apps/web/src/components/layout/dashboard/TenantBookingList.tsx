@@ -1,42 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box,
-  Text,
-  Button,
-  Grid,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Badge,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  IconButton,
-  HStack,
-  useToast,
-  useDisclosure,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalHeader,
-  ModalFooter,
-  ModalOverlay,
-  ModalContent,
+  Box, Text, Button, Grid, Card, CardHeader, CardBody, CardFooter, Badge, Table, Thead, Tbody, Tr, Th, Td, HStack, 
+  useToast, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalHeader, ModalFooter, ModalOverlay, ModalContent,
 } from '@chakra-ui/react';
 import { CheckCircleIcon, TimeIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BookingTenant } from '@/types';
 import Image from 'next/image';
-import {
-  approveTransaction,
-  cancelTransaction,
-  rejectTransaction,
-} from '@/api/transaction';
+import { approveTransaction, cancelTransaction, rejectTransaction } from '@/api/transaction';
 import ModalApproveTransaction from './ModalApproveTransaction';
 
 const TenantBookingList: React.FC = () => {
@@ -44,8 +16,8 @@ const TenantBookingList: React.FC = () => {
   const [approvedBookings, setApprovedBookings] = useState<BookingTenant[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [paymentProofUrl, setPaymentProofUrl] = useState<string | null>(null); // State for payment proof URL
-  const [isProofModalOpen, setIsProofModalOpen] = useState(false); // State for modal visibility
+  const [paymentProofUrl, setPaymentProofUrl] = useState<string | null>(null);
+  const [isProofModalOpen, setIsProofModalOpen] = useState(false);
   const toast = useToast();
   const bookingsPerPage = 5;
 
@@ -59,7 +31,6 @@ const TenantBookingList: React.FC = () => {
   } else if (userData) {
     try {
       const parsedUserData = JSON.parse(userData);
-      //console.log('Parsed User Data:', parsedUserData);
       tenantId = parsedUserData.id;
     } catch (error) {
       console.error('Error parsing user data from cookies:', error);
@@ -73,7 +44,6 @@ const TenantBookingList: React.FC = () => {
       );
       const responseData = response.data;
       const allBookings = responseData.data;
-
       const pending = allBookings.filter(
         (booking: BookingTenant) =>
           booking.status === 'waiting payment confirmation',
@@ -94,7 +64,6 @@ const TenantBookingList: React.FC = () => {
       console.error('Tenant ID not found in cookies');
       return;
     }
-
     fetchBookings();
   }, [tenantId]);
 
@@ -148,8 +117,6 @@ const TenantBookingList: React.FC = () => {
         `http://localhost:6570/api/transaction/payment-proof/${bookingId}`,
       );
       const paymentProofUrl = response.data.data.proof;
-      //console.log(response)
-      //console.log('Payment Proof URL:', paymentProofUrl); // Verify the URL
       setPaymentProofUrl(paymentProofUrl);
       setIsProofModalOpen(true);
     } catch (error) {
@@ -185,6 +152,13 @@ const TenantBookingList: React.FC = () => {
         <Text>
           <strong>Check-out Date:</strong>{' '}
           {new Date(booking.check_out).toLocaleDateString()}
+        </Text>
+        <Text
+          color="blue.500"
+          cursor="pointer"
+          onClick={() => handleViewPaymentProof(booking.id)}
+        >
+          View Payment Proof
         </Text>
       </CardBody>
       {isPending && (
@@ -234,10 +208,7 @@ const TenantBookingList: React.FC = () => {
           <Text>No pending bookings found.</Text>
         ) : (
           <>
-            <Grid
-              templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
-              gap={6}
-            >
+            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
               {currentBookings.map((booking) =>
                 renderBookingCard(booking, true),
               )}
@@ -319,12 +290,7 @@ const TenantBookingList: React.FC = () => {
     <Box p={6}>
       {renderPendingBookings()}
       {renderApprovedBookingsTable()}
-
-      {/* Payment Proof Modal */}
-      <Modal
-        isOpen={isProofModalOpen}
-        onClose={() => setIsProofModalOpen(false)}
-      >
+      <Modal isOpen={isProofModalOpen} onClose={() => setIsProofModalOpen(false)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Payment Proof</ModalHeader>
@@ -332,7 +298,7 @@ const TenantBookingList: React.FC = () => {
           <ModalBody>
             {paymentProofUrl && (
               <Image
-                src={paymentProofUrl}
+                src={`/images/${paymentProofUrl}`}
                 alt="Payment Proof"
                 width={500}
                 height={300}
@@ -340,10 +306,7 @@ const TenantBookingList: React.FC = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              onClick={() => setIsProofModalOpen(false)}
-            >
+            <Button colorScheme="blue" onClick={() => setIsProofModalOpen(false)}>
               Close
             </Button>
           </ModalFooter>
