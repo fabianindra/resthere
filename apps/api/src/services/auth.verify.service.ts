@@ -6,22 +6,18 @@ import {
   repoVerifyTenant,
 } from '../repository/auth.repository';
 
-// Token verification function
 const verifyToken = (token: string, secret: string): any => {
   return verify(token, secret);
 };
 
-// Email verification service
 export const serviceVerifyEmail = async (request: any) => {
   const token = request.query.token;
-
   if (!token) {
     return {
       status: 400,
       message: 'Verification token is missing',
     };
   }
-
   try {
     const decoded = verifyToken(token, 'verificationKey') as { email: string };
     const email = decoded.email;
@@ -52,7 +48,6 @@ export const serviceVerifyEmail = async (request: any) => {
       };
     }
   } catch (error) {
-    //console.log(error);
     return {
       status: 500,
       message: 'Server error',

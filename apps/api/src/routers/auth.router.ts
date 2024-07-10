@@ -7,8 +7,10 @@ import {
   changeUserPassword,
   completeRegisterTenant,
   completeRegisterUser,
+  handleResetPassword,
   registerTenant,
   registerUser,
+  sendResetPasswordEmail,
   tenantLogin,
   userLogin,
   verifyEmail,
@@ -98,5 +100,9 @@ authRouter.get(
 
 authRouter.post('/change-password-user', changeUserPassword);
 authRouter.post('/change-password-tenant', changeTenantPassword);
+
+authRouter.post('/send-reset-password-email', sendResetPasswordEmail);
+authRouter.post('/reset-password', handleResetPassword);
+
 
 export default authRouter;

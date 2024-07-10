@@ -1,18 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  Input,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Text,
+  Button, Input, FormControl, FormLabel, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
+  ModalBody, ModalCloseButton, Text
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -22,109 +11,72 @@ interface ChangePasswordModalProps {
   onClose: () => void;
 }
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('user');
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-  const userData = Cookies.get('user');
-  const parsedUserData = userData ? JSON.parse(userData) : null;
-  const email = parsedUserData?.email;
-
-  const handleChangePassword = async () => {
-    setError(null);
-    setSuccess(null);
-
-    if (newPassword !== confirmPassword) {
-      setError('New password and confirmation do not match.');
-      return;
+  useEffect(() => {
+    const userRole = Cookies.get('role');
+    if (userRole) {
+      setRole(userRole);
     }
+  }, []);
 
-    const isConfirmed = window.confirm(
-      'Are you sure you want to change your password?',
-    );
-    if (!isConfirmed) {
-      return;
-    }
-
+  const handleRequestReset = async () => {
     try {
-      const role = Cookies.get('role');
-      const apiEndpoint =
-        role == 'tenant'
-          ? 'http://localhost:6570/api/auth/change-password-tenant'
-          : 'http://localhost:6570/api/auth/change-password-user';
-
-      const response = await axios.post(apiEndpoint, {
-        email,
-        currentPassword,
-        newPassword,
-      });
-
+      const response = await axios.post('http://localhost:6570/api/auth/send-reset-password-email', { email, role });
       if (response.data.success) {
-        setSuccess('Password changed successfully.');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-        onClose();
+        setSuccess(true);
+        setError('');
       } else {
-        setError(response.data.message || 'Failed to change password.');
+        setError(response.data.message);
       }
     } catch (err) {
-      setError('An error occurred while changing the password.');
-      console.error(err);
+      setError('Failed to send reset email');
     }
   };
 
+  const handleClose = () => {
+    setEmail('');
+    setRole(Cookies.get('role') || 'user');
+    setSuccess(false);
+    setError('');
+    onClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Change Password</ModalHeader>
+        <ModalHeader>Request Password Reset</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl id="current-password" isRequired>
-            <FormLabel>Current Password</FormLabel>
-            <Input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-            />
-          </FormControl>
-          <FormControl id="new-password" isRequired mt={4}>
-            <FormLabel>New Password</FormLabel>
-            <Input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </FormControl>
-          <FormControl id="confirm-password" isRequired mt={4}>
-            <FormLabel>Confirm New Password</FormLabel>
-            <Input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </FormControl>
-          {error && <FormErrorMessage mt={4}>{error}</FormErrorMessage>}
-          {success && (
-            <Text color="green.500" mt={4}>
-              {success}
+          {!success ? (
+            <>
+              {error && <Text color="red.500" mb={4}>{error}</Text>}
+              <FormControl id="email" mb={4}>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </FormControl>
+            </>
+          ) : (
+            <Text color="green.500" textAlign="center">
+              A reset link has been sent to your email.
             </Text>
           )}
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" onClick={handleChangePassword}>
-            Change Password
-          </Button>
-          <Button onClick={onClose} ml={3}>
-            Cancel
-          </Button>
+          {!success ? (
+            <Button colorScheme="blue" onClick={handleRequestReset}>Send Reset Link</Button>
+          ) : (
+            <Button colorScheme="blue" onClick={handleClose}>Close</Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

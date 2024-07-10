@@ -22,18 +22,12 @@ export default function Page() {
     page,
     setPage,
     maxPage,
-    search,
-    setSearch,
     city,
     setCity,
-    sortBy,
-    setSortBy,
     startDate,
     setStartDate,
     endDate,
     setEndDate,
-    sortDirection,
-    handleDirections,
   } = usePropertyAll();
 
   useEffect(() => {

@@ -78,7 +78,7 @@ export default function Page() {
     }
   }, [propertyId, page, search, category, sortBy, sortDirection]);
 
-  const MyMap = useMemo(
+  const Map = useMemo(
     () =>
       dynamic(() => import('@/components/layout/property-detail/Map'), {
         loading: () => <p>A map is loading</p>,
@@ -87,8 +87,6 @@ export default function Page() {
     [],
   );
 
-  const position = [51.505, -0.09];
-  const zoom = 13;
   const inputWidth = useBreakpointValue({ base: '100%', md: '300px' });
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -115,8 +113,6 @@ export default function Page() {
         my={20}
         borderRadius="lg"
       />
-
-      <MyMap position={position} zoom={zoom} />
 
       <Stack
         my={10}
@@ -239,6 +235,9 @@ export default function Page() {
       </Stack>
 
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
+      <div className="bg-white-700 mx-auto my-5 w-full h-[480px]">
+        <Map posix={[4.79029, -75.69003]} />
+      </div>
       <CommentSection reviews={reviews} />
       <ModalAddRoom
         id={params.id}
