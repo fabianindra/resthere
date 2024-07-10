@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Text, Button, Grid, Card, CardHeader, CardBody, CardFooter, Badge, Table, Thead, Tbody, Tr, Th, Td, HStack, 
+  Box, Text, Button, Grid, Card, CardHeader, CardBody, CardFooter, Badge, Table, Thead, Tbody, Tr, Th, Td, HStack, Image,
   useToast, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalHeader, ModalFooter, ModalOverlay, ModalContent,
 } from '@chakra-ui/react';
 import { CheckCircleIcon, TimeIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { BookingTenant } from '@/types';
-import Image from 'next/image';
 import { approveTransaction, cancelTransaction, rejectTransaction } from '@/api/transaction';
 import ModalApproveTransaction from './ModalApproveTransaction';
 
@@ -298,7 +297,7 @@ const TenantBookingList: React.FC = () => {
           <ModalBody>
             {paymentProofUrl && (
               <Image
-                src={`/images/${paymentProofUrl}`}
+                src={`http://localhost:6570/images/${paymentProofUrl}`}
                 alt="Payment Proof"
                 width={500}
                 height={300}
