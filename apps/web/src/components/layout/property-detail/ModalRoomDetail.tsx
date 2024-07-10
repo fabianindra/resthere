@@ -51,17 +51,21 @@ export default function ModalRoomDetail({
   const toggleSpecialPrice = () => setAddSpecialPrice(!addSpecialPrice);
   const toggleAvailableRoom = () => setaddAvailableRoom(!addAvailableRoom);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [checkIn, setCheckIn] = useState<string>('');
   const [checkOut, setCheckOut] = useState<string>('');
   const { room, loading, error, setStartDate, setEndDate, fetchRoom } =
     useDetailRoom();
 
-  const handleBooking = async () => {
-    if (!userId) {
-      setIsAlertOpen(true);
-      return;
-    }
+    const preBooking = async () => {
+      if (!userId) {
+        setIsAlertOpen(true);
+        return;
+      }
+      setIsConfirmationOpen(true)
+    };
 
+  const handleBooking = async () => {
     try {
       const price = room?.finalPrice;
       const response = await axios.post(
@@ -128,7 +132,7 @@ export default function ModalRoomDetail({
           </ModalBody>
           <ModalFooter justifyContent={'space-between'}>
             <Heading size={'md'}>Rp. {room?.finalPrice}</Heading>
-            <Button px={10} onClick={handleBooking} colorScheme="blue">
+            <Button px={10} onClick={preBooking} colorScheme="blue">
               Booking
             </Button>
           </ModalFooter>
@@ -149,6 +153,26 @@ export default function ModalRoomDetail({
           <ModalFooter>
             <Button onClick={() => setIsAlertOpen(false)} colorScheme="blue">
               Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isConfirmationOpen} onClose={() => setIsConfirmationOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Confirm Booking</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Are you sure you want to book this property?
+            Total Price to Pay: Rp. {room?.finalPrice}
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setIsConfirmationOpen(false)} colorScheme="red" mr={3}>
+              No
+            </Button>
+            <Button onClick={handleBooking} colorScheme="green">
+              Yes
             </Button>
           </ModalFooter>
         </ModalContent>
