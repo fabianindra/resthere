@@ -185,7 +185,7 @@ export const serviceUploadPaymentProof = async (req: Request) => {
   }
 
   try {
-    const filePath = path.join('/images', file.filename);
+    const filePath = path.join(file.filename);
     const data = await repoUploadPaymentProof(transactionId, filePath);
 
     await repoUpdateTransactionStatus(

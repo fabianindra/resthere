@@ -10,7 +10,6 @@ export const repoAddTransaction = async (
   endDate: string
 ) => {
   try {
-    // Check if the user with the given userId exists
     const user = await prisma.user.findUnique({
       where: {
         id: parseInt(userId),
@@ -21,7 +20,6 @@ export const repoAddTransaction = async (
       throw new Error('User with the given userId does not exist.');
     }
 
-    // Check if the room with the given roomId exists
     const room = await prisma.room.findUnique({
       where: {
         id: parseInt(roomId),
