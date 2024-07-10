@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import session from 'express-session';
 import authRouter from './routers/auth.router';
@@ -14,6 +15,7 @@ import roomAvailability from './routers/roomavailability.router';
 import profileRouter from './routers/profile.router';
 import transactionRouter from './routers/transaction.router';
 import bookingRouter from './routers/booking.router';
+import reviewRouter from './routers/review.router';
 
 dotenv.config();
 
@@ -25,6 +27,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(
   session({ secret: sessionSecret, resave: false, saveUninitialized: false }),
@@ -37,10 +40,11 @@ app.use('/api/auth', authRouter);
 app.use('/api/property', propertyRouter);
 app.use('/api/room', roomRouter);
 app.use('/api/specialprice', specialPriceRouter);
-app.use('/api/romm-availability', roomAvailability);
+app.use('/api/room-availability', roomAvailability);
 app.use('/api/profile', profileRouter);
 app.use('/api/transaction', transactionRouter);
 app.use('/api/booking-list', bookingRouter);
+app.use('/api/review', reviewRouter);
 
 const PORT = 6570;
 
@@ -51,5 +55,5 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Application running on port:', PORT);
+  console.log(`Application running on port: ${PORT}`);
 });

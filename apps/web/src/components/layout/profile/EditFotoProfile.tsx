@@ -11,7 +11,6 @@ export default function EditFotoProfile(foto: any) {
 
   const uploadFoto = async (file: any) => {
     const storedUserId: any = Cookies.get('userId');
-    console.log(file);
     try {
       const data = await updateFotoProfile(parseInt(storedUserId), file);
       toast({
@@ -57,7 +56,10 @@ export default function EditFotoProfile(foto: any) {
         onChange={handleFileChange}
       />
       <>
-        <Avatar size="xl" src={preview ? preview : foto} />
+        <Avatar
+          size="xl"
+          src={preview ? preview : `http://localhost:6570/images/${foto.foto}`}
+        />
       </>
       <Button w={200} colorScheme="gray" onClick={handleUploadClick}>
         Ubah Foto

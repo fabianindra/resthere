@@ -26,7 +26,12 @@ const propertySchema = Yup.object().shape({
   property_id: Yup.number().required('property id is required'),
 });
 
-export default function ModalEditRoom({ isOpen, onClose, roomId }: any) {
+export default function ModalEditRoom({
+  isOpen,
+  onClose,
+  roomId,
+  fetchRooms,
+}: any) {
   const { room, loading, error, fetchRoom } = useDetailRoom();
   const [file, setFile] = useState<any>(null);
   const toast = useToast();
@@ -51,6 +56,7 @@ export default function ModalEditRoom({ isOpen, onClose, roomId }: any) {
         roomId,
         file,
       );
+      fetchRooms();
       toast({
         title: 'Add property succesfuly',
         status: 'success',

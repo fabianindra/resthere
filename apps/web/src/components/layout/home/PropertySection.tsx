@@ -1,26 +1,31 @@
 'use client';
 import { getDataPropertyByRoom } from '@/api/property';
 import CustomCard from '@/components/ui/CustomCard';
+import usePropertyAll from '@/hooks/property/usePropertyAll';
 import { VStack, HStack, Heading, Box, Text } from '@chakra-ui/react';
 import { ArrowRight } from '@phosphor-icons/react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 export default function PropertySection() {
-  const [dataRoom, setDataRoom] = useState<any>([]);
-
-  const fetchData = async () => {
-    try {
-      const response = await getDataPropertyByRoom(1);
-      setDataRoom(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const {
+    dataProperty,
+    page,
+    setPage,
+    maxPage,
+    search,
+    setSearch,
+    city,
+    setCity,
+    sortBy,
+    setSortBy,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    sortDirection,
+    handleDirections,
+  } = usePropertyAll();
 
   return (
     <Box mt={20} className="w-full">
@@ -42,16 +47,23 @@ export default function PropertySection() {
           </HStack>
         </HStack>
       </VStack>
-      <HStack my={10} justifyContent={'space-between'}>
-        {dataRoom.length == 0
+      <HStack my={10} flexWrap={'wrap'} justifyContent={'start'}>
+        {dataProperty.length == 0
           ? null
-          : dataRoom.map((item: any) => {
+          : dataProperty.map((item: any) => {
               return (
                 <CustomCard
                   key={item.id}
+                  id={item.id}
                   city={item.city_name}
                   name={item.name}
-                  price={item.rooms[0].price} id={0} dashboard={false}                />
+                  price={item.rooms.length > 0 ? item.rooms[0].price : 0}
+                  dashboard={false}
+                  startDate={null}
+                  endDate={null}
+                  fetchData={() => {}}
+                  image={item.image}
+                />
               );
             })}
       </HStack>

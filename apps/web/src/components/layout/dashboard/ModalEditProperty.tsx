@@ -34,7 +34,12 @@ const propertySchema = Yup.object().shape({
   property_id: Yup.number().required('property_id is required'),
 });
 
-export default function ModalEditProperty({ isOpen, onClose, id }: any) {
+export default function ModalEditProperty({
+  isOpen,
+  onClose,
+  id,
+  fetchData,
+}: any) {
   const {
     provinces,
     loading: provincesLoading,
@@ -46,7 +51,7 @@ export default function ModalEditProperty({ isOpen, onClose, id }: any) {
     loading: citiesLoading,
     error: citiesError,
   } = useCities();
-  const { property, fetchProperty, loading, error } = usePropertyDetail();
+  const { property, loading, error } = usePropertyDetail(id);
   const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
   const [file, setFile] = useState<any>(null);
   const toast = useToast();
@@ -70,6 +75,7 @@ export default function ModalEditProperty({ isOpen, onClose, id }: any) {
         property_id,
         file,
       );
+      fetchData();
       toast({
         title: 'Edit property successfully',
         status: 'success',
@@ -102,13 +108,6 @@ export default function ModalEditProperty({ isOpen, onClose, id }: any) {
     },
     enableReinitialize: true,
   });
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchProperty(id);
-    }
-    console.log(property);
-  }, [isOpen]);
 
   useEffect(() => {
     if (property) {

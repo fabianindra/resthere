@@ -7,7 +7,7 @@ export function getDataPropertyByRoom(
   sortBy?: string,
   sortDirection?: string | undefined,
   startDate?: string | undefined,
-  endDate?: string,
+  endDate?: string | undefined,
 ) {
   const params = new URLSearchParams();
   params.append('page', page.toString());
@@ -27,12 +27,13 @@ export function getDataPropertyByTenant(
   page: number,
   search: string,
   category: string,
-
   sortBy: string,
   sortDirection: string,
+  startDate: string,
+  endDate: string,
 ) {
   return axios.get(
-    `http://localhost:6570/api/property/${tenant_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}`,
+    `http://localhost:6570/api/property/${tenant_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}&startDate=${startDate}&endDate=${endDate}`,
   );
 }
 

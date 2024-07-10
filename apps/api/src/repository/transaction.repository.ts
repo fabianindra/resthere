@@ -3,15 +3,16 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const repoAddTransaction = async (
-  roomId: number,
-  userId: number,
-  price: number,
+  roomId: string,
+  userId: string,
+  price: string,
+  startDate: string,
+  endDate: string
 ) => {
   try {
-    // Check if the user with the given userId exists
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: parseInt(userId),
       },
     });
 
@@ -19,10 +20,9 @@ export const repoAddTransaction = async (
       throw new Error('User with the given userId does not exist.');
     }
 
-    // Check if the room with the given roomId exists
     const room = await prisma.room.findUnique({
       where: {
-        id: roomId,
+        id: parseInt(roomId),
       },
     });
 
@@ -30,18 +30,17 @@ export const repoAddTransaction = async (
       throw new Error('Room with the given roomId does not exist.');
     }
 
-    const now: Date = new Date();
-    const checkOutDate: Date = new Date(now);
-    checkOutDate.setDate(checkOutDate.getDate() + 1);
+    const checkIn: Date = new Date(startDate);
+    const checkOut: Date = new Date(endDate);
 
     await prisma.transaction.create({
       data: {
-        room_id: roomId,
-        user_id: userId,
-        total_price: price,
+        room_id: parseInt(roomId),
+        user_id: parseInt(userId),
+        total_price: parseInt(price),
         total_room: 1,
-        check_in: now,
-        check_out: checkOutDate,
+        check_in: checkIn,
+        check_out: checkOut,
       },
     });
 
@@ -144,5 +143,23 @@ export const repoUploadPaymentProof = async (
     return { success: true };
   } catch (error: any) {
     throw new Error('Failed to upload payment proof: ' + error.message);
+  }
+};
+
+export const repoGetPaymentProof = async (transactionId: any) => {
+  try {
+    const transaction = await prisma.transaction.findUnique({
+      where: { id: parseInt(transactionId) },
+    });
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+    return { success: true, proof: transaction.proof };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: 'Failed to get transaction status',
+      error: error.message,
+    };
   }
 };

@@ -10,8 +10,16 @@ import Cookies from 'js-cookie';
 import UserMenu from './UserMenu';
 
 export default function Nav() {
-  const { isOpen: isUserModalOpen, onOpen: onOpenUserModal, onClose: onCloseUserModal } = useDisclosure();
-  const { isOpen: isTenantModalOpen, onOpen: onOpenTenantModal, onClose: onCloseTenantModal } = useDisclosure();
+  const {
+    isOpen: isUserModalOpen,
+    onOpen: onOpenUserModal,
+    onClose: onCloseUserModal,
+  } = useDisclosure();
+  const {
+    isOpen: isTenantModalOpen,
+    onOpen: onOpenTenantModal,
+    onClose: onCloseTenantModal,
+  } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
@@ -23,7 +31,7 @@ export default function Nav() {
     const email = urlParams.get('email');
     const roleGoogle = urlParams.get('role');
     const idGoogle = urlParams.get('userId');
-    const id = urlParams.get('userId')
+    const id = urlParams.get('userId');
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -31,11 +39,15 @@ export default function Nav() {
     }
 
     if (token) {
-      Cookies.set('token', token);
-      Cookies.set('user', JSON.stringify({ id, username, email }));
-      Cookies.set('role', String(roleGoogle).toLowerCase());
-      Cookies.set('id', String(idGoogle))
+      Cookies.set('token', token, { expires: 1 });
+      Cookies.set('user', JSON.stringify({ id, username, email }), { expires: 1 });
+      Cookies.set('role', String(roleGoogle).toLowerCase(), { expires: 1 });
+      Cookies.set('id', String(idGoogle), { expires: 1 });
       window.location.href = '/';
+    }
+
+    if (idGoogle) {
+      Cookies.set('login method', "google", { expires: 1 })
     }
   }, []);
 
@@ -43,15 +55,21 @@ export default function Nav() {
     Cookies.remove('token');
     Cookies.remove('user');
     Cookies.remove('role');
+    Cookies.remove('login method');
     setLoggedIn(false);
     setUser(null);
     window.location.href = '/';
   };
 
   return (
-    <Box className="z-50">
-      <HStack justifyContent="space-between" pr={20} pt={8}>
-      <Header
+    <Box className="w-full z-50 shadow-sm">
+      <HStack
+        className=" w-full shadow-sm bg-white"
+        justifyContent="space-between"
+        px={{ base: '32px', md: '32px', lg: '64px' }}
+        py={8}
+      >
+        <Header
           loggedIn={loggedIn}
           user={user}
           onOpenUserModal={onOpenUserModal}

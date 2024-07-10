@@ -21,14 +21,12 @@ export const repoGetPropertyByRooms = async ({
   sortBy,
   sortDirection,
 }: GetPropertyParams) => {
-  console.log(startDate, endDate);
+  //console.log(startDate, endDate);
   const pageN = page ? (parseInt(page) - 1) * 4 : 0;
 
-  // Parse the startDate and endDate to Date objects
   const start = startDate ? new Date(startDate) : undefined;
   const end = endDate ? new Date(endDate) : undefined;
 
-  // Build the whereClause
   const whereClause: any = {
     ...(city ? { city_name: city } : {}),
     ...(search
@@ -120,6 +118,8 @@ export const repoGetPropertyByTenant = async ({
   page,
   sortBy,
   sortDirection,
+  startDate,
+  endDate,
 }: {
   tenant_id: string;
   search: string;
@@ -127,13 +127,47 @@ export const repoGetPropertyByTenant = async ({
   page: string;
   sortBy: 'name' | 'price';
   sortDirection: 'asc' | 'desc';
+  startDate: string;
+  endDate: string;
 }) => {
   const pageN = page ? parseInt(page) * 4 - 4 : 0;
+
+  const start = startDate ? new Date(startDate) : undefined;
+  const end = endDate ? new Date(endDate) : undefined;
 
   const whereClause = {
     tenant_id: parseInt(tenant_id),
     ...(category ? { category_property: category } : {}),
     ...(search ? { OR: [{ name: { contains: search } }] } : {}),
+    ...(start &&
+      end && {
+        rooms: {
+          none: {
+            OR: [
+              {
+                room_availability: {
+                  some: {
+                    AND: [
+                      { start_date: { lte: end } },
+                      { end_date: { gte: start } },
+                    ],
+                  },
+                },
+              },
+              {
+                transaction: {
+                  some: {
+                    AND: [
+                      { check_out: { gte: start } },
+                      { check_in: { lte: end } },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }),
   };
 
   const count = await prisma.property.aggregate({

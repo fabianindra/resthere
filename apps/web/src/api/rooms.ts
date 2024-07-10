@@ -1,7 +1,13 @@
 import axios from 'axios';
 
-export function getDetailRoom(room_id: number) {
-  return axios.get(`http://localhost:6570/api/room/detail/${room_id}`);
+export function getDetailRoom(
+  room_id: number,
+  startDate: string,
+  endDate: string,
+) {
+  return axios.get(
+    `http://localhost:6570/api/room/detail/${room_id}?startDate=${startDate}&endDate=${endDate}`,
+  );
 }
 
 export function getDataRoomsByProperty(
@@ -11,9 +17,11 @@ export function getDataRoomsByProperty(
   category: string,
   sortBy: string,
   sortDirection: string,
+  startDate: string,
+  endDate: string,
 ) {
   return axios.get(
-    `http://localhost:6570/api/room/${property_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}`,
+    `http://localhost:6570/api/room/${property_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}&startDate=${startDate}&endDate=${endDate}`,
   );
 }
 

@@ -40,7 +40,11 @@ export default function Hero() {
     );
   };
   return (
-    <HStack position="relative" className="w-full overflow-hidden">
+    <HStack
+      h={{ base: '90vh', sm: 'auto' }}
+      position="relative"
+      className="w-full overflow-hidden"
+    >
       <Box className="p-2 absolute bg-travertine rounded-full cursor-pointer left-1 top-1/2 transform -translate-y-1/2 z-10">
         <CaretLeft size={24} onClick={handlePrev} />
       </Box>

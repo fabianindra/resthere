@@ -9,9 +9,12 @@ import {
 
 export const serviceGetALLRoom = async (req: any) => {
   const { room_id } = req.params;
+  const { startDate, endDate } = req.query;
+
+  const id = parseInt(room_id);
+
   try {
-    const data = await repoGetRoom(parseInt(room_id));
-    console.log(data, room_id);
+    const data = await repoGetRoom({ id, startDate, endDate });
     return {
       status: 200,
       success: true,
@@ -68,7 +71,6 @@ export const serviceAddRoom = async (req: any) => {
     property_id,
   } = req.body;
   const { file } = req;
-  console.log(req.body, file, 'HALOO');
   if (
     !name ||
     !price ||
@@ -147,7 +149,7 @@ export const serviceUpdateRoom = async (req: any) => {
       capacity_room: parseInt(capacity_room),
       room_size,
       id: parseInt(req.params.id),
-      image: file?.path,
+      image: file?.filename,
     });
     return {
       status: 201,

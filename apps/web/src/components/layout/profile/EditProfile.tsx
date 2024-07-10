@@ -40,10 +40,10 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      console.log(parsedUser.id);
+      //console.log(parsedUser.id);
       setUserId(storedUserId);
     }
-    console.log(storedUserId);
+    //console.log(storedUserId);
   }, []);
 
   const initialValues = {
@@ -54,7 +54,7 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
   };
 
   const handleSave = async (values: typeof initialValues) => {
-    console.log(user, userId);
+    //console.log(user, userId);
     try {
       const { username, gender, email, brithday } = values;
       const response = await updateDataProfile(
@@ -82,6 +82,8 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
     Cookies.set('user', JSON.stringify(values));
     setIsEdit(false);
   };
+
+  const isEmailLogin = Cookies.get("login method") !== 'google';
 
   return (
     <div>
@@ -151,9 +153,11 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
             <Button w={200} colorScheme="gray" onClick={() => setIsEdit(true)}>
               Edit Profile
             </Button>
-            <Button w={200} colorScheme="gray" onClick={onOpen}>
-              Change Password
-            </Button>
+            {isEmailLogin && (
+              <Button w={200} colorScheme="gray" onClick={onOpen}>
+                Change Password
+              </Button>
+            )}
           </HStack>
         )}
       </HStack>

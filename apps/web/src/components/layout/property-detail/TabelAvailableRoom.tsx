@@ -63,7 +63,7 @@ export function AvailableRoomTable({
     start_date: string,
     end_date: string,
   ) => {
-    console.log(roomavailability_id);
+    //console.log(roomavailability_id);
     try {
       const response = await editAvailableRoom({
         roomavailability_id,
@@ -142,7 +142,7 @@ export function AvailableRoomTable({
               </form>
             </Td>
           </Tr>
-          {dataAvailableRoom.map((value: any, index: number) => (
+          {dataAvailableRoom?.map((value: any, index: number) => (
             <Tr key={index}>
               <Td>
                 <Input

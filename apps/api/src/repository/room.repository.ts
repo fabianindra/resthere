@@ -2,8 +2,17 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const repoGetRoom = async (id: number) => {
-  return await prisma.room.findUnique({
+export const repoGetRoom = async ({
+  id,
+  startDate,
+  endDate,
+}: {
+  id: number;
+  startDate?: string;
+  endDate?: string;
+}) => {
+  // Fetch the room with related data
+  const room = await prisma.room.findUnique({
     where: {
       id: id,
     },
@@ -12,6 +21,39 @@ export const repoGetRoom = async (id: number) => {
       room_availability: true,
     },
   });
+
+  if (!room) {
+    throw new Error('Room not found');
+  }
+
+  let finalPrice = 0;
+  const start = startDate ? new Date(startDate) : new Date();
+  const end = endDate ? new Date(endDate) : new Date(start);
+
+  // Iterate through each day in the date range
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    let dayPrice = room.price;
+
+    // Check for special price
+    const specialPrice = room.special_price.find((sp) => {
+      const spStart = new Date(sp.start_date);
+      const spEnd = new Date(sp.end_date);
+      return d >= spStart && d <= spEnd;
+    });
+
+    if (specialPrice) {
+      dayPrice = specialPrice.special_price;
+    } else {
+      // Check for weekend price (0 for Sunday, 6 for Saturday)
+      if (d.getDay() === 0 || d.getDay() === 6) {
+        dayPrice = room.weekend_price;
+      }
+    }
+
+    finalPrice += dayPrice;
+  }
+
+  return { ...room, finalPrice };
 };
 
 export const repoGetRoomByProperty = async ({
@@ -45,35 +87,46 @@ export const repoGetRoomByProperty = async ({
       end && {
         AND: [
           {
-            room_availability: {
-              none: {
-                AND: [
-                  { start_date: { lte: end } },
-                  { end_date: { gte: start } },
-                ],
+            OR: [
+              {
+                room_availability: {
+                  none: {
+                    AND: [
+                      { start_date: { lte: end } },
+                      { end_date: { gte: start } },
+                    ],
+                  },
+                },
               },
-            },
+              {
+                room_availability: {},
+              },
+            ],
           },
           {
-            transaction: {
-              none: {
-                AND: [
-                  { check_out: { gte: start } },
-                  { check_in: { lte: end } },
-                ],
+            OR: [
+              {
+                transaction: {
+                  none: {
+                    AND: [
+                      { check_out: { gte: start } },
+                      { check_in: { lte: end } },
+                    ],
+                  },
+                },
               },
-            },
+              {
+                transaction: {},
+              },
+            ],
           },
         ],
       }),
   };
 
   // Count the total number of matching rooms
-  const countResult = await prisma.room.aggregate({
+  const countResult = await prisma.room.count({
     where: whereClause,
-    _count: {
-      _all: true,
-    },
   });
 
   // Find the matching rooms
@@ -81,16 +134,53 @@ export const repoGetRoomByProperty = async ({
     skip: pageN,
     take: 4,
     where: whereClause,
-    orderBy: [
-      {
-        [sortBy]: sortDirection,
-      },
-    ],
+    include: {
+      special_price: true,
+    },
+    orderBy: {
+      [sortBy]: sortDirection,
+    },
+  });
+
+  // Calculate the final price based on special price and weekend price
+  const roomsWithPrice = allRooms.map((room) => {
+    let finalPrice = 0;
+    const startDateToUse = start || new Date();
+    const endDateToUse = end || new Date(startDateToUse);
+
+    // Iterate through each day in the date range
+    for (
+      let d = new Date(startDateToUse);
+      d <= endDateToUse;
+      d.setDate(d.getDate() + 1)
+    ) {
+      let dayPrice = room.price;
+
+      // Check for special price
+      const specialPrice = room.special_price.find((sp) => {
+        const spStart = new Date(sp.start_date);
+        const spEnd = new Date(sp.end_date);
+        return d >= spStart && d <= spEnd;
+      });
+
+      if (specialPrice) {
+        dayPrice = specialPrice.special_price;
+      } else {
+        // Check for weekend price (0 for Sunday, 6 for Saturday)
+        if (d.getDay() === 0 || d.getDay() === 6) {
+          dayPrice = room.weekend_price;
+        }
+      }
+
+      finalPrice += dayPrice;
+    }
+
+    return { ...room, finalPrice };
   });
 
   return {
-    count: countResult._count._all,
-    data: allRooms,
+    count: countResult,
+    data: roomsWithPrice,
   };
 };
 

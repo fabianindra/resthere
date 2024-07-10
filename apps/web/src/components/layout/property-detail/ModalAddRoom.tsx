@@ -25,7 +25,7 @@ const propertySchema = Yup.object().shape({
   property_id: Yup.number().required('property id is required'),
 });
 
-export default function ModalAddRoom({ isOpen, onClose, id }: any) {
+export default function ModalAddRoom({ isOpen, onClose, id, fetchRooms }: any) {
   const [file, setFile] = useState<any>(null);
   const toast = useToast();
 
@@ -50,6 +50,7 @@ export default function ModalAddRoom({ isOpen, onClose, id }: any) {
         id,
         file,
       );
+      fetchRooms();
       toast({
         title: 'Add property succesfuly',
         status: 'success',
@@ -79,7 +80,7 @@ export default function ModalAddRoom({ isOpen, onClose, id }: any) {
     validationSchema: propertySchema,
     onSubmit: (values: any) => {
       handleSubmit(values);
-      console.log(values, file);
+      //console.log(values, file);
       onClose();
     },
   });

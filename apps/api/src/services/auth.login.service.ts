@@ -1,9 +1,6 @@
-import { compare } from "bcrypt";
-import { sign } from "jsonwebtoken";
-import {
-  repoFindTenant,
-  repoFindUser
-} from "../repository/auth.repository";
+import { compare } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import { repoFindTenant, repoFindUser } from '../repository/auth.repository';
 
 type UserOrTenant = {
   id: number;
@@ -14,7 +11,10 @@ type UserOrTenant = {
 };
 
 // Password comparison function
-const comparePasswords = async (password: string, hashedPassword: string): Promise<boolean> => {
+const comparePasswords = async (
+  password: string,
+  hashedPassword: string,
+): Promise<boolean> => {
   return await compare(password, hashedPassword);
 };
 
@@ -34,7 +34,7 @@ export const serviceUserLogin = async (request: any) => {
       return {
         status: 401,
         success: false,
-        message: "Invalid email or password",
+        message: 'Invalid email or password',
       };
     }
 
@@ -43,7 +43,7 @@ export const serviceUserLogin = async (request: any) => {
       return {
         status: 401,
         success: false,
-        message: "Invalid email or password",
+        message: 'Invalid email or password',
       };
     }
 
@@ -53,7 +53,7 @@ export const serviceUserLogin = async (request: any) => {
       return {
         status: 401,
         success: false,
-        message: "Email not verified",
+        message: 'Email not verified',
       };
     }
 
@@ -65,23 +65,23 @@ export const serviceUserLogin = async (request: any) => {
       return {
         status: 201,
         success: true,
-        message: "Login successfully",
+        message: 'Login successfully',
         data: entityWithoutPassword,
         token: token,
-        role: userType
+        role: userType,
       };
     }
 
     return {
       status: 401,
       success: false,
-      message: "Invalid email or password",
+      message: 'Invalid email or password',
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
-      message: "Server error",
+      message: 'Server error',
       error: (error as Error).message,
     };
   }
@@ -96,7 +96,7 @@ export const serviceTenantLogin = async (request: any) => {
       return {
         status: 401,
         success: false,
-        message: "Invalid email or password",
+        message: 'Invalid email or password',
       };
     }
 
@@ -105,7 +105,7 @@ export const serviceTenantLogin = async (request: any) => {
       return {
         status: 401,
         success: false,
-        message: "Invalid email or password",
+        message: 'Invalid email or password',
       };
     }
 
@@ -115,7 +115,7 @@ export const serviceTenantLogin = async (request: any) => {
       return {
         status: 401,
         success: false,
-        message: "Email not verified",
+        message: 'Email not verified',
       };
     }
 
@@ -127,23 +127,23 @@ export const serviceTenantLogin = async (request: any) => {
       return {
         status: 201,
         success: true,
-        message: "Login successfully",
+        message: 'Login successfully',
         data: entityWithoutPassword,
         token: token,
-        role: userType
+        role: userType,
       };
     }
 
     return {
       status: 401,
       success: false,
-      message: "Invalid email or password",
+      message: 'Invalid email or password',
     };
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return {
       status: 500,
-      message: "Server error",
+      message: 'Server error',
       error: (error as Error).message,
     };
   }

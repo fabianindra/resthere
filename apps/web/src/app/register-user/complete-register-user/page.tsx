@@ -15,7 +15,7 @@ export default function CompleteRegister() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setEmail(params.get('email') || '');
-    console.log(email)
+    //console.log(email)
   }, []);
 
   const handleRegister = async () => {

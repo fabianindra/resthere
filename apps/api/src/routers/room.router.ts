@@ -1,8 +1,6 @@
 import { uploader } from '../middlewares/uploder';
-import { checkPropertyController } from '../controllers/property.controller';
 import {
   addRoomController,
-  checkRoomController,
   deleteRoomController,
   getRoomByPropertyController,
   getRoomController,

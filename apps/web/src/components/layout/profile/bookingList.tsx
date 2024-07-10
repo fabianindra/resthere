@@ -1,8 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import {
+  Box,
+  Text,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Heading,
+  useToast,
+  useDisclosure,
+} from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Booking } from '@/types';
+import { cancelTransaction } from '@/api/transaction';
+import ModalReview from '../transaction/ModalReview';
 
 const BookingList: React.FC<any> = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -11,26 +33,50 @@ const BookingList: React.FC<any> = () => {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
+  const OverlayOne = () => <ModalOverlay bg="rgba(0, 34, 77, 0.66)" />;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [overlay, setOverlay] = React.useState(<OverlayOne />);
+  const toast = useToast();
+
+  const handleCancel = async (id: string) => {
+    try {
+      const response = await cancelTransaction(id);
+      toast({
+        title: 'cancel transaction succesfuly',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Failed to cancel transaction',
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
+    }
+  };
 
   useEffect(() => {
     if (!userId) {
       console.error('User ID not found in cookies');
       return;
     }
-  
+
     const fetchBookings = async () => {
       try {
-        const response = await axios.get(`http://localhost:6570/api/booking-list/all-booking/${userId}`);
+        const response = await axios.get(
+          `http://localhost:6570/api/booking-list/all-booking/${userId}`,
+        );
         const responseData = response.data;
-        console.log('Response data:', responseData);
         setBookings(responseData.data);
       } catch (error) {
         console.error('Error fetching bookings:', error);
       }
     };
-  
+
     fetchBookings();
-  }, [userId]);
+  }, [handleCancel]);
 
   const handleUploadPaymentProof = (booking: Booking) => {
     setSelectedBooking(booking);
@@ -54,11 +100,15 @@ const BookingList: React.FC<any> = () => {
       formData.append('transactionId', String(selectedBooking?.id) || '');
 
       try {
-        const response = await axios.post('http://localhost:6570/api/transaction/upload-payment-proof', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
+        const response = await axios.post(
+          'http://localhost:6570/api/transaction/upload-payment-proof',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           },
-        });
+        );
         setIsModalOpen(false);
       } catch (error) {
         console.error('Error uploading payment proof:', error);
@@ -66,99 +116,87 @@ const BookingList: React.FC<any> = () => {
     }
   };
 
-  const pendingPaymentBookings = bookings.filter(booking => booking.status === 'waiting payment');
-  const pendingApprovalBookings = bookings.filter(booking => booking.status === 'waiting payment confirmation');
-  const approvedBookings = bookings.filter(booking => booking.status === 'approved');
+  const formatBookingDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   return (
     <>
-      <Box>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Bookings Needing Payment Proof
-        </Text>
-        {pendingPaymentBookings.length === 0 ? (
-          <Text>No bookings needing payment proof found.</Text>
+      <Box p={4} mb={8}>
+        <Heading as="h3" size="md" textAlign="center" mb={6}>
+          Your Bookings
+        </Heading>
+        {bookings.length === 0 ? (
+          <Text textAlign="center">No bookings found.</Text>
         ) : (
-          pendingPaymentBookings.map((booking, index) => (
-            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Booking Date:
-                </Text>{' '}
-                {booking.date}
-              </Text>
-              <Button colorScheme="blue" onClick={() => handleUploadPaymentProof(booking)}>
-                Upload Payment Proof
-              </Button>
-            </Box>
-          ))
-        )}
-      </Box>
-
-      <Box>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Bookings Waiting for Approval
-        </Text>
-        {pendingApprovalBookings.length === 0 ? (
-          <Text>No bookings waiting for approval found.</Text>
-        ) : (
-          pendingApprovalBookings.map((booking, index) => (
-            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Booking Date:
-                </Text>{' '}
-                {booking.date}
-              </Text>
-            </Box>
-          ))
-        )}
-      </Box>
-
-      <Box>
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>
-          Approved Bookings
-        </Text>
-        {approvedBookings.length === 0 ? (
-          <Text>No approved bookings found.</Text>
-        ) : (
-          approvedBookings.map((booking, index) => (
-            <Box key={index} borderWidth="1px" borderRadius="lg" p={6} mb={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={2}>
-                {booking.property_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Room:
-                </Text>{' '}
-                {booking.room_name}
-              </Text>
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  Booking Date:
-                </Text>{' '}
-                {booking.date}
-              </Text>
-            </Box>
-          ))
+          <Box mx={{ base: 4, sm: 10 }} overflowX="auto">
+            <Table overflowX="auto" whiteSpace={'nowrap'} variant="simple">
+              <Thead>
+                <Tr>
+                  <Th>Property Name</Th>
+                  <Th>Room</Th>
+                  <Th>Booking Date</Th>
+                  <Th>Status</Th>
+                  <Th textAlign="end">Action</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {bookings.map((booking: any, index) => (
+                  <Tr key={index}>
+                    <Td>{booking.property_name}</Td>
+                    <Td>{booking.room_name}</Td>
+                    <Td>{formatBookingDate(booking.date)}</Td>
+                    <Td>{booking.status}</Td>
+                    <Td textAlign="end">
+                      {booking.status === 'waiting payment' ? (
+                        <>
+                          <Button
+                            size="sm"
+                            colorScheme="blue"
+                            onClick={() => handleUploadPaymentProof(booking)}
+                          >
+                            Upload Payment Proof
+                          </Button>
+                          <Button
+                            size="sm"
+                            colorScheme="red"
+                            ml={2}
+                            onClick={() => handleCancel(booking.id)}
+                          >
+                            Cancel Booking
+                          </Button>
+                        </>
+                      ) : booking.status === 'approved' ? (
+                        <>
+                          <Button
+                            size="sm"
+                            colorScheme="orange"
+                            onClick={() => {
+                              setOverlay(<OverlayOne />);
+                              onOpen();
+                            }}
+                          >
+                            Review
+                          </Button>
+                          <ModalReview
+                            isOpen={isOpen}
+                            onClose={onClose}
+                            overlay={overlay}
+                            property_id={booking.room.property_id}
+                          />
+                        </>
+                      ) : null}
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
         )}
       </Box>
 
@@ -183,6 +221,8 @@ const BookingList: React.FC<any> = () => {
           </ModalContent>
         </Modal>
       )}
+
+      <Box mb={8} />
     </>
   );
 };

@@ -43,12 +43,13 @@ export const repoUpdateFotoProfile = async ({
   profile_id: number;
   foto: string;
 }) => {
+  console.log(foto, 'repo');
   return prisma.user.update({
     where: {
       id: profile_id,
     },
     data: {
-      foto,
+      foto: foto,
     },
   });
 };
