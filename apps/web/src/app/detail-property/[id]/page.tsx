@@ -19,12 +19,15 @@ import {
   useBreakpointValue,
   Hide,
   Show,
+  Text,
+  VStack,
 } from '@chakra-ui/react';
 import {
   MagnifyingGlass,
   SortAscending,
   SortDescending,
   Plus,
+  MapPin,
 } from '@phosphor-icons/react';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
@@ -92,14 +95,27 @@ export default function Page() {
 
   return (
     <Box className="px-4 md:px-16">
-      <Link href={'/dashboard'}>
-        <HStack my={10}>
-          <ArrowLeft size={32} />
-          <Heading ml={8} size={'lg'}>
-            {property ? property.name : 'Property Details'}
-          </Heading>
+      <VStack alignItems={'start'}>
+        <Link href={'/dashboard'}>
+          <HStack my={10}>
+            <ArrowLeft size={32} />
+            <Heading ml={8} size={'lg'}>
+              {property ? property.name : 'Property Details'}
+            </Heading>
+          </HStack>
+        </Link>
+        <HStack alignItems={'start'}>
+          <MapPin size={30} />
+          <VStack alignItems={'start'}>
+            <Text fontSize={'large'}>
+              {property ? property.city_name : 'City Name'}
+            </Text>
+            <Text fontSize={'large'}>
+              {property ? property.address : 'City Name'}
+            </Text>
+          </VStack>
         </HStack>
-      </Link>
+      </VStack>
 
       <Image
         src={
