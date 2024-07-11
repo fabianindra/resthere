@@ -57,13 +57,13 @@ export default function ModalRoomDetail({
   const { room, loading, error, setStartDate, setEndDate, fetchRoom } =
     useDetailRoom();
 
-    const preBooking = async () => {
-      if (!userId) {
-        setIsAlertOpen(true);
-        return;
-      }
+  const preBooking = async () => {
+    if (!userId) {
+      setIsAlertOpen(true);
+      return;
+    }
       setIsConfirmationOpen(true)
-    };
+  };
 
   const handleBooking = async () => {
     try {
@@ -78,10 +78,11 @@ export default function ModalRoomDetail({
           endDate: checkOut,
         },
       );
-      console.log(checkIn, checkOut);
-      console.log('Booking response:', response);
+      window.location.href = `/transaction`;
     } catch (error: any) {
       console.log(error);
+    } finally {
+      setIsConfirmationOpen(false);
     }
   };
 
