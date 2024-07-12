@@ -138,7 +138,7 @@ export const serviceSendResetPasswordEmail = async (email: string, role: string)
     const resetToken = createToken(
       { email: email, role },
       'verificationKey',
-      '1d',
+      '1h',
     );
     const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
     await sendEmail({

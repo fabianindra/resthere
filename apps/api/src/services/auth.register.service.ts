@@ -95,7 +95,7 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
     const verificationToken = createToken(
       { email: request.email },
       'verificationKey',
-      '1d',
+      '1h',
     );
 
     await sendEmail({

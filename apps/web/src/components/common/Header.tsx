@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = () => {
     >
       <Link href="/">
         <Heading textAlign={'start'} color="primary" as="h2" size="lg">
-          Hostel
+          Resthere
         </Heading>
       </Link>
     </Flex>

@@ -8,8 +8,6 @@ import {
   repoUploadPaymentProof,
 } from '../repository/transaction.repository';
 import path from 'path';
-import nodemailer from 'nodemailer';
-import { google } from 'googleapis';
 
 interface PaymentProofRequestBody {
   transactionId: string;
