@@ -41,6 +41,8 @@ CREATE TABLE `Property` (
     `category_property` VARCHAR(191) NOT NULL,
     `room_count` INTEGER NOT NULL,
     `image` VARCHAR(191) NOT NULL,
+    `latitude` VARCHAR(191) NOT NULL,
+    `longitude` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `tenant_id` INTEGER NOT NULL,
@@ -114,6 +116,7 @@ CREATE TABLE `Review` (
     `feed_back` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `user_id` INTEGER NOT NULL,
     `property_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -136,6 +139,9 @@ ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_room_id_fkey` FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Review` ADD CONSTRAINT `Review_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Review` ADD CONSTRAINT `Review_property_id_fkey` FOREIGN KEY (`property_id`) REFERENCES `Property`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

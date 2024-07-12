@@ -10,6 +10,7 @@ export const repoAddReview = async (
   return await prisma.review.create({
     data: {
       property_id,
+      user_id: 1,
       star,
       feed_back,
     },

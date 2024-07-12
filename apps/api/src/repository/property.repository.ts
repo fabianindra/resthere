@@ -1,4 +1,12 @@
 import { PrismaClient } from '@prisma/client';
+import {
+  buildPropertyWhereClause,
+  countProperties,
+  findProperties,
+  sortProperties,
+  paginateProperties,
+  geocoder,
+} from '../utils/property.utils';
 
 const prisma = new PrismaClient();
 
@@ -21,92 +29,28 @@ export const repoGetPropertyByRooms = async ({
   sortBy,
   sortDirection,
 }: GetPropertyParams) => {
-  //console.log(startDate, endDate);
   const pageN = page ? (parseInt(page) - 1) * 4 : 0;
-
-  const start = startDate ? new Date(startDate) : undefined;
-  const end = endDate ? new Date(endDate) : undefined;
-
-  const whereClause: any = {
-    ...(city ? { city_name: city } : {}),
-    ...(search
-      ? {
-          OR: [
-            { name: { contains: search } },
-            { province_name: { contains: search } },
-          ],
-        }
-      : {}),
-    ...(start &&
-      end && {
-        rooms: {
-          none: {
-            OR: [
-              {
-                room_availability: {
-                  some: {
-                    AND: [
-                      { start_date: { lte: end } },
-                      { end_date: { gte: start } },
-                    ],
-                  },
-                },
-              },
-              {
-                transaction: {
-                  some: {
-                    AND: [
-                      { check_out: { gte: start } },
-                      { check_in: { lte: end } },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
-        },
-      }),
-  };
-
-  const count = await prisma.property.aggregate({
-    where: whereClause,
-    _count: {
-      _all: true,
-    },
+  const whereClause = buildPropertyWhereClause({
+    city,
+    search,
+    startDate,
+    endDate,
   });
 
-  const allProperties = await prisma.property.findMany({
-    where: whereClause,
-    skip: pageN,
-    take: 4,
-    include: {
-      rooms: true,
-    },
-  });
+  const count = await countProperties(whereClause);
 
-  const sortedProperties = allProperties.sort((a, b) => {
-    if (sortBy === 'price') {
-      const aMinPrice = a.rooms.length
-        ? Math.min(...a.rooms.map((room) => room.price))
-        : Number.MAX_VALUE;
-      const bMinPrice = b.rooms.length
-        ? Math.min(...b.rooms.map((room) => room.price))
-        : Number.MAX_VALUE;
-      return sortDirection === 'asc'
-        ? aMinPrice - bMinPrice
-        : bMinPrice - aMinPrice;
-    } else if (sortBy === 'name') {
-      return sortDirection === 'asc'
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
-    }
-    return 0;
-  });
+  const allProperties = await findProperties(whereClause, pageN, 4);
 
-  const paginatedProperties = sortedProperties.slice(0, 4);
+  const sortedProperties = sortProperties(
+    allProperties,
+    sortBy || '',
+    sortDirection || '',
+  );
+
+  const paginatedProperties = paginateProperties(sortedProperties, 1, 4);
 
   return {
-    count: count._count._all,
+    count,
     result: paginatedProperties,
   };
 };
@@ -131,82 +75,23 @@ export const repoGetPropertyByTenant = async ({
   endDate: string;
 }) => {
   const pageN = page ? parseInt(page) * 4 - 4 : 0;
+  const whereClause = buildPropertyWhereClause({ search, startDate, endDate });
 
-  const start = startDate ? new Date(startDate) : undefined;
-  const end = endDate ? new Date(endDate) : undefined;
+  whereClause['tenant_id'] = parseInt(tenant_id);
+  if (category) {
+    whereClause['category_property'] = category;
+  }
 
-  const whereClause = {
-    tenant_id: parseInt(tenant_id),
-    ...(category ? { category_property: category } : {}),
-    ...(search ? { OR: [{ name: { contains: search } }] } : {}),
-    ...(start &&
-      end && {
-        rooms: {
-          none: {
-            OR: [
-              {
-                room_availability: {
-                  some: {
-                    AND: [
-                      { start_date: { lte: end } },
-                      { end_date: { gte: start } },
-                    ],
-                  },
-                },
-              },
-              {
-                transaction: {
-                  some: {
-                    AND: [
-                      { check_out: { gte: start } },
-                      { check_in: { lte: end } },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
-        },
-      }),
-  };
+  const count = await countProperties(whereClause);
 
-  const count = await prisma.property.aggregate({
-    where: whereClause,
-    _count: {
-      _all: true,
-    },
-  });
+  const allProperties = await findProperties(whereClause, 0, 0);
 
-  const allProperties = await prisma.property.findMany({
-    where: whereClause,
-    include: {
-      rooms: true,
-    },
-  });
+  const sortedProperties = sortProperties(allProperties, sortBy, sortDirection);
 
-  const sortedProperties = allProperties.sort((a, b) => {
-    if (sortBy === 'price') {
-      const aMinPrice = a.rooms.length
-        ? Math.min(...a.rooms.map((room) => room.price))
-        : Number.MAX_VALUE;
-      const bMinPrice = b.rooms.length
-        ? Math.min(...b.rooms.map((room) => room.price))
-        : Number.MAX_VALUE;
-      return sortDirection === 'asc'
-        ? aMinPrice - bMinPrice
-        : bMinPrice - aMinPrice;
-    } else if (sortBy === 'name') {
-      return sortDirection === 'asc'
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
-    }
-    return 0;
-  });
-
-  const paginatedProperties = sortedProperties.slice(pageN, pageN + 4);
+  const paginatedProperties = paginateProperties(sortedProperties, pageN, 4);
 
   return {
-    count: count._count._all,
+    count,
     result: paginatedProperties,
   };
 };
@@ -236,18 +121,38 @@ export const repoAddProperty = async ({
   tenant_id: number;
   image: string;
 }) => {
-  return await prisma.property.create({
-    data: {
-      name,
-      address,
-      city_name,
-      province_name,
-      category_property,
-      room_count: 0,
-      tenant_id,
-      image,
-    },
-  });
+  try {
+    const geocodeResult: any = await new Promise((resolve, reject) => {
+      geocoder.geocode(address, function (err: any, res: any) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+    });
+
+    const latitude = `${geocodeResult[0].latitude}`;
+    const longitude = `${geocodeResult[0].longitude}`;
+
+    return await prisma.property.create({
+      data: {
+        name,
+        address,
+        city_name,
+        province_name,
+        category_property,
+        room_count: 0,
+        tenant_id,
+        image,
+        latitude,
+        longitude,
+      },
+    });
+  } catch (error) {
+    console.error('Error adding property:', error);
+    throw error;
+  }
 };
 
 export const repoUpdateProperty = async ({
