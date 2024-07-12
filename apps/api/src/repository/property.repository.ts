@@ -4,7 +4,6 @@ import {
   countProperties,
   findProperties,
   sortProperties,
-  paginateProperties,
   geocoder,
 } from '../utils/property.utils';
 
@@ -47,11 +46,9 @@ export const repoGetPropertyByRooms = async ({
     sortDirection || '',
   );
 
-  const paginatedProperties = paginateProperties(sortedProperties, 1, 4);
-
   return {
     count,
-    result: paginatedProperties,
+    result: sortedProperties,
   };
 };
 
@@ -84,15 +81,13 @@ export const repoGetPropertyByTenant = async ({
 
   const count = await countProperties(whereClause);
 
-  const allProperties = await findProperties(whereClause, 0, 0);
+  const allProperties = await findProperties(whereClause, pageN, 4);
 
   const sortedProperties = sortProperties(allProperties, sortBy, sortDirection);
 
-  const paginatedProperties = paginateProperties(sortedProperties, pageN, 4);
-
   return {
     count,
-    result: paginatedProperties,
+    result: sortedProperties,
   };
 };
 

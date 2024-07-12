@@ -57,6 +57,10 @@ const usePropertyData = () => {
     tenantId,
   ]);
 
+  useEffect(() => {
+    console.log(dataRoom);
+  }, [dataRoom]);
+
   const handleDirections = () => {
     setDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));
   };

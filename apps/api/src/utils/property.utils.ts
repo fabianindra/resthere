@@ -112,15 +112,6 @@ export const sortProperties = (
   });
 };
 
-export const paginateProperties = (
-  properties: any[],
-  page: number,
-  pageSize: number,
-) => {
-  const startIndex = (page - 1) * pageSize;
-  return properties.slice(startIndex, startIndex + pageSize);
-};
-
 export const geocoder = NodeGeocoder({
   provider: 'opencage',
   apiKey: '6a2cd4e96b9249efbd3e437027b456b2',
