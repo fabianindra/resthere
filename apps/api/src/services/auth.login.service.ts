@@ -10,7 +10,6 @@ type UserOrTenant = {
   verified: boolean;
 };
 
-// Password comparison function
 const comparePasswords = async (
   password: string,
   hashedPassword: string,
@@ -18,13 +17,11 @@ const comparePasswords = async (
   return await compare(password, hashedPassword);
 };
 
-// Token creation function
 const createToken = (payload: object, expiresIn: string): string => {
   const secret = process.env.JWT_SECRET!;
   return sign(payload, secret, { expiresIn });
 };
 
-// Login service for both user and tenant
 export const serviceUserLogin = async (request: any) => {
   const { email, password }: { email: string; password: string } = request;
   try {
@@ -61,7 +58,7 @@ export const serviceUserLogin = async (request: any) => {
     if (isValidPassword) {
       const jwtPayload = { email, userType };
       const token = createToken(jwtPayload, '1h');
-      const { password, ...entityWithoutPassword } = entity; // Destructuring to remove password
+      const { password, ...entityWithoutPassword } = entity;
       return {
         status: 201,
         success: true,
@@ -78,7 +75,7 @@ export const serviceUserLogin = async (request: any) => {
       message: 'Invalid email or password',
     };
   } catch (error) {
-    //console.log(error);
+    console.log(error);
     return {
       status: 500,
       message: 'Server error',
@@ -123,7 +120,7 @@ export const serviceTenantLogin = async (request: any) => {
     if (isValidPassword) {
       const jwtPayload = { email, userType };
       const token = createToken(jwtPayload, '1h');
-      const { password, ...entityWithoutPassword } = entity; // Destructuring to remove password
+      const { password, ...entityWithoutPassword } = entity;
       return {
         status: 201,
         success: true,
@@ -140,7 +137,7 @@ export const serviceTenantLogin = async (request: any) => {
       message: 'Invalid email or password',
     };
   } catch (error) {
-    //console.log(error);
+    console.log(error);
     return {
       status: 500,
       message: 'Server error',

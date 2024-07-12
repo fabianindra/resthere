@@ -11,7 +11,7 @@ export const Footer = () => {
     >
       <HStack>
         <Heading ml={-4} color={'primary'} as="h2" size="lg">
-          Hostel
+          Resthere
         </Heading>
       </HStack>
       <VStack maxW={300} justifyContent={'start'} alignItems={'start'}>
@@ -19,8 +19,8 @@ export const Footer = () => {
           About
         </Heading>
         <Text textAlign={'justify'} mt={2} color={'gray.400'}>
-        All material herein ©2024 Hostel Indonesia Company Pte. Ltd. All Rights Reserved.
-        Hostel is part of Hostel International Inc., online travel & related services.
+        All material herein ©2024 Resthere Indonesia Company Pte. Ltd. All Rights Reserved.
+        Resthere is part of Resthere International Inc., online travel & related services.
         </Text>
       </VStack>
       <VStack alignItems={'start'}>
