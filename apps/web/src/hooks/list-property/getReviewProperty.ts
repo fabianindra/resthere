@@ -10,7 +10,6 @@ const useGetReviews = () => {
     setLoading(true);
     try {
       const response = await getReview(propertyId);
-      console.log(response.data.data);
       setReviews(response.data.data);
     } catch (err) {
       setError('Failed to fetch cities');

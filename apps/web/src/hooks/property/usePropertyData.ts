@@ -39,9 +39,7 @@ const usePropertyData = () => {
         setMaxPage(Math.ceil(response.data.count / 4));
         setDataRoom(response.data.data);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -56,10 +54,6 @@ const usePropertyData = () => {
     endDate,
     tenantId,
   ]);
-
-  useEffect(() => {
-    console.log(dataRoom);
-  }, [dataRoom]);
 
   const handleDirections = () => {
     setDirection((prev) => (prev == 'asc' ? 'desc' : 'asc'));

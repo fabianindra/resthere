@@ -37,10 +37,13 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:6570/api/auth/user-login', {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        'http://localhost:6570/api/auth/user-login',
+        {
+          email,
+          password,
+        },
+      );
 
       if (response.data) {
         const userData = response.data.data;
@@ -50,7 +53,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
         Cookies.set('userId', JSON.stringify(userData.id), { expires: 1 });
         Cookies.set('token', userToken, { expires: 1 });
         Cookies.set('role', userRole, { expires: 1 });
-        console.log('Login successful', response.data);
         setLoggedIn(true);
         setUser(userData);
         setError('');
@@ -103,7 +105,12 @@ const LoginModal: React.FC<LoginModalProps> = ({
             Log In
           </Button>
           <Link href="/register-user" passHref>
-            <Button variant="link" colorScheme="blue" ml={3} onClick={handleCloseModal}>
+            <Button
+              variant="link"
+              colorScheme="blue"
+              ml={3}
+              onClick={handleCloseModal}
+            >
               Register
             </Button>
           </Link>

@@ -1,10 +1,10 @@
 import { Room, SpecialPrice } from '@prisma/client';
 
-export const calculateFinalPrice = (
+export const calculateFinalPrice = async (
   room: Room & { special_price: SpecialPrice[] },
   startDate?: string,
   endDate?: string,
-): number => {
+): Promise<number> => {
   let finalPrice = 0;
   const start = startDate ? new Date(startDate) : new Date();
   const end = endDate ? new Date(endDate) : new Date(start);

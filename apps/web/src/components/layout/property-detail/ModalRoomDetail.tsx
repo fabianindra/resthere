@@ -45,6 +45,7 @@ export default function ModalRoomDetail({
   title,
   startDate: initialStartDate,
   endDate: initialEndDate,
+  price,
 }: any) {
   const [addSpecialPrice, setAddSpecialPrice] = useState(true);
   const [addAvailableRoom, setaddAvailableRoom] = useState(true);
@@ -62,12 +63,11 @@ export default function ModalRoomDetail({
       setIsAlertOpen(true);
       return;
     }
-      setIsConfirmationOpen(true)
+    setIsConfirmationOpen(true);
   };
 
   const handleBooking = async () => {
     try {
-      const price = room?.finalPrice;
       const response = await axios.post(
         'http://localhost:6570/api/transaction/booking',
         {
@@ -80,7 +80,6 @@ export default function ModalRoomDetail({
       );
       window.location.href = `/transaction`;
     } catch (error: any) {
-      console.log(error);
     } finally {
       setIsConfirmationOpen(false);
     }
@@ -95,10 +94,6 @@ export default function ModalRoomDetail({
       setCheckOut(initialEndDate);
     }
   }, [isOpen, initialStartDate, initialEndDate, roomId]);
-
-  useEffect(() => {
-    console.log(room);
-  }, [room]);
 
   return (
     <>
@@ -132,7 +127,7 @@ export default function ModalRoomDetail({
             ) : null}
           </ModalBody>
           <ModalFooter justifyContent={'space-between'}>
-            <Heading size={'md'}>Rp. {room?.finalPrice}</Heading>
+            <Heading size={'md'}>Rp. {price}</Heading>
             <Button px={10} onClick={preBooking} colorScheme="blue">
               Booking
             </Button>
@@ -159,17 +154,24 @@ export default function ModalRoomDetail({
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isConfirmationOpen} onClose={() => setIsConfirmationOpen(false)}>
+      <Modal
+        isOpen={isConfirmationOpen}
+        onClose={() => setIsConfirmationOpen(false)}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Confirm Booking</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Are you sure you want to book this property?
-            Total Price to Pay: Rp. {room?.finalPrice}
+            Are you sure you want to book this property? Total Price to Pay: Rp.{' '}
+            {room?.finalPrice}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={() => setIsConfirmationOpen(false)} colorScheme="red" mr={3}>
+            <Button
+              onClick={() => setIsConfirmationOpen(false)}
+              colorScheme="red"
+              mr={3}
+            >
               No
             </Button>
             <Button onClick={handleBooking} colorScheme="green">

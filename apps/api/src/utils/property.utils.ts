@@ -3,6 +3,11 @@ import NodeGeocoder from 'node-geocoder';
 
 const prisma = new PrismaClient();
 
+const geocoder = NodeGeocoder({
+  provider: 'opencage',
+  apiKey: '6a2cd4e96b9249efbd3e437027b456b2',
+});
+
 interface GetPropertyParams {
   city?: string;
   search?: string;
@@ -11,7 +16,7 @@ interface GetPropertyParams {
   endDate?: string;
 }
 
-export const buildPropertyWhereClause = ({
+const buildPropertyWhereClause = ({
   city,
   search,
   startDate,
@@ -61,7 +66,7 @@ export const buildPropertyWhereClause = ({
   return whereClause;
 };
 
-export const countProperties = async (whereClause: any) => {
+const countProperties = async (whereClause: any) => {
   const count = await prisma.property.aggregate({
     where: whereClause,
     _count: {
@@ -71,11 +76,7 @@ export const countProperties = async (whereClause: any) => {
   return count._count._all;
 };
 
-export const findProperties = async (
-  whereClause: any,
-  skip: number,
-  take: number,
-) => {
+const findProperties = async (whereClause: any, skip: number, take: number) => {
   const properties = await prisma.property.findMany({
     where: whereClause,
     skip,
@@ -87,7 +88,7 @@ export const findProperties = async (
   return properties;
 };
 
-export const sortProperties = (
+const sortProperties = (
   properties: any[],
   sortBy: string,
   sortDirection: string,
@@ -112,7 +113,10 @@ export const sortProperties = (
   });
 };
 
-export const geocoder = NodeGeocoder({
-  provider: 'opencage',
-  apiKey: '6a2cd4e96b9249efbd3e437027b456b2',
-});
+export {
+  geocoder,
+  buildPropertyWhereClause,
+  countProperties,
+  findProperties,
+  sortProperties,
+};

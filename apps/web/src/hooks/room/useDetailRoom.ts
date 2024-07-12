@@ -9,11 +9,6 @@ const useDetailRoom = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const fetchRoom = async (id: number) => {
-    console.log(
-      'Fetching room with dates:',
-      startDate?.toISOString() ?? '',
-      endDate?.toISOString() ?? '',
-    );
     setLoading(true);
     setError(null);
     try {

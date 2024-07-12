@@ -8,24 +8,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 export default function PropertySection() {
-  const {
-    dataProperty,
-    page,
-    setPage,
-    maxPage,
-    search,
-    setSearch,
-    city,
-    setCity,
-    sortBy,
-    setSortBy,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
-    sortDirection,
-    handleDirections,
-  } = usePropertyAll();
+  const { dataProperty } = usePropertyAll();
 
   return (
     <Box mt={20} className="w-full">

@@ -29,7 +29,7 @@ export const repoGetPropertyByRooms = async ({
   sortDirection,
 }: GetPropertyParams) => {
   const pageN = page ? (parseInt(page) - 1) * 4 : 0;
-  const whereClause = buildPropertyWhereClause({
+  const whereClause = await buildPropertyWhereClause({
     city,
     search,
     startDate,
@@ -37,18 +37,13 @@ export const repoGetPropertyByRooms = async ({
   });
 
   const count = await countProperties(whereClause);
-
   const allProperties = await findProperties(whereClause, pageN, 4);
 
-  const sortedProperties = sortProperties(
-    allProperties,
-    sortBy || '',
-    sortDirection || '',
-  );
+  console.log(allProperties);
 
   return {
     count,
-    result: sortedProperties,
+    result: allProperties,
   };
 };
 
@@ -80,9 +75,7 @@ export const repoGetPropertyByTenant = async ({
   }
 
   const count = await countProperties(whereClause);
-
   const allProperties = await findProperties(whereClause, pageN, 4);
-
   const sortedProperties = sortProperties(allProperties, sortBy, sortDirection);
 
   return {
@@ -95,6 +88,9 @@ export const repoGetDetailProperty = async (property_id: number) => {
   return await prisma.property.findUnique({
     where: {
       id: property_id,
+    },
+    include: {
+      rooms: true,
     },
   });
 };
@@ -116,38 +112,39 @@ export const repoAddProperty = async ({
   tenant_id: number;
   image: string;
 }) => {
-  try {
-    const geocodeResult: any = await new Promise((resolve, reject) => {
-      geocoder.geocode(address, function (err: any, res: any) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(res);
-        }
-      });
+  const geocodeResult = await new Promise<any>((resolve, reject) => {
+    geocoder.geocode(address, function (err: any, res: any) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
     });
+  });
 
-    const latitude = `${geocodeResult[0].latitude}`;
-    const longitude = `${geocodeResult[0].longitude}`;
-
-    return await prisma.property.create({
-      data: {
-        name,
-        address,
-        city_name,
-        province_name,
-        category_property,
-        room_count: 0,
-        tenant_id,
-        image,
-        latitude,
-        longitude,
-      },
-    });
-  } catch (error) {
-    console.error('Error adding property:', error);
-    throw error;
+  if (!geocodeResult || geocodeResult.length === 0) {
+    throw new Error('Geocoding failed');
   }
+
+  console.log('Geocode result:', geocodeResult);
+
+  const latitude = `${geocodeResult[0].latitude}`;
+  const longitude = `${geocodeResult[0].longitude}`;
+
+  return await prisma.property.create({
+    data: {
+      name,
+      address,
+      city_name,
+      province_name,
+      category_property,
+      room_count: 0,
+      tenant_id,
+      image,
+      latitude,
+      longitude,
+    },
+  });
 };
 
 export const repoUpdateProperty = async ({
@@ -163,6 +160,25 @@ export const repoUpdateProperty = async ({
   category_property: string;
   image: string;
 }) => {
+  const geocodeResult = await new Promise<any>((resolve, reject) => {
+    geocoder.geocode(address, function (err: any, res: any) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    });
+  });
+
+  if (!geocodeResult || geocodeResult.length === 0) {
+    throw new Error('Geocoding failed');
+  }
+
+  console.log('Geocode result:', geocodeResult);
+
+  const latitude = `${geocodeResult[0].latitude}`;
+  const longitude = `${geocodeResult[0].longitude}`;
+
   return await prisma.property.update({
     where: { id },
     data: {
@@ -170,6 +186,8 @@ export const repoUpdateProperty = async ({
       address,
       category_property,
       image,
+      latitude,
+      longitude,
     },
   });
 };

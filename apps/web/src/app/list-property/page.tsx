@@ -82,7 +82,7 @@ export default function Page() {
                 id={item.id}
                 city={item.city_name}
                 name={item.name}
-                price={item.rooms[0].price}
+                price={item.rooms.length > 0 ? item.rooms[0].price : 0}
                 dashboard={false}
                 startDate={new Date(startDate)}
                 endDate={new Date(endDate)}

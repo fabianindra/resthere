@@ -40,10 +40,8 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      //console.log(parsedUser.id);
       setUserId(storedUserId);
     }
-    //console.log(storedUserId);
   }, []);
 
   const initialValues = {
@@ -54,7 +52,6 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
   };
 
   const handleSave = async (values: typeof initialValues) => {
-    //console.log(user, userId);
     try {
       const { username, gender, email, brithday } = values;
       const response = await updateDataProfile(
@@ -83,7 +80,7 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
     setIsEdit(false);
   };
 
-  const isEmailLogin = Cookies.get("login method") !== 'google';
+  const isEmailLogin = Cookies.get('login method') !== 'google';
 
   return (
     <div>

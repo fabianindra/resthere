@@ -33,7 +33,6 @@ export function editAvailableRoom({
   start_date: string;
   end_date: string;
 }) {
-  //console.log();
   axios.put(`http://localhost:6570/api/romm-availability`, {
     roomavailability_id,
     start_date,

@@ -4,8 +4,7 @@ export function getDataPropertyByRoom(
   page: number,
   city?: string,
   search?: string,
-  sortBy?: string,
-  sortDirection?: string | undefined,
+
   startDate?: string | undefined,
   endDate?: string | undefined,
 ) {
@@ -14,8 +13,6 @@ export function getDataPropertyByRoom(
 
   if (city) params.append('city', city);
   if (search) params.append('search', search);
-  if (sortBy) params.append('sortBy', sortBy);
-  if (sortDirection) params.append('sortDirection', sortDirection);
   if (startDate) params.append('startDate', startDate);
   if (endDate) params.append('endDate', endDate);
 

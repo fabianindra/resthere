@@ -63,7 +63,6 @@ export function AvailableRoomTable({
     start_date: string,
     end_date: string,
   ) => {
-    //console.log(roomavailability_id);
     try {
       const response = await editAvailableRoom({
         roomavailability_id,

@@ -1,6 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Badge, Button, Box, Text, Grid, Table, Thead, Tbody, Tr, Th, Td, useToast, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalHeader, ModalFooter, ModalOverlay, ModalContent, Image
+  Badge,
+  Button,
+  Box,
+  Text,
+  Grid,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  useToast,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalHeader,
+  ModalFooter,
+  ModalOverlay,
+  ModalContent,
+  Image,
 } from '@chakra-ui/react';
 import { CheckCircleIcon } from '@chakra-ui/icons';
 import { BookingTenant } from '@/types';
@@ -25,16 +45,37 @@ const TenantBookingList: React.FC = () => {
   const tenantId = fetchTenantId();
 
   useEffect(() => {
-    if (tenantId) fetchBookingsData(tenantId, setPendingBookings, setApprovedBookings);
+    if (tenantId)
+      fetchBookingsData(tenantId, setPendingBookings, setApprovedBookings);
     else console.error('Tenant ID not found in cookies');
   }, [tenantId]);
 
   const handleApprove = () => onOpen();
-  const handleReject = (bookingId: string) => handleTransaction(rejectTransaction, bookingId, () => fetchBookingsData(tenantId!, setPendingBookings, setApprovedBookings), toast, 'Rejected transaction successfully', 'Failed to reject transaction');
-  const handleCancel = (bookingId: string) => handleTransaction(cancelTransaction, bookingId, () => fetchBookingsData(tenantId!, setPendingBookings, setApprovedBookings), toast, 'Cancelled transaction successfully', 'Failed to cancel transaction');
+  const handleReject = (bookingId: string) =>
+    handleTransaction(
+      rejectTransaction,
+      bookingId,
+      () =>
+        fetchBookingsData(tenantId!, setPendingBookings, setApprovedBookings),
+      toast,
+      'Rejected transaction successfully',
+      'Failed to reject transaction',
+    );
+  const handleCancel = (bookingId: string) =>
+    handleTransaction(
+      cancelTransaction,
+      bookingId,
+      () =>
+        fetchBookingsData(tenantId!, setPendingBookings, setApprovedBookings),
+      toast,
+      'Cancelled transaction successfully',
+      'Failed to cancel transaction',
+    );
   const handleViewPaymentProof = async (bookingId: string) => {
     try {
-      const { data } = await axios.get(`http://localhost:6570/api/transaction/payment-proof/${bookingId}`);
+      const { data } = await axios.get(
+        `http://localhost:6570/api/transaction/payment-proof/${bookingId}`,
+      );
       setPaymentProofUrl(data.data.proof);
       setIsProofModalOpen(true);
     } catch (error) {
@@ -42,33 +83,69 @@ const TenantBookingList: React.FC = () => {
     }
   };
 
-  const currentBookings = pendingBookings.slice((currentPage - 1) * BOOKINGS_PER_PAGE, currentPage * BOOKINGS_PER_PAGE);
+  const currentBookings = pendingBookings.slice(
+    (currentPage - 1) * BOOKINGS_PER_PAGE,
+    currentPage * BOOKINGS_PER_PAGE,
+  );
   const totalPages = Math.ceil(pendingBookings.length / BOOKINGS_PER_PAGE);
 
   return (
     <Box p={6}>
       <Box borderWidth="1px" borderRadius="lg" p={6} mb={6} boxShadow="lg">
-        <Text fontSize="2xl" fontWeight="bold" mb={4}>Pending Bookings</Text>
-        {pendingBookings.length === 0 ? <Text>No pending bookings found.</Text> : (
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          Pending Bookings
+        </Text>
+        {pendingBookings.length === 0 ? (
+          <Text>No pending bookings found.</Text>
+        ) : (
           <>
-            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-              {currentBookings.map((booking) => (
-                <BookingCard
-                  key={booking.id}
-                  booking={booking}
-                  isPending={true}
-                  handleApprove={handleApprove}
-                  handleReject={handleReject}
-                  handleCancel={handleCancel}
-                  handleViewPaymentProof={handleViewPaymentProof}
-                />
+            <Grid
+              templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+              gap={6}
+            >
+              {currentBookings.map((booking: any) => (
+                <>
+                  <BookingCard
+                    key={booking.id}
+                    booking={booking}
+                    isPending={true}
+                    handleApprove={handleApprove}
+                    handleReject={handleReject}
+                    handleCancel={handleCancel}
+                    handleViewPaymentProof={handleViewPaymentProof}
+                  />
+                  <ModalApproveTransaction
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    email={booking.user.email}
+                    bookingId={booking.id}
+                    fetchBookings={() =>
+                      fetchBookingsData(
+                        tenantId ? tenantId : '',
+                        setPendingBookings,
+                        setApprovedBookings,
+                      )
+                    }
+                  />
+                </>
               ))}
             </Grid>
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </>
         )}
       </Box>
-      <Table variant="striped" colorScheme="gray" borderWidth="1px" borderRadius="lg" p={6} boxShadow="lg">
+      <Table
+        variant="striped"
+        colorScheme="gray"
+        borderWidth="1px"
+        borderRadius="lg"
+        p={6}
+        boxShadow="lg"
+      >
         <Thead>
           <Tr>
             <Th>Property Name</Th>
@@ -89,25 +166,43 @@ const TenantBookingList: React.FC = () => {
               <Td>{booking.room_name}</Td>
               <Td>{new Date(booking.check_in).toLocaleDateString()}</Td>
               <Td>{new Date(booking.check_out).toLocaleDateString()}</Td>
-              <Td><Badge colorScheme="green"><CheckCircleIcon mr={1} /> Approved</Badge></Td>
+              <Td>
+                <Badge colorScheme="green">
+                  <CheckCircleIcon mr={1} /> Approved
+                </Badge>
+              </Td>
             </Tr>
           ))}
         </Tbody>
       </Table>
-      <Modal isOpen={isProofModalOpen} onClose={() => setIsProofModalOpen(false)}>
+      <Modal
+        isOpen={isProofModalOpen}
+        onClose={() => setIsProofModalOpen(false)}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Payment Proof</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {paymentProofUrl && <Image src={`http://localhost:6570/images/${paymentProofUrl}`} alt="Payment Proof" width={500} height={300} />}
+            {paymentProofUrl && (
+              <Image
+                src={`http://localhost:6570/images/${paymentProofUrl}`}
+                alt="Payment Proof"
+                width={500}
+                height={300}
+              />
+            )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" onClick={() => setIsProofModalOpen(false)}>Close</Button>
+            <Button
+              colorScheme="blue"
+              onClick={() => setIsProofModalOpen(false)}
+            >
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <ModalApproveTransaction isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };

@@ -11,6 +11,8 @@ import {
 export const serviceGetPropertyByRooms = async (req: any) => {
   const { city, search, page, sortBy, sortDirection, startDate, endDate } =
     req.query;
+  console.log(page);
+
   try {
     const data = await repoGetPropertyByRooms({
       city,

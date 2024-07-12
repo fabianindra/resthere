@@ -37,6 +37,7 @@ export default function ModalApproveTransaction({
         position: 'top',
         isClosable: true,
       });
+      fetchBookings();
       onClose();
     } catch (error) {
       toast({

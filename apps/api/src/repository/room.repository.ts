@@ -1,4 +1,4 @@
-import { PrismaClient, Room, SpecialPrice } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { calculateFinalPrice, buildWhereClause } from '../utils/room.utils';
 
 const prisma = new PrismaClient();
@@ -19,7 +19,7 @@ export const repoGetRoom = async ({ id, startDate, endDate }: RoomParams) => {
     throw new Error('Room not found');
   }
 
-  const finalPrice = calculateFinalPrice(room, startDate, endDate);
+  const finalPrice = await calculateFinalPrice(room, startDate, endDate);
 
   return { ...room, finalPrice };
 };
@@ -45,7 +45,12 @@ export const repoGetRoomByProperty = async ({
 }: RoomByPropertyParams) => {
   const pageN = page ? parseInt(page) * 4 - 4 : 0;
 
-  const whereClause = buildWhereClause(property_id, search, startDate, endDate);
+  const whereClause = await buildWhereClause(
+    property_id,
+    search,
+    startDate,
+    endDate,
+  );
 
   const countResult = await prisma.room.count({ where: whereClause });
 
@@ -57,10 +62,12 @@ export const repoGetRoomByProperty = async ({
     orderBy: { [sortBy]: sortDirection },
   });
 
-  const roomsWithPrice = allRooms.map((room) => {
-    const finalPrice = calculateFinalPrice(room, startDate, endDate);
-    return { ...room, finalPrice };
-  });
+  const roomsWithPrice = await Promise.all(
+    allRooms.map(async (room) => {
+      const finalPrice = await calculateFinalPrice(room, startDate, endDate);
+      return { ...room, finalPrice };
+    }),
+  );
 
   return { count: countResult, data: roomsWithPrice };
 };

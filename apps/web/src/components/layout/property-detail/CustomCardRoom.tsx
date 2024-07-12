@@ -109,6 +109,7 @@ export default function CustomCardRoom({
         title={name}
         startDate={startDate}
         endDate={endDate}
+        price={price}
       />
       <ModalEditRoom
         isOpen={isOpen}

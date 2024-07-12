@@ -18,7 +18,6 @@ export function useSpecialPriceForm(
 
   const handleSubmit = async (values: any) => {
     const { room_id, start_date, end_date, special_price } = values;
-    //console.log(room_id);
     try {
       const response = await addSpecialPrice({
         room_id,

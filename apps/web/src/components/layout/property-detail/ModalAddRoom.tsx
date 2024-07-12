@@ -80,7 +80,6 @@ export default function ModalAddRoom({ isOpen, onClose, id, fetchRooms }: any) {
     validationSchema: propertySchema,
     onSubmit: (values: any) => {
       handleSubmit(values);
-      //console.log(values, file);
       onClose();
     },
   });

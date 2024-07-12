@@ -25,11 +25,12 @@ import {
 } from '@phosphor-icons/react';
 import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
 import { useParams, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import CustomCardRoom from '@/components/layout/property-detail/CustomCardRoom';
 import SimplePagination from '@/components/ui/Pagination';
 import usePropertyDetails from '@/hooks/property/usePropertyDetail';
 import useRoomsData from '@/hooks/room/useRoomsData';
+import dynamic from 'next/dynamic';
 
 export default function Page() {
   const [page, setPage] = useState<number>(1);
@@ -102,6 +103,15 @@ export default function Page() {
     endDate,
     fetchRooms,
   ]);
+
+  const Map = useMemo(
+    () =>
+      dynamic(() => import('@/components/layout/property-detail/Map'), {
+        loading: () => <p>A map is loading</p>,
+        ssr: false,
+      }),
+    [],
+  );
 
   const inputWidth = useBreakpointValue({ base: '100%', md: '300px' });
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -208,6 +218,15 @@ export default function Page() {
         ))}
       </Stack>
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
+      <div className="bg-white-700 mx-auto my-5 w-full h-[480px]">
+        <Map
+          propertyName={property ? property.name : ''}
+          posix={[
+            property ? parseInt(property.latitude) : 4.79029,
+            property ? parseInt(property.latitude) : -75.69003,
+          ]}
+        />
+      </div>
       <CommentSection reviews={reviews} />
     </Box>
   );

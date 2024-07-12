@@ -17,7 +17,6 @@ export function useAvailableRoomForm(
 
   const handleSubmit = async (values: any) => {
     const { room_id, start_date, end_date } = values;
-    //console.log(room_id);
     try {
       const response = await addAvailableRoom({
         room_id,

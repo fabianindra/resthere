@@ -252,7 +252,13 @@ export default function Page() {
 
       <SimplePagination page={page} setPage={setPage} maxPage={1} />
       <div className="bg-white-700 mx-auto my-5 w-full h-[480px]">
-        <Map posix={[4.79029, -75.69003]} />
+        <Map
+          propertyName={property ? property.name : ''}
+          posix={[
+            property ? parseInt(property.latitude) : 4.79029,
+            property ? parseInt(property.latitude) : -75.69003,
+          ]}
+        />
       </div>
       <CommentSection reviews={reviews} />
       <ModalAddRoom
