@@ -100,7 +100,8 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
 
     await sendEmail({
       subject: 'Email Verification',
-      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}`,
+      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken} 
+      if the link expired, you can ask for a new link here: http://localhost:3000/re-register`,
       to: request.email,
       from: process.env.EMAIL,
     });
@@ -110,6 +111,47 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
       success: true,
       message: 'Register successfully. Please check your email to verify your account.',
       data: request,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: 'Server error',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const serviceReRegister = async (request: { email: string }) => {
+  try {
+    const existingEntity = await repoFindUser(request.email) || await repoFindTenant(request.email);
+
+    if (!existingEntity) {
+      return {
+        status: 404,
+        success: false,
+        message: 'Email not found',
+      };
+    }
+
+    const verificationToken = createToken(
+      { email: request.email },
+      'verificationKey',
+      '1h',
+    );
+
+    await sendEmail({
+      subject: 'Resend Email Verification',
+      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken} 
+      if the link expired, you can ask for a new link here: http://localhost:3000/re-register`,
+      to: request.email,
+      from: process.env.EMAIL,
+    });
+
+    return {
+      status: 200,
+      success: true,
+      message: 'Verification email resent successfully. Please check your email.',
     };
   } catch (error) {
     return {
