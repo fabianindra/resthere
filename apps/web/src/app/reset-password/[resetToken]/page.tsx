@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Text, Heading, Input, FormControl, FormLabel, Container, Box } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { User } from '@/types';
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
@@ -13,6 +14,8 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState('');
   const [email, setEmail] = useState('');
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -38,6 +41,27 @@ export default function ResetPassword() {
       }
     }
   }, []);
+
+
+  const logoutAndRedirect = async () => {
+    try {
+      Cookies.remove('token');
+      Cookies.remove('user');
+      Cookies.remove('role');
+      Cookies.remove('login method');
+      setLoggedIn(false);
+      setUser(null);
+      window.location.href = '/';
+    } catch (err) {
+      console.error('Failed to log out:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (success) {
+      logoutAndRedirect();
+    }
+  }, [success]);
 
   const handleResetPassword = async () => {
     if (newPassword !== confirmPassword) {

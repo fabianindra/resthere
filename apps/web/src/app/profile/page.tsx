@@ -1,6 +1,6 @@
 'use client';
 
-import { VStack, Box, Text, HStack } from '@chakra-ui/react';
+import { VStack, Center, Text, HStack } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types';
 import Cookies from 'js-cookie';
@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [verified, setVerified] = useState(false);
+  const [role, setRole] = useState('');
 
   useEffect(() => {
     const storedUser = Cookies.get('user');
@@ -38,16 +39,37 @@ export default function ProfilePage() {
     verifyAndSet();
   }, []);
 
-  if (!verified) {
+  useEffect(() => {
+    const storedUser = Cookies.get('user');
+    const storedRole = Cookies.get('role');
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+    if (storedRole) {
+      setRole(storedRole);
+    } else {
+      setRole('');
+    }
+  }, []);
+
+  if (verified == null || role == null) {
     return (
-      <Box>
-        <VStack mt={100} mb={200}>
-          <Text>
-            You are not authorized. Please log in to access this page.
-          </Text>
-          <Link href="/">Go to Home Page</Link>
-        </VStack>
-      </Box>
+      <Center mt={100} mb={200}>
+        <Text>Loading...</Text>
+      </Center>
+    );
+  }
+
+  if (!loggedIn || !verified || role !== 'user') {
+    return (
+      <VStack mt={100} mb={200}>
+        <Text>You are not authorized. Please log in to access this page.</Text>
+        <Link href="/">Go to Home Page</Link>
+      </VStack>
     );
   }
 
