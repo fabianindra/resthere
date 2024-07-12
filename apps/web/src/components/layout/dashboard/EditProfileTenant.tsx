@@ -16,9 +16,11 @@ import Cookies from 'js-cookie';
 import * as Yup from 'yup';
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import { updateDataProfile } from '@/api/profile';
+import ChangeEmailTenantModal from './changeEmailTenant';
 
 interface EditProfileProps {
   onOpen: () => void;
+  onOpenEmail: () => void;
 }
 
 const validationSchema = Yup.object({
@@ -33,6 +35,7 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
   const [user, setUser] = useState<any | null>(null);
   const [userId, setUserId] = useState<any | null>(null);
   const toast = useToast();
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
 
   useEffect(() => {
     const storedUser = Cookies.get('user');
@@ -152,9 +155,15 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
                 Change Password
               </Button>
             )}
+            {isEmailLogin && (
+              <Button w={200} colorScheme="gray" onClick={() => setIsEmailModalOpen(true)}>
+                Change Email
+              </Button>
+            )}
           </HStack>
         )}
       </HStack>
-    </div>
+      <ChangeEmailTenantModal isOpen={isEmailModalOpen} onClose={() => setIsEmailModalOpen(false)} />
+      </div>
   );
 }

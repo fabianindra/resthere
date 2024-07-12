@@ -11,7 +11,8 @@ import {
   serviceResetPassword,
   serviceChangeUserPassword,
   serviceChangeTenantPassword,
-} from '../services/auth.password.service';
+  serviceResetEmail
+} from '../services/auth.reset.service';
 import {
   serviceTenantLogin,
   serviceUserLogin,
@@ -79,6 +80,11 @@ export const verifyEmail = async (req: Request, res: Response) => {
   }
 };
 
+export const verifyEmailReset = async (req: Request, res: Response) => {
+  const result = await serviceVerifyEmail(req);
+  return res.redirect(`http://localhost:3000/`);
+}
+
 export const changeUserPassword = async (req: Request, res: Response) => {
   const { email, currentPassword, newPassword } = req.body;
   const result = await serviceChangeUserPassword(
@@ -114,4 +120,14 @@ export const handleResetPassword = async (req: Request, res: Response) => {
     String(token),
   );
   res.status(result.status).json(result);
+};
+
+export const changeEmail = async (req: Request, res: Response) => {
+  const { email, role, newEmail, token } = req.body;
+  const result = await serviceResetEmail(
+    email,
+    role,
+    newEmail, 
+  );
+  return res.status(Number(result?.status)).send(result);
 };
