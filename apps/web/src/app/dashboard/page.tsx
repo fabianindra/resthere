@@ -105,7 +105,7 @@ export default function DashboardPage() {
     verifyAndSet();
   }, []);
 
-  if (verified == null) {
+  if (verified == null || role == null) {
     return (
       <Center mt={100} mb={200}>
         <Text>Loading...</Text>
@@ -113,7 +113,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!verified || role !== 'tenant') {
+  if (!loggedIn || !verified || role !== 'tenant') {
     return (
       <VStack mt={100} mb={200}>
         <Text>You are not authorized. Please log in to access this page.</Text>

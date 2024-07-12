@@ -8,6 +8,7 @@ import {
   completeRegisterTenant,
   completeRegisterUser,
   handleResetPassword,
+  reRegister,
   registerTenant,
   registerUser,
   sendResetPasswordEmail,
@@ -23,6 +24,7 @@ authRouter.post('/register-user', registerUser);
 authRouter.post('/register-user-complete', completeRegisterUser);
 authRouter.post('/register-tenant', registerTenant);
 authRouter.post('/register-tenant-complete', completeRegisterTenant);
+authRouter.post('/re-register', reRegister);
 
 authRouter.post('/user-login', userLogin);
 authRouter.post('/tenant-login', tenantLogin);

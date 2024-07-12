@@ -1,15 +1,13 @@
 'use client';
 
-import { VStack, Box, Text, Button, Avatar, useToast } from '@chakra-ui/react';
+import { VStack, Box, Text, useToast } from '@chakra-ui/react';
 import React, { useState, useEffect, useRef } from 'react';
 import { User } from '@/types';
 import Cookies from 'js-cookie';
 import { verifyTokenClient } from '../verifyToken';
-import { useDisclosure } from '@chakra-ui/react';
 import BookingList from '@/components/layout/profile/bookingList';
 
 export default function TransactionPage() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState('');
@@ -82,7 +80,7 @@ export default function TransactionPage() {
     window.location.href = '/';
   };
 
-  if (verified === null) {
+  if (verified === null || role === null) {
     return (
       <Box>
         <VStack mt={100} mb={200}>
