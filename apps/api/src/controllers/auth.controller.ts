@@ -4,6 +4,7 @@ import {
   serviceRegisterTenant,
   serviceCompleteRegistrationUser,
   serviceCompleteRegistrationTenant,
+  serviceReRegister
 } from '../services/auth.register.service';
 import {
   serviceSendResetPasswordEmail,
@@ -16,6 +17,11 @@ import {
   serviceUserLogin,
 } from '../services/auth.login.service';
 import { serviceVerifyEmail } from '../services/auth.verify.service';
+
+export const reRegister = async (req: Request, res: Response) => {
+  const result = await serviceReRegister(req.body);
+  return res.status(Number(result?.status)).send(result);
+};
 
 export const registerUser = async (req: Request, res: Response) => {
   const result = await serviceRegisterUser(req.body);
