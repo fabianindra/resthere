@@ -35,7 +35,7 @@ const ChangeEmailModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose 
 
   const handleRequestReset = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/api/auth/reset-email`, { email, role, newEmail });
+      const response = await axios.post(`${apiUrl}/auth/reset-email`, { email, role, newEmail });
       if (response.data.success) {
         setSuccess(true);
         setError('');

@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { apiUrl } from '@/api';
 
 export const verifyTokenClient = async () => {
   const tokenToVerify = Cookies.get('token');
@@ -10,7 +11,7 @@ export const verifyTokenClient = async () => {
     }
 
     const response = await axios.post(
-      'http://localhost:6570/api/auth/verify-token',
+      `${apiUrl}/auth/verify-token`,
       {},
       {
         headers: {

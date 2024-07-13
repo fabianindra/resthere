@@ -16,6 +16,7 @@ import React from 'react';
 import ModalEditProperty from '../layout/dashboard/ModalEditProperty';
 import ModalDeleteProperty from '../layout/dashboard/ModalDeleteProperty';
 import Link from 'next/link';
+import { imageUrl } from '@/api';
 
 export default function CustomCard({
   id,
@@ -57,7 +58,7 @@ export default function CustomCard({
         <Image
           src={
             image
-              ? `http://localhost:6570/images/${image}`
+              ? `${imageUrl}/${image}`
               : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
           }
           objectFit="cover"

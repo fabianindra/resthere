@@ -30,7 +30,7 @@ import BookingCard from './BookingCard';
 import Pagination from './Pagination';
 import ModalApproveTransaction from './ModalApproveTransaction';
 import axios from 'axios';
-import { apiUrl } from '@/api';
+import { apiUrl, imageUrl } from '@/api';
 
 const BOOKINGS_PER_PAGE = 5;
 
@@ -191,7 +191,7 @@ const TenantBookingList: React.FC = () => {
           <ModalBody>
             {paymentProofUrl && (
               <Image
-                src={`http://localhost:6570/images/${paymentProofUrl}`}
+                src={`${imageUrl}/${paymentProofUrl}`}
                 alt="Payment Proof"
                 width={500}
                 height={300}

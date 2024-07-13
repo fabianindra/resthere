@@ -40,7 +40,7 @@ export default function CompleteRegister() {
         password,
       };
       const response = await axios.post(
-        `${apiUrl}/api/auth/register-tenant-complete`,
+        `${apiUrl}/auth/register-tenant-complete`,
         payload,
       );
       if (response.data.success) {
