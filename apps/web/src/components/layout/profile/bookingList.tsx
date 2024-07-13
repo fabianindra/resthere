@@ -25,6 +25,7 @@ import Cookies from 'js-cookie';
 import { Booking } from '@/types';
 import { cancelTransaction } from '@/api/transaction';
 import ModalReview from '../transaction/ModalReview';
+import { apiUrl } from '@/api';
 
 const BookingList: React.FC<any> = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -66,7 +67,7 @@ const BookingList: React.FC<any> = () => {
     const fetchBookings = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:6570/api/booking-list/all-booking/${userId}`,
+          `${apiUrl}/booking-list/all-booking/${userId}`,
         );
         const responseData = response.data;
         setBookings(responseData.data);
@@ -101,7 +102,7 @@ const BookingList: React.FC<any> = () => {
 
       try {
         const response = await axios.post(
-          'http://localhost:6570/api/transaction/upload-payment-proof',
+          `${apiUrl}/transaction/upload-payment-proof`,
           formData,
           {
             headers: {

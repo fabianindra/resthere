@@ -38,6 +38,7 @@ import useGetReviews from '@/hooks/list-property/getReviewProperty';
 import CommentSection from '@/components/layout/CommentSection';
 import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
+import { imageUrl } from '@/api';
 
 export default function Page() {
   const [page, setPage] = useState<number>(1);
@@ -120,7 +121,7 @@ export default function Page() {
       <Image
         src={
           property?.image
-            ? `http://localhost:6570/images/${property?.image}`
+            ? `${imageUrl}/${property?.image}`
             : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
         }
         alt="Green double couch with wooden legs"

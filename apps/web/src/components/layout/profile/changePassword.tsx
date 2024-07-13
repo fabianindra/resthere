@@ -5,6 +5,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { apiUrl } from '@/api';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
 
   const handleRequestReset = async () => {
     try {
-      const response = await axios.post('http://localhost:6570/api/auth/send-reset-password-email', { email, role });
+      const response = await axios.post(`${apiUrl}/auth/send-reset-password-email`, { email, role });
       if (response.data.success) {
         setSuccess(true);
         setError('');

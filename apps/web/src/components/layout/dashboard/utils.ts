@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { ToastId, useToast } from '@chakra-ui/react';
 import { BookingTenant } from '@/types';
+import { apiUrl } from '@/api';
 
 export const fetchTenantId = (): string | null => {
   const userData = Cookies.get('user');
@@ -23,7 +24,7 @@ export const fetchBookingsData = async (
   setApprovedBookings: React.Dispatch<React.SetStateAction<BookingTenant[]>>
 ) => {
   try {
-    const { data } = await axios.get(`http://localhost:6570/api/booking-list/all-booking-tenant/${tenantId}`);
+    const { data } = await axios.get(`${apiUrl}/booking-list/all-booking-tenant/${tenantId}`);
     const allBookings = data.data;
     setPendingBookings(allBookings.filter((booking: BookingTenant) => booking.status === 'waiting payment confirmation'));
     setApprovedBookings(allBookings.filter((booking: BookingTenant) => booking.status === 'approved'));

@@ -36,6 +36,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { apiUrl } from '@/api';
 
 ChartJS.register(
   CategoryScale,
@@ -58,7 +59,7 @@ const SalesReport = () => {
     const fetchSalesData = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:6570/api/transaction/sales-report',
+          `${apiUrl}/transaction/sales-report`,
           {
             params: {
               sortBy,
