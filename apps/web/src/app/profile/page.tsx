@@ -8,11 +8,13 @@ import { verifyTokenClient } from '../verifyToken';
 import Link from 'next/link';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePasswordModal from '@/components/layout/profile/changePassword';
+import ChangeEmailModal from '@/components/layout/profile/changeEmail';
 import EditProfile from '@/components/layout/profile/EditProfile';
 import EditFotoProfile from '@/components/layout/profile/EditFotoProfile';
 
 export default function ProfilePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isEmailOpen, onOpen: onOpenEmail, onClose: onCloseEmail } = useDisclosure();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [verified, setVerified] = useState(false);
@@ -79,7 +81,7 @@ export default function ProfilePage() {
         {loggedIn && user ? (
           <VStack p={6}>
             <EditFotoProfile foto={user.foto} />
-            <EditProfile onOpen={onOpen} />
+            <EditProfile onOpen={onOpen} onOpenEmail={onOpenEmail} />
           </VStack>
         ) : (
           <Text
@@ -93,6 +95,7 @@ export default function ProfilePage() {
         )}
       </VStack>
       <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
+      <ChangeEmailModal isOpen={isEmailOpen} onClose={onCloseEmail} />
     </HStack>
   );
 }

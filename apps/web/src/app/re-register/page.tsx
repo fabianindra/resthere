@@ -1,17 +1,26 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, VStack, Text, Heading, Input, FormControl, FormLabel, Container, Box } from '@chakra-ui/react';
 import axios from 'axios';
 
 export default function InitialRegister() {
   const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const roleParam = params.get('role');
+    if (roleParam) {
+      setRole(roleParam);
+    }
+  }, []);
+
   const handleEmailSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:6570/api/auth/re-register', { email });
+      const response = await axios.post('http://localhost:6570/api/auth/re-register', { email, role });
       if (response.data.success) {
         setSuccess(true);
         setError('');

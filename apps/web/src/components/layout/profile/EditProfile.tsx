@@ -19,6 +19,7 @@ import { updateDataProfile } from '@/api/profile';
 
 interface EditProfileProps {
   onOpen: () => void;
+  onOpenEmail: () => void;
 }
 
 const validationSchema = Yup.object({
@@ -28,7 +29,7 @@ const validationSchema = Yup.object({
   brithday: Yup.date().required('Required'),
 });
 
-export default function EditProfile({ onOpen }: EditProfileProps) {
+export default function EditProfile({ onOpen, onOpenEmail }: EditProfileProps) {
   const [isEdit, setIsEdit] = useState(false);
   const [user, setUser] = useState<any | null>(null);
   const [userId, setUserId] = useState<any | null>(null);
@@ -153,6 +154,11 @@ export default function EditProfile({ onOpen }: EditProfileProps) {
             {isEmailLogin && (
               <Button w={200} colorScheme="gray" onClick={onOpen}>
                 Change Password
+              </Button>
+            )}
+            {isEmailLogin && (
+              <Button w={200} colorScheme="gray" onClick={onOpenEmail}>
+                Change Email
               </Button>
             )}
           </HStack>

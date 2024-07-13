@@ -78,7 +78,7 @@ const sendEmail = async (emailOptions: any) => {
   await emailTransporter.sendMail(emailOptions);
 };
 
-const registerEntity = async (request: User | Tenant, repoFind: Function, repoAdd: Function) => {
+const registerEntity = async (request: User | Tenant, repoFind: Function, repoAdd: Function, role:string) => {
   try {
     const existingEntity = await repoFind(request.email);
 
@@ -100,8 +100,8 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
 
     await sendEmail({
       subject: 'Email Verification',
-      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken} 
-      if the link expired, you can ask for a new link here: http://localhost:3000/re-register`,
+      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}&role=${role} 
+      if the link expired, you can ask for a new link here: http://localhost:3000/re-register?role=${role}`,
       to: request.email,
       from: process.env.EMAIL,
     });
@@ -122,9 +122,20 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
   }
 };
 
-export const serviceReRegister = async (request: { email: string }) => {
+export const serviceReRegister = async (request: { email: string, role: string }) => {
   try {
-    const existingEntity = await repoFindUser(request.email) || await repoFindTenant(request.email);
+    let existingEntity;
+    if (request.role === 'user') {
+      existingEntity = await repoFindUser(request.email);
+    } else if (request.role === 'tenant') {
+      existingEntity = await repoFindTenant(request.email);
+    } else {
+      return {
+        status: 400,
+        success: false,
+        message: 'Invalid role specified',
+      };
+    }
 
     if (!existingEntity) {
       return {
@@ -135,15 +146,15 @@ export const serviceReRegister = async (request: { email: string }) => {
     }
 
     const verificationToken = createToken(
-      { email: request.email },
+      { email: request.email, role: request.role },
       'verificationKey',
       '1h',
     );
 
     await sendEmail({
       subject: 'Resend Email Verification',
-      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken} 
-      if the link expired, you can ask for a new link here: http://localhost:3000/re-register`,
+      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}&role=${request.role} 
+      if the link expired, you can ask for a new link here: http://localhost:3000/re-register?role=${request.role}`,
       to: request.email,
       from: process.env.EMAIL,
     });
@@ -164,11 +175,11 @@ export const serviceReRegister = async (request: { email: string }) => {
 };
 
 export const serviceRegisterUser = async (request: User) => {
-  return registerEntity(request, repoFindUser, repoAddUser);
+  return registerEntity(request, repoFindUser, repoAddUser, 'user');
 };
 
 export const serviceRegisterTenant = async (request: Tenant) => {
-  return registerEntity(request, repoFindTenant, repoAddTenant);
+  return registerEntity(request, repoFindTenant, repoAddTenant, 'tenant');
 };
 
 export const serviceCompleteRegistrationUser = async (data: {

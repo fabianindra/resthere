@@ -3,6 +3,7 @@ import passport from '../passport.config';
 import { sign } from 'jsonwebtoken';
 import { User } from '@prisma/client';
 import {
+  changeEmail,
   changeTenantPassword,
   changeUserPassword,
   completeRegisterTenant,
@@ -15,6 +16,7 @@ import {
   tenantLogin,
   userLogin,
   verifyEmail,
+  verifyEmailReset,
 } from '../controllers/auth.controller';
 import { serviceVerifyToken } from '../middlewares/auth.middleware';
 
@@ -105,6 +107,9 @@ authRouter.post('/change-password-tenant', changeTenantPassword);
 
 authRouter.post('/send-reset-password-email', sendResetPasswordEmail);
 authRouter.post('/reset-password', handleResetPassword);
+
+authRouter.post('/reset-email', changeEmail);
+authRouter.get('/verify-email-reset', verifyEmailReset);
 
 
 export default authRouter;
