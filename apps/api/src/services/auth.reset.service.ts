@@ -25,11 +25,9 @@ const createTransporter = async () => {
     process.env.GOOGLE_CLIENT_SECRET,
     'https://developers.google.com/oauthplayground',
   );
-
   oauth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN,
   });
-
   const accessToken = await new Promise<string>((resolve, reject) => {
     oauth2Client.getAccessToken((err: any, token: any) => {
       if (err) {
@@ -205,17 +203,14 @@ export const serviceResetPassword = async (newPassword: string, role: string, em
       } else {
         throw new Error('Invalid role');
       }
-  
       const verificationToken = createVerificationToken(newEmail);
       const verificationLink = `http://localhost:6570/api/auth/verify-email-reset?token=${verificationToken}&role=${role}`;
-  
       await sendEmail({
         to: newEmail,
         from: process.env.EMAIL,
         subject: 'Verify Your New Email',
         text: `Please verify your new email by clicking the following link: ${verificationLink}`,
       });
-  
       return {
         status: 200,
         success: true,

@@ -9,17 +9,13 @@ export const serviceGetBookings = async (req: any) => {
     if (!user_id) {
       throw new Error('User ID is missing');
     }
-
     const bookings: any = await repoGetBookings(parseInt(user_id));
-
     const enhancedBookings = bookings.map((booking: any) => ({
       ...booking,
       room_name: booking.room.name,
       property_name: booking.room.property.name,
       date: booking.check_in,
     }));
-
-    //console.log(enhancedBookings, user_id);
     return {
       status: 200,
       success: true,
@@ -41,9 +37,7 @@ export const serviceGetBookingsTenant = async (req: any) => {
     if (!tenant_id) {
       throw new Error('Tenant ID is missing');
     }
-
     const bookings = await repoGetBookingsTenant(parseInt(tenant_id));
-
     const enhancedBookings = bookings.map((booking: any) => ({
       ...booking,
       username: booking.user.username,
@@ -53,8 +47,6 @@ export const serviceGetBookingsTenant = async (req: any) => {
       check_in: booking.check_in,
       check_out: booking.check_out,
     }));
-
-    //console.log(enhancedBookings, tenant_id);
     return {
       status: 200,
       success: true,

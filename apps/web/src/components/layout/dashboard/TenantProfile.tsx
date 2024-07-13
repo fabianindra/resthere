@@ -38,6 +38,10 @@ export default function TenantProfile() {
     verifyAndSet();
   }, []);
 
+  const onOpenEmail = () => {
+    console.log('Email open handler');
+  };
+
   if (!verified) {
     return (
       <Box>
@@ -57,7 +61,7 @@ export default function TenantProfile() {
         {loggedIn && user ? (
           <VStack borderWidth="1px" borderRadius="lg" p={6}>
             <EditFotoProfile foto={user.foto} />
-            <EditProfileTenant onOpen={onOpen} />
+            <EditProfileTenant onOpen={onOpen} onOpenEmail={onOpenEmail} />
           </VStack>
         ) : (
           <Text

@@ -56,7 +56,6 @@ export default function DashboardPage() {
   const [role, setRole] = useState('');
   const [user, setUser] = useState<User | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
   const {
     dataRoom,
     page,
@@ -78,7 +77,6 @@ export default function DashboardPage() {
   useEffect(() => {
     const storedUser = Cookies.get('user');
     const storedRole = Cookies.get('role');
-
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setLoggedIn(true);

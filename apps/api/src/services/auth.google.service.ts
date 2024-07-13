@@ -24,7 +24,6 @@ function generateRandomPassword(length: number = 12): string {
 }
 
 //user
-
 export const serviceRegisterUserGoogle = async (
   accessToken: string,
   refreshToken: string,
@@ -109,7 +108,6 @@ export const configureGoogleStrategyUser = () => {
 };
 
 //Tenant
-
 export const serviceRegisterTenantGoogle = async (
   accessToken: string,
   refreshToken: string,

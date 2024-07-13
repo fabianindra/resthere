@@ -44,7 +44,6 @@ const createTransporter = async () => {
     process.env.GOOGLE_CLIENT_SECRET,
     'https://developers.google.com/oauthplayground',
   );
-
   oauth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN,
   });
@@ -69,7 +68,6 @@ const createTransporter = async () => {
       refreshToken: process.env.REFRESH_TOKEN,
     },
   } as nodemailer.TransportOptions);
-
   return transporter;
 };
 
@@ -89,15 +87,12 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
         message: 'Email already registered',
       };
     }
-
     await repoAdd(request.email);
-
     const verificationToken = createToken(
       { email: request.email },
       'verificationKey',
       '1h',
     );
-
     await sendEmail({
       subject: 'Email Verification',
       text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}&role=${role} 
@@ -105,7 +100,6 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
       to: request.email,
       from: process.env.EMAIL,
     });
-
     return {
       status: 201,
       success: true,
@@ -136,7 +130,6 @@ export const serviceReRegister = async (request: { email: string, role: string }
         message: 'Invalid role specified',
       };
     }
-
     if (!existingEntity) {
       return {
         status: 404,
@@ -144,13 +137,11 @@ export const serviceReRegister = async (request: { email: string, role: string }
         message: 'Email not found',
       };
     }
-
     const verificationToken = createToken(
       { email: request.email, role: request.role },
       'verificationKey',
       '1h',
     );
-
     await sendEmail({
       subject: 'Resend Email Verification',
       text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}&role=${request.role} 
@@ -158,7 +149,6 @@ export const serviceReRegister = async (request: { email: string, role: string }
       to: request.email,
       from: process.env.EMAIL,
     });
-
     return {
       status: 200,
       success: true,
@@ -196,10 +186,8 @@ export const serviceCompleteRegistrationUser = async (data: {
         message: 'Email not verified or user not found',
       };
     }
-
     const hashedPassword = await hashPassword(data.password);
     await repoUserCompletePassword(data.email, data.username, hashedPassword);
-
     return {
       status: 200,
       success: true,
@@ -228,10 +216,8 @@ export const serviceCompleteRegistrationTenant = async (data: {
         message: 'Email not verified or user not found',
       };
     }
-
     const hashedPassword = await hashPassword(data.password);
     await repoTenantCompletePassword(data.email, data.username, hashedPassword);
-
     return {
       status: 200,
       success: true,

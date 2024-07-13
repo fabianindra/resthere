@@ -45,7 +45,7 @@ export default function CompleteRegister() {
       if (response.data.success) {
         setSuccess(true);
         setError('');
-        window.location.href = '/'; // Redirect to the dashboard or home page
+        window.location.href = '/';
       } else {
         setError(response.data.message || 'Registration failed');
       }

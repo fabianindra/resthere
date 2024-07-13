@@ -1,4 +1,3 @@
-// middleware/serviceVerifyToken.ts
 import { verify } from 'jsonwebtoken';
 import type { NextFunction, Request, Response } from 'express';
 
