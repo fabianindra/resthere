@@ -90,7 +90,7 @@ const TenantBookingList: React.FC = () => {
   const totalPages = Math.ceil(pendingBookings.length / BOOKINGS_PER_PAGE);
 
   return (
-    <Box p={6}>
+    <Box p={{ base: 2, md: 6 }}>
       <Box borderWidth="1px" borderRadius="lg" p={6} mb={6} boxShadow="lg">
         <Text fontSize="2xl" fontWeight="bold" mb={4}>
           Pending Bookings
@@ -138,43 +138,47 @@ const TenantBookingList: React.FC = () => {
           </>
         )}
       </Box>
-      <Table
-        variant="striped"
-        colorScheme="gray"
-        borderWidth="1px"
-        borderRadius="lg"
-        p={6}
-        boxShadow="lg"
-      >
-        <Thead>
-          <Tr>
-            <Th>Property Name</Th>
-            <Th>Username</Th>
-            <Th>Email</Th>
-            <Th>Room</Th>
-            <Th>Check-in Date</Th>
-            <Th>Check-out Date</Th>
-            <Th>Status</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {approvedBookings.map((booking) => (
-            <Tr key={booking.id}>
-              <Td>{booking.property_name}</Td>
-              <Td>{booking.username}</Td>
-              <Td>{booking.email}</Td>
-              <Td>{booking.room_name}</Td>
-              <Td>{new Date(booking.check_in).toLocaleDateString()}</Td>
-              <Td>{new Date(booking.check_out).toLocaleDateString()}</Td>
-              <Td>
-                <Badge colorScheme="green">
-                  <CheckCircleIcon mr={1} /> Approved
-                </Badge>
-              </Td>
+      <Box overflowX="auto">
+        <Table
+          overflowX="auto"
+          variant="striped"
+          colorScheme="gray"
+          borderWidth="1px"
+          borderRadius="lg"
+          p={6}
+          boxShadow="lg"
+        >
+          <Thead>
+            <Tr>
+              <Th>Property Name</Th>
+              <Th>Username</Th>
+              <Th>Email</Th>
+              <Th>Room</Th>
+              <Th>Check-in Date</Th>
+              <Th>Check-out Date</Th>
+              <Th>Status</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {approvedBookings.map((booking) => (
+              <Tr key={booking.id}>
+                <Td>{booking.property_name}</Td>
+                <Td>{booking.username}</Td>
+                <Td>{booking.email}</Td>
+                <Td>{booking.room_name}</Td>
+                <Td>{new Date(booking.check_in).toLocaleDateString()}</Td>
+                <Td>{new Date(booking.check_out).toLocaleDateString()}</Td>
+                <Td>
+                  <Badge colorScheme="green">
+                    <CheckCircleIcon mr={1} /> Approved
+                  </Badge>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
+
       <Modal
         isOpen={isProofModalOpen}
         onClose={() => setIsProofModalOpen(false)}

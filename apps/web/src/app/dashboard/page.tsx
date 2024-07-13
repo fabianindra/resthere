@@ -194,10 +194,10 @@ export default function DashboardPage() {
             </HStack>
 
             <HStack
-              w={'100vw'}
+              w={{ base: 'auto', sm: '100vw' }}
               flexWrap={'wrap'}
               justifyContent={'start'}
-              gap={4}
+              gap={0}
               my={10}
             >
               {dataRoom.length === 0 ? (

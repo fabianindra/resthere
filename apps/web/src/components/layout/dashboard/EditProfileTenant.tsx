@@ -83,7 +83,7 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
     setIsEdit(false);
   };
 
-  const isEmailLogin = Cookies.get("login method") !== 'google';
+  const isEmailLogin = Cookies.get('login method') !== 'google';
 
   return (
     <div>
@@ -149,21 +149,28 @@ export default function EditProfileTenant({ onOpen }: EditProfileProps) {
       )}
       <HStack gap={8}>
         {!isEdit && (
-          <HStack gap={8} mt={4}>
+          <HStack flexWrap={'wrap'} justifyContent={'center'} gap={8} mt={4}>
             {isEmailLogin && (
               <Button w={200} colorScheme="gray" onClick={onOpen}>
                 Change Password
               </Button>
             )}
             {isEmailLogin && (
-              <Button w={200} colorScheme="gray" onClick={() => setIsEmailModalOpen(true)}>
+              <Button
+                w={200}
+                colorScheme="gray"
+                onClick={() => setIsEmailModalOpen(true)}
+              >
                 Change Email
               </Button>
             )}
           </HStack>
         )}
       </HStack>
-      <ChangeEmailTenantModal isOpen={isEmailModalOpen} onClose={() => setIsEmailModalOpen(false)} />
-      </div>
+      <ChangeEmailTenantModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+      />
+    </div>
   );
 }

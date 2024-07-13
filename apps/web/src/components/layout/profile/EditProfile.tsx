@@ -147,7 +147,7 @@ export default function EditProfile({ onOpen, onOpenEmail }: EditProfileProps) {
       )}
       <HStack gap={8}>
         {!isEdit && (
-          <HStack gap={8} mt={4}>
+          <HStack flexWrap={'wrap'} justifyContent={'center'} gap={8} mt={4}>
             <Button w={200} colorScheme="gray" onClick={() => setIsEdit(true)}>
               Edit Profile
             </Button>

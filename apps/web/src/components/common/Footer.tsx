@@ -7,24 +7,26 @@ export const Footer = () => {
       flexWrap={'wrap'}
       alignItems={'start'}
       gap={8}
-      className="px-20 py-10 "
+      px={{ base: '32px', md: '32px', lg: '64px' }}
+      py={8}
     >
       <HStack>
-        <Heading ml={-4} color={'primary'} as="h2" size="lg">
+        <Heading color={'primary'} as="h2" size={{ base: 'md', sm: 'lg' }}>
           Resthere
         </Heading>
       </HStack>
       <VStack maxW={300} justifyContent={'start'} alignItems={'start'}>
-        <Heading as={'h3'} size={'md'}>
+        <Heading as={'h3'} size={{ base: 'sm', sm: 'md' }}>
           About
         </Heading>
         <Text textAlign={'justify'} mt={2} color={'gray.400'}>
-        All material herein ©2024 Resthere Indonesia Company Pte. Ltd. All Rights Reserved.
-        Resthere is part of Resthere International Inc., online travel & related services.
+          All material herein ©2024 Resthere Indonesia Company Pte. Ltd. All
+          Rights Reserved. Resthere is part of Resthere International Inc.,
+          online travel & related services.
         </Text>
       </VStack>
       <VStack alignItems={'start'}>
-        <Heading as={'h3'} size={'md'}>
+        <Heading as={'h3'} size={{ base: 'sm', sm: 'md' }}>
           External Link
         </Heading>
         <Link color={'gray.400'}>Careers</Link>
@@ -33,7 +35,7 @@ export const Footer = () => {
         <Link color={'gray.400'}>Service</Link>
       </VStack>
       <VStack alignItems={'start'}>
-        <Heading as={'h3'} size={'md'}>
+        <Heading as={'h3'} size={{ base: 'sm', sm: 'md' }}>
           Property & Promotion
         </Heading>
         <Link color={'gray.400'}>Luxury Stays</Link>
@@ -42,7 +44,7 @@ export const Footer = () => {
         <Link color={'gray.400'}>Propoerty near the Beach</Link>
       </VStack>
       <VStack alignItems={'start'}>
-        <Heading as={'h3'} size={'md'}>
+        <Heading as={'h3'} size={{ base: 'sm', sm: 'md' }}>
           Contact us
         </Heading>
         <Link color={'gray.400'}>Hostel@gmail.com</Link>

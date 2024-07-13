@@ -9,7 +9,11 @@ export const calculateFinalPrice = async (
   const start = startDate ? new Date(startDate) : new Date();
   const end = endDate ? new Date(endDate) : new Date(start);
 
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+  for (
+    let d = new Date(start);
+    d <= new Date(end.getTime() - 24 * 60 * 60 * 1000);
+    d.setDate(d.getDate() + 1)
+  ) {
     let dayPrice = room.price;
     const specialPrice = room.special_price.find((sp) => {
       const spStart = new Date(sp.start_date);
@@ -26,6 +30,9 @@ export const calculateFinalPrice = async (
     finalPrice += dayPrice;
   }
 
+  if (finalPrice <= 0) {
+    finalPrice = room.price;
+  }
   return finalPrice;
 };
 
