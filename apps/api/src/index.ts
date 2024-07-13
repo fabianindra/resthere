@@ -17,6 +17,8 @@ import transactionRouter from './routers/transaction.router';
 import bookingRouter from './routers/booking.router';
 import reviewRouter from './routers/review.router';
 
+import './scheduler';
+
 dotenv.config();
 
 const sessionSecret = process.env.SESSION_SECRET || 'defaultSecret';
