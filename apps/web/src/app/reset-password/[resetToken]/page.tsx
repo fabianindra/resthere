@@ -4,6 +4,7 @@ import { Button, Text, Heading, Input, FormControl, FormLabel, Container, Box } 
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { User } from '@/types';
+import { apiUrl } from '@/api';
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
@@ -72,7 +73,7 @@ export default function ResetPassword() {
     const payload = { newPassword, role, email, token };
 
     try {
-      const response = await axios.post('http://localhost:6570/api/auth/reset-password', payload);
+      const response = await axios.post(`${apiUrl}/api/auth/reset-password`, payload);
       setLoading(false);
       if (response.data.success) {
         setSuccess(true);

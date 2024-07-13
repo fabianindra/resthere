@@ -13,6 +13,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { apiUrl } from '@/api';
 
 export default function CompleteRegister() {
   const [email, setEmail] = useState('');
@@ -39,7 +40,7 @@ export default function CompleteRegister() {
         password,
       };
       const response = await axios.post(
-        'http://localhost:6570/api/auth/register-user-complete',
+        `${apiUrl}/auth/register-user-complete`,
         payload,
       );
       if (response.data.success) {

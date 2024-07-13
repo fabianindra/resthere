@@ -30,6 +30,7 @@ import BookingCard from './BookingCard';
 import Pagination from './Pagination';
 import ModalApproveTransaction from './ModalApproveTransaction';
 import axios from 'axios';
+import { apiUrl } from '@/api';
 
 const BOOKINGS_PER_PAGE = 5;
 
@@ -74,7 +75,7 @@ const TenantBookingList: React.FC = () => {
   const handleViewPaymentProof = async (bookingId: string) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:6570/api/transaction/payment-proof/${bookingId}`,
+        `${apiUrl}/transaction/payment-proof/${bookingId}`,
       );
       setPaymentProofUrl(data.data.proof);
       setIsProofModalOpen(true);

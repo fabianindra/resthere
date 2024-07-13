@@ -24,7 +24,8 @@ type Tenant = {
   username: string;
   password: string;
 };
-
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const BACKEND_URL = process.env.BACKEND_URL;
 const hashPassword = async (password: string): Promise<string> => {
   const salt = await genSalt(10);
   return await hash(password, salt);
@@ -95,8 +96,8 @@ const registerEntity = async (request: User | Tenant, repoFind: Function, repoAd
     );
     await sendEmail({
       subject: 'Email Verification',
-      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}&role=${role} 
-      if the link expired, you can ask for a new link here: http://localhost:3000/re-register?role=${role}`,
+      text: `Please verify your email by clicking the link: ${BACKEND_URL}/auth/verify-email?token=${verificationToken}&role=${role} 
+      if the link expired, you can ask for a new link here: ${FRONTEND_URL}/re-register?role=${role}`,
       to: request.email,
       from: process.env.EMAIL,
     });
@@ -144,8 +145,8 @@ export const serviceReRegister = async (request: { email: string, role: string }
     );
     await sendEmail({
       subject: 'Resend Email Verification',
-      text: `Please verify your email by clicking the link: http://localhost:6570/api/auth/verify-email?token=${verificationToken}&role=${request.role} 
-      if the link expired, you can ask for a new link here: http://localhost:3000/re-register?role=${request.role}`,
+      text: `Please verify your email by clicking the link: ${BACKEND_URL}/auth/verify-email?token=${verificationToken}&role=${request.role} 
+      if the link expired, you can ask for a new link here: ${FRONTEND_URL}/re-register?role=${request.role}`,
       to: request.email,
       from: process.env.EMAIL,
     });

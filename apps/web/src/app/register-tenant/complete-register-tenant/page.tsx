@@ -13,6 +13,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { apiUrl } from '@/api';
 
 export default function CompleteRegister() {
   const [email, setEmail] = useState('');
@@ -39,13 +40,13 @@ export default function CompleteRegister() {
         password,
       };
       const response = await axios.post(
-        'http://localhost:6570/api/auth/register-tenant-complete',
+        `${apiUrl}/api/auth/register-tenant-complete`,
         payload,
       );
       if (response.data.success) {
         setSuccess(true);
         setError('');
-        window.location.href = '/'; // Redirect to the dashboard or home page
+        window.location.href = '/';
       } else {
         setError(response.data.message || 'Registration failed');
       }

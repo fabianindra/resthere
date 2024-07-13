@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, VStack, Text, Heading, Input, FormControl, FormLabel, Container, Box } from '@chakra-ui/react';
 import axios from 'axios';
+import { apiUrl } from '@/api';
 
 export default function InitialRegister() {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ export default function InitialRegister() {
 
   const handleEmailSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:6570/api/auth/re-register', { email, role });
+      const response = await axios.post(`${apiUrl}/auth/re-register`, { email, role });
       if (response.data.success) {
         setSuccess(true);
         setError('');

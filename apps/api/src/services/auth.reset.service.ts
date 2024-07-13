@@ -6,6 +6,9 @@ import { verify } from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
 import { repoFindTenant, repoFindUser, repoTenantChangePassword, repoUserChangePassword, repoUserChangeEmail, repoTenantChangeEmail } from '../repository/auth.repository';
 
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const BACKEND_URL = process.env.BACKEND_URL;
+
 const hashPassword = async (password: string): Promise<string> => {
   const salt = await genSalt(10);
   return await hash(password, salt);
@@ -142,7 +145,7 @@ export const serviceSendResetPasswordEmail = async (email: string, role: string)
       'verificationKey',
       '1h',
     );
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+    const resetLink = `${FRONTEND_URL}/reset-password/${resetToken}`;
     await sendEmail({
       to: email,
       from: process.env.EMAIL,
@@ -204,7 +207,7 @@ export const serviceResetPassword = async (newPassword: string, role: string, em
         throw new Error('Invalid role');
       }
       const verificationToken = createVerificationToken(newEmail);
-      const verificationLink = `http://localhost:6570/api/auth/verify-email-reset?token=${verificationToken}&role=${role}`;
+      const verificationLink = `${BACKEND_URL}/auth/verify-email-reset?token=${verificationToken}&role=${role}`;
       await sendEmail({
         to: newEmail,
         from: process.env.EMAIL,
