@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { apiUrl } from './index';
 
 export function getDetailSpecialPrice(id: string) {
-  return axios.get(`http://localhost:6570/api/specialprice/${id}`);
+  return axios.get(`${apiUrl}/specialprice/${id}`);
 }
 
 export function getSpecialPriceByRoom(room_id: string) {
-  return axios.get(`http://localhost:6570/api/specialprice/${room_id}`);
+  return axios.get(`${apiUrl}/specialprice/${room_id}`);
 }
 
 export function addSpecialPrice({
@@ -19,7 +20,7 @@ export function addSpecialPrice({
   end_date: Date;
   special_price: number;
 }) {
-  axios.post(`http://localhost:6570/api/specialprice`, {
+  axios.post(`${apiUrl}/specialprice`, {
     room_id,
     start_date,
     end_date,
@@ -38,7 +39,7 @@ export function editSpecialPrice({
   end_date: string;
   special_price: number;
 }) {
-  axios.put(`http://localhost:6570/api/specialprice`, {
+  axios.put(`${apiUrl}/specialprice`, {
     specialprice_id,
     start_date,
     end_date,
@@ -47,5 +48,5 @@ export function editSpecialPrice({
 }
 
 export function deleteSpecialPrice(specialprice_id: string) {
-  axios.delete(`http://localhost:6570/api/specialprice/${specialprice_id}`);
+  axios.delete(`${apiUrl}/specialprice/${specialprice_id}`);
 }

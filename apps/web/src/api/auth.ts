@@ -1,13 +1,14 @@
-import axios from "axios";
+import axios from 'axios';
+import { apiUrl } from './index';
 
 export function Login() {
-    return axios.get(`http://localhost:6570/api/auth/login`);
-  }
+  return axios.get(`${apiUrl}/auth/login`);
+}
 
 export function RegisterUser() {
-    return axios.get(`http://localhost:6570/api/auth/register-user`);
-  }
+  return axios.get(`${apiUrl}/auth/register-user`);
+}
 
 export function RegisterTenant() {
-    return axios.get(`http://localhost:6570/api/auth/register-tenant`);
-  }
+  return axios.get(`${apiUrl}/auth/register-tenant`);
+}

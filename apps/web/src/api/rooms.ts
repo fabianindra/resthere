@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { apiUrl } from './index';
 
 export function getDetailRoom(
   room_id: number,
@@ -6,7 +7,7 @@ export function getDetailRoom(
   endDate: string,
 ) {
   return axios.get(
-    `http://localhost:6570/api/room/detail/${room_id}?startDate=${startDate}&endDate=${endDate}`,
+    `${apiUrl}/room/detail/${room_id}?startDate=${startDate}&endDate=${endDate}`,
   );
 }
 
@@ -21,7 +22,7 @@ export function getDataRoomsByProperty(
   endDate: string,
 ) {
   return axios.get(
-    `http://localhost:6570/api/room/${property_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}&startDate=${startDate}&endDate=${endDate}`,
+    `${apiUrl}/room/${property_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}&startDate=${startDate}&endDate=${endDate}`,
   );
 }
 
@@ -43,7 +44,7 @@ export function editDataRoom(
   formData.append('capacity_room', capacity_room);
   formData.append('room_size', room_size);
   formData.append('file', file);
-  return axios.put(`http://localhost:6570/api/room/${room_id}`, formData, {
+  return axios.put(`${apiUrl}/room/${room_id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: '',
@@ -69,7 +70,7 @@ export function addDataRoom(
   formData.append('room_size', room_size);
   formData.append('property_id', property_id);
   formData.append('file', file);
-  return axios.post(`http://localhost:6570/api/room/`, formData, {
+  return axios.post(`${apiUrl}/room/`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: '',
@@ -78,5 +79,5 @@ export function addDataRoom(
 }
 
 export function getDeleteRoom(room_id: number) {
-  return axios.delete(`http://localhost:6570/api/room/${room_id}`);
+  return axios.delete(`${apiUrl}/room/${room_id}`);
 }

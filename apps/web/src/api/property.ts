@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { apiUrl } from './index';
 
 export function getDataPropertyByRoom(
   page: number,
@@ -16,7 +17,7 @@ export function getDataPropertyByRoom(
   if (startDate) params.append('startDate', startDate);
   if (endDate) params.append('endDate', endDate);
 
-  return axios.get(`http://localhost:6570/api/property/?${params.toString()}`);
+  return axios.get(`${apiUrl}/property/?${params.toString()}`);
 }
 
 export function getDataPropertyByTenant(
@@ -30,12 +31,12 @@ export function getDataPropertyByTenant(
   endDate: string,
 ) {
   return axios.get(
-    `http://localhost:6570/api/property/${tenant_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}&startDate=${startDate}&endDate=${endDate}`,
+    `${apiUrl}/property/${tenant_id}?page=${page}&search=${search}&category=${category}&sortBy=${sortBy}&sortDirection=${sortDirection}&startDate=${startDate}&endDate=${endDate}`,
   );
 }
 
 export function getDetailProperty(id: any) {
-  return axios.get(`http://localhost:6570/api/property/detail/${id}`);
+  return axios.get(`${apiUrl}/property/detail/${id}`);
 }
 
 export function addDataProperty(
@@ -55,7 +56,7 @@ export function addDataProperty(
   formData.append('province_name', province_name);
   formData.append('tenant_id', tenant_id);
   formData.append('file', file);
-  return axios.post(`http://localhost:6570/api/property/`, formData, {
+  return axios.post(`${apiUrl}/property/`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: '',
@@ -78,18 +79,14 @@ export function editDataProperty(
   formData.append('city_name', city_name);
   formData.append('province_name', province_name);
   formData.append('file', file);
-  return axios.put(
-    `http://localhost:6570/api/property/${property_id}`,
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: '',
-      },
+  return axios.put(`${apiUrl}/property/${property_id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: '',
     },
-  );
+  });
 }
 
 export function deleteProperty(id: any) {
-  return axios.delete(`http://localhost:6570/api/property/${id}`);
+  return axios.delete(`${apiUrl}/property/${id}`);
 }
