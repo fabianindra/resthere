@@ -27,11 +27,17 @@ const CustomDatePicker = ({
 
   useEffect(() => {
     if (value) {
-      let v = new Date(value);
-      setStartDate(v);
-      setValue(v);
+      // Ensure the value is in YYYY-MM-DD format
+      const formattedValue = value.includes('-')
+        ? value
+        : value.split('/').reverse().join('-');
+      let v = new Date(formattedValue);
+      if (!isNaN(v.getTime())) {
+        setStartDate(v);
+        setValue(v);
+      }
     }
-  }, [value]);
+  }, [value, setValue]);
 
   return (
     <Box className="relative">
