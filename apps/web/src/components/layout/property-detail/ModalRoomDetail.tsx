@@ -96,7 +96,7 @@ export default function ModalRoomDetail({
   }, [isOpen, initialStartDate, initialEndDate, roomId]);
 
   function formatRupiah(number: number) {
-    return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
   return (

@@ -53,7 +53,7 @@ export default function CustomCard({
   const formattedEndDate = formatDate(endDate);
 
   function formatRupiah(number: number) {
-    return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
   return (
