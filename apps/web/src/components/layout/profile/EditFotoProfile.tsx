@@ -1,3 +1,4 @@
+import { imageUrl } from '@/api';
 import { updateFotoProfile } from '@/api/profile';
 import { Avatar, Box, Button, Input, VStack, useToast } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
@@ -58,7 +59,7 @@ export default function EditFotoProfile(foto: any) {
       <>
         <Avatar
           size="xl"
-          src={preview ? preview : `http://localhost:6570/images/${foto.foto}`}
+          src={preview ? preview : `${imageUrl}/${foto.foto}`}
         />
       </>
       <Button w={200} colorScheme="gray" onClick={handleUploadClick}>

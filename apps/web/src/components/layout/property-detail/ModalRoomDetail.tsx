@@ -20,6 +20,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { User } from '@/types';
 import useDetailRoom from '@/hooks/room/useDetailRoom';
+import { apiUrl } from '@/api';
 
 const getUserFromCookie = (): User | null => {
   const userCookie = Cookies.get('user');
@@ -69,7 +70,7 @@ export default function ModalRoomDetail({
   const handleBooking = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:6570/api/transaction/booking',
+        `${apiUrl}/transaction/booking`,
         {
           roomId,
           userId,

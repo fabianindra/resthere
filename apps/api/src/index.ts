@@ -19,13 +19,17 @@ import reviewRouter from './routers/review.router';
 
 import './scheduler';
 
-dotenv.config();
+const envFile = process.env.NODE_ENV === 'development' ? '.env.development' : '.env.production';
+dotenv.config({ path: path.resolve(__dirname, envFile) });
 
 const sessionSecret = process.env.SESSION_SECRET || 'defaultSecret';
 
 const app: Application = express();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -51,7 +55,7 @@ app.use('/api/transaction', transactionRouter);
 app.use('/api/booking-list', bookingRouter);
 app.use('/api/review', reviewRouter);
 
-const PORT = 6570;
+const PORT = process.env.PORT || 6570;
 
 app.get('/', (req: Request, res: Response) => {
   res.send({

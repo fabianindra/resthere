@@ -20,6 +20,7 @@ import {
 } from '../controllers/auth.controller';
 import { serviceVerifyToken } from '../middlewares/auth.middleware';
 
+const FRONTEND_URL = process.env.FRONTEND_URL;
 const authRouter = Router();
 
 authRouter.post('/register-user', registerUser);
@@ -47,7 +48,7 @@ authRouter.get(
 authRouter.get(
   '/google-user/callback',
   passport.authenticate('google-user', {
-    failureRedirect: 'http://localhost:3000',
+    failureRedirect: `${FRONTEND_URL}`,
   }),
   (req: Request, res: Response) => {
     try {
@@ -62,7 +63,7 @@ authRouter.get(
       const role = 'user';
 
       res.redirect(
-        `http://localhost:3000/?token=${token}&username=${username}&email=${email}&role=${role}&userId=${id}`,
+        `${FRONTEND_URL}/?token=${token}&username=${username}&email=${email}&role=${role}&userId=${id}`,
       );
     } catch (error) {
       console.error('Error generating token:', error);
@@ -78,7 +79,7 @@ authRouter.get(
 authRouter.get(
   '/google-tenant/callback',
   passport.authenticate('google-tenant', {
-    failureRedirect: 'http://localhost:3000',
+    failureRedirect: `${FRONTEND_URL}`,
   }),
   (req: Request, res: Response) => {
     try {
@@ -93,7 +94,7 @@ authRouter.get(
       const role = 'tenant';
 
       res.redirect(
-        `http://localhost:3000/?token=${token}&username=${username}&email=${email}&role=${role}&userId=${id}`,
+        `${FRONTEND_URL}/?token=${token}&username=${username}&email=${email}&role=${role}&userId=${id}`,
       );
     } catch (error) {
       console.error('Error generating token:', error);

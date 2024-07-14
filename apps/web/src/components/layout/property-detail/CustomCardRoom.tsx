@@ -18,6 +18,7 @@ import ModalEditRoom from './ModalEditRoom';
 import ModalDeleteRoom from './ModalDeleteRoom';
 import ModalRoomDetail from '../property-detail/ModalRoomDetail';
 import { apiUrl } from '@/api';
+import { imageUrl } from '@/api';
 
 export default function CustomCardRoom({
   id,
@@ -66,7 +67,7 @@ export default function CustomCardRoom({
           <Image
             src={
               image
-                ? `${apiUrl}/images/${image}`
+                ? `${imageUrl}/${image}`
                 : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
             }
             objectFit="cover"

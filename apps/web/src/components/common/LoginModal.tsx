@@ -17,6 +17,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { User } from '@/types';
+import { apiUrl } from '@/api';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -38,7 +39,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:6570/api/auth/user-login',
+        `${apiUrl}/auth/user-login`,
         {
           email,
           password,
@@ -66,7 +67,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   };
 
   const handleGoogleLogin = async () => {
-    window.location.href = 'http://localhost:6570/api/auth/google-user';
+    window.location.href = `${apiUrl}/auth/google-user`;
   };
 
   const handleCloseModal = () => {

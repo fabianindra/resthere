@@ -19,6 +19,8 @@ import {
 } from '../services/auth.login.service';
 import { serviceVerifyEmail } from '../services/auth.verify.service';
 
+const FRONTEND_URL = process.env.FRONTEND_URL;
+
 export const reRegister = async (req: Request, res: Response) => {
   const result = await serviceReRegister(req.body);
   return res.status(Number(result?.status)).send(result);
@@ -63,11 +65,11 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
     if (type === 'user') {
       return res.redirect(
-        `http://localhost:3000/register-user/complete-register-user?email=${email}`,
+        `${FRONTEND_URL}/register-user/complete-register-user?email=${email}`,
       );
     } else if (type === 'tenant') {
       return res.redirect(
-        `http://localhost:3000/register-tenant/complete-register-tenant?email=${email}`,
+        `${FRONTEND_URL}/register-tenant/complete-register-tenant?email=${email}`,
       );
     } else {
       return res.status(400).send({
@@ -82,7 +84,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
 export const verifyEmailReset = async (req: Request, res: Response) => {
   const result = await serviceVerifyEmail(req);
-  return res.redirect(`http://localhost:3000/`);
+  return res.redirect(`${FRONTEND_URL}`);
 }
 
 export const changeUserPassword = async (req: Request, res: Response) => {
