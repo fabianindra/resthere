@@ -17,6 +17,7 @@ import Link from 'next/link';
 import ModalEditRoom from './ModalEditRoom';
 import ModalDeleteRoom from './ModalDeleteRoom';
 import ModalRoomDetail from '../property-detail/ModalRoomDetail';
+import { apiUrl } from '@/api';
 
 export default function CustomCardRoom({
   id,
@@ -54,6 +55,10 @@ export default function CustomCardRoom({
   const formattedStartDate = formatDate(startDate);
   const formattedEndDate = formatDate(endDate);
 
+  function formatRupiah(number: number) {
+    return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
   return (
     <>
       <Card maxW="xs" className=" cursor-pointer" onClick={onOpenDetail} pb={4}>
@@ -61,7 +66,7 @@ export default function CustomCardRoom({
           <Image
             src={
               image
-                ? `http://localhost:6570/images/${image}`
+                ? `${apiUrl}/images/${image}`
                 : `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
             }
             objectFit="cover"
@@ -83,7 +88,7 @@ export default function CustomCardRoom({
             </HStack>
             <Box>
               <Text fontSize={'md'} fontWeight={'bold'}>
-                Rp. {price}
+                Rp. {formatRupiah(price)}
               </Text>
             </Box>
           </HStack>

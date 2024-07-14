@@ -31,14 +31,21 @@ export default function Page() {
   } = usePropertyAll();
 
   useEffect(() => {
+    console.log(cityParam);
     if (cityParam) {
       setCity(cityParam);
+    } else {
+      setCity('');
     }
     if (startDateParam) {
       setStartDate(startDateParam);
+    } else {
+      setStartDate('');
     }
     if (endDateParam) {
       setEndDate(endDateParam);
+    } else {
+      setEndDate('');
     }
   }, [searchParams, setCity, setStartDate, setEndDate]);
 

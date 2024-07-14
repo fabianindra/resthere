@@ -95,6 +95,10 @@ export default function ModalRoomDetail({
     }
   }, [isOpen, initialStartDate, initialEndDate, roomId]);
 
+  function formatRupiah(number: number) {
+    return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
   return (
     <>
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
@@ -127,7 +131,7 @@ export default function ModalRoomDetail({
             ) : null}
           </ModalBody>
           <ModalFooter justifyContent={'space-between'}>
-            <Heading size={'md'}>Rp. {price}</Heading>
+            <Heading size={'md'}>Rp. {formatRupiah(price)}</Heading>
             <Button px={10} onClick={preBooking} colorScheme="blue">
               Booking
             </Button>
@@ -164,7 +168,7 @@ export default function ModalRoomDetail({
           <ModalCloseButton />
           <ModalBody>
             Are you sure you want to book this property? Total Price to Pay: Rp.{' '}
-            {room?.finalPrice}
+            {formatRupiah(price)}
           </ModalBody>
           <ModalFooter>
             <Button

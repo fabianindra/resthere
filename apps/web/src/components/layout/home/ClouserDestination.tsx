@@ -14,7 +14,7 @@ export default function ClouserDestination() {
     {
       url: '/BANDUNG.png',
       title: 'Bandung',
-      link: '/list-property?city=KABUPATEN%20BANDUNG',
+      link: '/list-property?city=KOTA%20BANDUNG',
     },
     {
       url: '/JAKARTA.png',

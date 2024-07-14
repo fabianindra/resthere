@@ -29,7 +29,10 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(
+  '/api/images',
+  express.static(path.join(__dirname, '../public/images')),
+);
 
 app.use(
   session({ secret: sessionSecret, resave: false, saveUninitialized: false }),

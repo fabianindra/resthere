@@ -2,6 +2,7 @@ import React from 'react';
 import { Flex, Heading, Button, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { HeaderProps } from '@/types';
+import { useRouter } from 'next/navigation';
 
 const Header: React.FC<HeaderProps> = () => {
   return (

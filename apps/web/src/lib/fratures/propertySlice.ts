@@ -27,7 +27,6 @@ export const fetchProperties = createAsyncThunk(
     page: number;
     city: string;
     search: string;
-
     startDate: string;
     endDate: string;
   }) => {
