@@ -17,7 +17,6 @@ import Link from 'next/link';
 import ModalEditRoom from './ModalEditRoom';
 import ModalDeleteRoom from './ModalDeleteRoom';
 import ModalRoomDetail from '../property-detail/ModalRoomDetail';
-import { apiUrl } from '@/api';
 import { imageUrl } from '@/api';
 
 export default function CustomCardRoom({
@@ -116,6 +115,7 @@ export default function CustomCardRoom({
         startDate={startDate}
         endDate={endDate}
         price={price}
+        image={image}
       />
       <ModalEditRoom
         isOpen={isOpen}

@@ -39,7 +39,7 @@ export default function TenantProfile() {
   }, []);
 
   const onOpenEmail = () => {
-    console.log('Email open handler');
+    // console.log('Email open handler');
   };
 
   if (!verified) {

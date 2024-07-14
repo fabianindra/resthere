@@ -19,17 +19,17 @@ import reviewRouter from './routers/review.router';
 
 import './scheduler';
 
-const envFile = process.env.NODE_ENV === 'development' ? '.env.development' : '.env.production';
+const envFile =
+  process.env.NODE_ENV === 'development'
+    ? '.env.development'
+    : '.env.production';
 dotenv.config({ path: path.resolve(__dirname, envFile) });
 
 const sessionSecret = process.env.SESSION_SECRET || 'defaultSecret';
 
 const app: Application = express();
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

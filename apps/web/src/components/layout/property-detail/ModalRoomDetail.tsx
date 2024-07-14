@@ -47,6 +47,7 @@ export default function ModalRoomDetail({
   startDate: initialStartDate,
   endDate: initialEndDate,
   price,
+  image,
 }: any) {
   const [addSpecialPrice, setAddSpecialPrice] = useState(true);
   const [addAvailableRoom, setaddAvailableRoom] = useState(true);
@@ -69,16 +70,13 @@ export default function ModalRoomDetail({
 
   const handleBooking = async () => {
     try {
-      const response = await axios.post(
-        `${apiUrl}/transaction/booking`,
-        {
-          roomId,
-          userId,
-          price,
-          startDate: checkIn,
-          endDate: checkOut,
-        },
-      );
+      const response = await axios.post(`${apiUrl}/transaction/booking`, {
+        roomId,
+        userId,
+        price,
+        startDate: checkIn,
+        endDate: checkOut,
+      });
       window.location.href = `/transaction`;
     } catch (error: any) {
     } finally {
@@ -108,7 +106,7 @@ export default function ModalRoomDetail({
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <RoomImage />
+            <RoomImage image={image} />
             <RoomInfo
               user={room?.capacity_person}
               bed={room?.capacity_room}
