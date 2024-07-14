@@ -19,11 +19,7 @@ import reviewRouter from './routers/review.router';
 
 import './scheduler';
 
-const envFile =
-  process.env.NODE_ENV === 'development'
-    ? '.env.development'
-    : '.env.production';
-dotenv.config({ path: path.resolve(__dirname, envFile) });
+dotenv.config();
 
 const sessionSecret = process.env.SESSION_SECRET || 'defaultSecret';
 

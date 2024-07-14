@@ -2,7 +2,7 @@ import { Image } from '@chakra-ui/react';
 import React from 'react';
 import { imageUrl } from '@/api';
 
-export function RoomImage(image: any) {
+export function RoomImage({ image }: { image: string }) {
   return (
     <Image
       src={

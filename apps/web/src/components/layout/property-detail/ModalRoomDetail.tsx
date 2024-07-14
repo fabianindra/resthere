@@ -37,6 +37,7 @@ const getUserFromCookie = (): User | null => {
 
 const user = getUserFromCookie();
 const userId = user?.id;
+const role = Cookies.get('role');
 
 export default function ModalRoomDetail({
   onClose,
@@ -131,9 +132,11 @@ export default function ModalRoomDetail({
           </ModalBody>
           <ModalFooter justifyContent={'space-between'}>
             <Heading size={'md'}>Rp. {formatRupiah(price)}</Heading>
-            <Button px={10} onClick={preBooking} colorScheme="blue">
-              Booking
-            </Button>
+            {role === 'user' && (
+              <Button px={10} onClick={preBooking} colorScheme="blue">
+                Booking
+              </Button>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -16,10 +16,17 @@ const usePropertyData = () => {
 
   useEffect(() => {
     const storedUser = Cookies.get('user');
-    const dataUser = JSON.parse(Cookies.get('user') as string);
 
-    if (dataUser) {
-      setTenantId(dataUser.id);
+    if (storedUser) {
+      try {
+        const dataUser = JSON.parse(storedUser);
+
+        if (dataUser && dataUser.id) {
+          setTenantId(dataUser.id);
+        }
+      } catch (e) {
+        console.error("Failed to parse 'user' cookie:", e);
+      }
     }
   }, []);
 
