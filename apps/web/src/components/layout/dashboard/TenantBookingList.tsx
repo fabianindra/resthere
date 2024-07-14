@@ -105,9 +105,8 @@ const TenantBookingList: React.FC = () => {
               gap={6}
             >
               {currentBookings.map((booking: any) => (
-                <>
+                <Box key={booking.id}>
                   <BookingCard
-                    key={booking.id}
                     booking={booking}
                     isPending={true}
                     handleApprove={handleApprove}
@@ -128,7 +127,7 @@ const TenantBookingList: React.FC = () => {
                       )
                     }
                   />
-                </>
+                </Box>
               ))}
             </Grid>
             <Pagination

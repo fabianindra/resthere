@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CalendarDots } from '@phosphor-icons/react/dist/ssr';
@@ -14,6 +14,7 @@ const CustomDatePicker = ({
 }) => {
   const [startDate, setStartDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false);
+  const initialMount = useRef(true);
 
   const handleButtonClick = () => {
     setIsOpen(!isOpen);
@@ -26,18 +27,23 @@ const CustomDatePicker = ({
   };
 
   useEffect(() => {
+    if (initialMount.current) {
+      initialMount.current = false;
+      return;
+    }
     if (value) {
       // Ensure the value is in YYYY-MM-DD format
       const formattedValue = value.includes('-')
         ? value
         : value.split('/').reverse().join('-');
-      let v = new Date(formattedValue);
-      if (!isNaN(v.getTime())) {
-        setStartDate(v);
-        setValue(v);
+      const newDate = new Date(formattedValue);
+
+      if (!isNaN(newDate.getTime()) && (!startDate || newDate.getTime() !== startDate.getTime())) {
+        setStartDate(newDate);
+        setValue(newDate);
       }
     }
-  }, [value, setValue]);
+  }, [value]);
 
   return (
     <Box className="relative">
